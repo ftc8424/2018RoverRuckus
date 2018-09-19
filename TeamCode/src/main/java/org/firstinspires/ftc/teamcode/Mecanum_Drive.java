@@ -35,7 +35,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static org.firstinspires.ftc.teamcode.HardwareHelper.RobotType.MEC_TROLLBOT;
 
 /**
  * Created by FTC8424 on 9/15/2016.
@@ -60,22 +59,16 @@ public class Mecanum_Drive extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private HardwareHelper robot = new HardwareHelper(MEC_TROLLBOT);
+    private Hardware4Motor robot = new Hardware4Motor(hardwareMap);
     private MecanumHelper drive = new MecanumHelper();
 
-
-    long LiftMaxHeight = -1; // 2200 ; //3360 = 19 inches with a 2 inch spool, and a NeveRest 40:1 motor -> (which has 1120 encoder ticks per revolution)
-    long LiftCurrentPosition = 0;
-    double liftSpeed = 0.6;
-    int liftStoneHeight = 691;
-    boolean liftLocked = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        robot.robot_init(hardwareMap);
+        robot.robot_init();
         telemetry.addData("Status", "Initialized");
     }
 
@@ -126,10 +119,10 @@ public class Mecanum_Drive extends OpMode {
                 Math.atan2(-gamepad1.left_stick_x, gamepad1.left_stick_y) + Math.PI / 4,
                 -gamepad1.right_stick_x);
 
-        robot.leftMidDrive.setPower(wheelPower[0]);
-        robot.rightMidDrive.setPower(wheelPower[1]);
-        robot.leftBackDrive.setPower(wheelPower[2]);
-        robot.rightBackDrive.setPower(wheelPower[3]);
+        robot.LFront.setPower(wheelPower[0]);
+        robot.RFront.setPower(wheelPower[1]);
+        robot.LBack.setPower(wheelPower[2]);
+        robot.RBack.setPower(wheelPower[3]);
 
         telemetry.addData("Left Front Power", wheelPower[0])
                  .addData("Right Front Power", wheelPower[1])
@@ -142,6 +135,10 @@ public class Mecanum_Drive extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public    void stop() {robot.normalDrive(this, 0, 0);
+    public    void stop() {
+        robot.LFront.setPower(0);
+        robot.RFront.setPower(0);
+        robot.LBack.setPower(0);
+        robot.RBack.setPower(0);
     }
 }
