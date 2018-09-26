@@ -81,8 +81,8 @@ public class Hardware4Motor extends Hardware {
         RFront.setPower(rightFrontPower);
         //LBack.setPower(leftBackPower);
         //RBack.setPower(rightBackPower);
-        caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", LFront.getPower(), RFront.getPower(),
-                RFront.getPower(), RBack.getPower());
+        caller.telemetry.addData("normalDrive:", "Front Power set to L:%.2f, R:%.2f", leftFrontPower, rightFrontPower);
+
 
         super.normalDrive(leftBackPower, rightBackPower);
     }

@@ -203,8 +203,7 @@ public class Hardware {
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower) {
         LBack.setPower(leftBackPower);
         RBack.setPower(rightBackPower);
-        caller.telemetry.addData("normalDrive:", "Power set to L:%.2f, R:%.2f", LFront.getPower(), LBack.getPower(),
-                RFront.getPower(), RBack.getPower());
+        caller.telemetry.addData("normalDrive:", "Back Power set to L:%.2f, R:%.2f", leftBackPower, rightBackPower);
 
     }
     public void encoderDrive(LinearOpMode caller,
