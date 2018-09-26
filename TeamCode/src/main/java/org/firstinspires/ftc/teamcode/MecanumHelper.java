@@ -19,9 +19,12 @@ public class MecanumHelper {
      * @return
      *   An array of doubles for power values to left front, right front, left back and right back
      */
-    public double[] motorPower (double magnitude, double angle, double rotation) {
+        public double[] motorPower (double x, double y) {
         double[] power = {0.0, 0.0, 0.0, 0.0};
 
+    double magnitude = Math.hypot(y, x);
+    double angle = Math.atan2(x, y) + Math.PI / 4;
+    double rotation = -x;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
