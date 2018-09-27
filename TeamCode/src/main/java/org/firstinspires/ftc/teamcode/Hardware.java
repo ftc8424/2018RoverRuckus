@@ -206,6 +206,18 @@ public class Hardware {
         caller.telemetry.addData("normalDrive:", "Back Power set to L:%.2f, R:%.2f", leftBackPower, rightBackPower);
 
     }
+
+    public boolean setEncoderPosition (LinearOpMode caller, DcMotor m1, int target, long timeOut) {
+        m1.setTargetPosition(target);
+        int m1Pos = m1.getTargetPosition();
+        double stopTime = runtime.milliseconds() + timeOut;
+        while ( caller.opModeIsActive() && m1Pos != target && runtime.milliseconds() < stopTime ) {
+            m1.setTargetPosition(target);
+            m1Pos = m1.getTargetPosition();
+        }
+        return m1Pos == target;
+    }
+
     public void encoderDrive(LinearOpMode caller,
                              double speed,
                              double leftInches, double rightInches,
