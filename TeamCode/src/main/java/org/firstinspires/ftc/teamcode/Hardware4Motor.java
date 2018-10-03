@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 public class Hardware4Motor extends Hardware {
 
@@ -75,7 +78,7 @@ public class Hardware4Motor extends Hardware {
         RFront.setMode(mode);
         super.setEncoderMode(mode);
     }
-    @Override
+
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower, double leftFrontPower, double rightFrontPower) {
         LFront.setPower(leftFrontPower);
         RFront.setPower(rightFrontPower);
@@ -84,7 +87,7 @@ public class Hardware4Motor extends Hardware {
         caller.telemetry.addData("normalDrive:", "Front Power set to L:%.2f, R:%.2f", leftFrontPower, rightFrontPower);
 
 
-        super.normalDrive(leftBackPower, rightBackPower);
+        super.normalDrive(caller, leftBackPower, rightBackPower);
     }
     @Override
     public void encoderDrive(LinearOpMode caller,
@@ -192,7 +195,7 @@ public class Hardware4Motor extends Hardware {
             //     leftMidDrive.setPower(leftBackPower);
             //   rightMidDrive.setPower(rightBackPower);
             //}
-            caller.telemetry.addData("Power:", "Left Power %.2f, Right Power %.2f", leftBackPower, rightBackPower);
+            caller.telemetry.addData("Power:", "Left Power %.2f, Right Power %.2f", leftFrontPower, rightFrontPower);
             caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();

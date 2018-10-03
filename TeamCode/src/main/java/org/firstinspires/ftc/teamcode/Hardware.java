@@ -2,9 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -30,6 +35,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  */
 
 public class Hardware {
+
+    /* Keep track of the time, available to me and to sub-classes. */
+
+    protected ElapsedTime runtime = new ElapsedTime();
 
     /* This is the core of REV Expansion hubs, just the IMU's */
     public BNO055IMU imu = null;
@@ -77,6 +86,7 @@ public class Hardware {
         initMotor();      // Polymorphism should call one of my sub-classes initMotor().
         initServo();      // Ditto
         initSensor();     // Ditto squared
+        runtime.reset();  // Reset the runtime to be now, when we initialized
     }
 
     /**
