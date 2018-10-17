@@ -4,27 +4,28 @@ package org.firstinspires.ftc.teamcode;
  * Created by aagrockstar on 4/17/2018.
  */
 
+// TODO:  Refactor MecanumHelper Class to be sub-class of Hardware4Motor
+
 public class MecanumHelper {
 
     /**
-     * This method takes the values from the game pad and turns them into proper power
+     * This method takes the values from the x and y of game pad and turns them into proper power
      * settings for each of the motors.
      *
-     * @param magnitude
-     *  This is the hypotenuse from right triangle of left stick values
-     * @param angle
-     *  This is the ARC Tangent from right triangle of left stick values
-     * @param rotation
-     *  This is the right stick x for how quickly to rotate to the angle
+     * @param x
+     *  This is the x stick value, denoting the heading of the robot
+     * @param y
+     *  This is the y stick value, denoting the direction/translation of robot
      * @return
      *   An array of doubles for power values to left front, right front, left back and right back
      */
-        public double[] motorPower (double x, double y) {
+
+    public double[] motorPower (double x, double y) {
         double[] power = {0.0, 0.0, 0.0, 0.0};
 
-    double magnitude = Math.hypot(y, x);
-    double angle = Math.atan2(x, y) + Math.PI / 4;
-    double rotation = -x;
+        double magnitude = Math.hypot(y, x);
+        double angle = Math.atan2(x, y) + Math.PI / 4;
+        double rotation = -x;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
@@ -77,5 +78,7 @@ public class MecanumHelper {
         return power;
     }
 
+
+    // TODO:  Add encoderDrive() method for driving by encoders using Mecanum drive power sets
 
 }

@@ -89,6 +89,9 @@ public class Hardware4Motor extends Hardware {
 
         super.normalDrive(caller, leftBackPower, rightBackPower);
     }
+
+    // TODO: Fix encoderDrive() to set position and things on all 4 motors, not just 2 in H4M
+
     @Override
     public void encoderDrive(LinearOpMode caller,
                              double speed,

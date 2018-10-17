@@ -55,6 +55,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Mecanum Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
+// TODO:  Adjust to refactored MecanumHelper as sub-class of Hardware4Motor
+
 public class Mecanum_Drive extends OpMode {
 
     /* Declare OpMode members. */
