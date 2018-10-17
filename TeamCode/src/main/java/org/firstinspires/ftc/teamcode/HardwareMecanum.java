@@ -4,9 +4,8 @@ package org.firstinspires.ftc.teamcode;
  * Created by aagrockstar on 4/17/2018.
  */
 
-// TODO:  Refactor MecanumHelper Class to be sub-class of Hardware4Motor
 
-public class MecanumHelper {
+public class HardwareMecanum extends Hardware4Motor{
 
     /**
      * This method takes the values from the x and y of game pad and turns them into proper power
@@ -20,12 +19,12 @@ public class MecanumHelper {
      *   An array of doubles for power values to left front, right front, left back and right back
      */
 
-    public double[] motorPower (double x, double y) {
+    public double[] motorPower (double leftX, double leftY, double rightX) {
         double[] power = {0.0, 0.0, 0.0, 0.0};
 
-        double magnitude = Math.hypot(y, x);
-        double angle = Math.atan2(x, y) + Math.PI / 4;
-        double rotation = -x;
+        double magnitude = Math.hypot(leftY, leftX);
+        double angle = Math.atan2(leftX, leftY) + Math.PI / 4;
+        double rotation = -rightX;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
