@@ -41,16 +41,23 @@ public class Hardware4Motor extends Hardware {
     public void initMotor(boolean revLeft) {
         LFront = hwMap.dcMotor.get(Constants.LFRONT);
         RFront = hwMap.dcMotor.get(Constants.RFRONT);
+        LBack = hwMap.dcMotor.get(Constants.LBACK);
+        RBack = hwMap.dcMotor.get(Constants.RBACK);
 
         RFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if (revLeft)
             LFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            LBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
         LFront.setPower(0);
         RFront.setPower(0);
+        LBack.setPower(0);
+        RBack.setPower(0);
 
         super.initMotor(revLeft);
     }
