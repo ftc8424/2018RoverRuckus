@@ -55,14 +55,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Mecanum Trollbot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
-// TODO:  Adjust to refactored MecanumHelper as sub-class of Hardware4Motor
 
 public class Mecanum_Drive extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Hardware4Motor robot = new Hardware4Motor(hardwareMap);
-    private MecanumHelper drive = new MecanumHelper();
+    private HardwareMecanum robot = new HardwareMecanum();
 
 
     /*
@@ -70,7 +68,7 @@ public class Mecanum_Drive extends OpMode {
      */
     @Override
     public void init() {
-        robot.robot_init();
+        robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -116,7 +114,7 @@ public class Mecanum_Drive extends OpMode {
        * Math.atan2().
        */
 
-        double[] wheelPower = drive.motorPower(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double[] wheelPower = robot.motorPower(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         robot.LFront.setPower(wheelPower[0]);
         robot.RFront.setPower(wheelPower[1]);

@@ -14,17 +14,6 @@ public class Hardware4Motor extends Hardware {
     public DcMotor RFront = null;
 
     /**
-     * Constructor for Hardware types, takes the HardwareMap from the OpMode and saves it for later.
-     * Each sub-class should call super.Hardware(hw) in case any of the classes in the hierarchy
-     * wants to do something at construction time.
-     *
-     * @param hw The hardware map we'll use for this particular OpMode run
-     */
-    public Hardware4Motor(HardwareMap hw) {
-        super(hw);
-    }
-
-    /**
      * Configure and initialize the two back motors, with no reversal.  SUB-CLASS MUST OVERRIDE.
      * <p>
      * Polymorphism will cause sub-classes to call theirs and they must then call super.initMotor()
@@ -90,7 +79,6 @@ public class Hardware4Motor extends Hardware {
         super.normalDrive(caller, leftBackPower, rightBackPower);
     }
 
-    // TODO: Fix encoderDrive() to set position and things on all 4 motors, not just 2 in H4M
 
     @Override
     public void encoderDrive(LinearOpMode caller,
@@ -100,8 +88,8 @@ public class Hardware4Motor extends Hardware {
 
         int newLeftFrontTarget;
         int newRightFrontTarget;
-        //int newLeftBackTarget;
-        //int newRightBackTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
         //int getHeading = gyro.getIntegratedZValue();
         long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
 
@@ -110,6 +98,8 @@ public class Hardware4Motor extends Hardware {
 
         LFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // if ( robotType == FULLAUTO ) {
         // leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -126,9 +116,13 @@ public class Hardware4Motor extends Hardware {
         //} else {
         newLeftFrontTarget = 0;
         newRightFrontTarget = 0;
+        newRightBackTarget = 0;
+        newLeftBackTarget = 0;
         // }
         newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
         newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
+        newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
+        newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
 //        caller.telemetry.addLine("encoderDrive-MID:")
 //                .addData("Left Tgt POS: ", newLeftMidTarget)
 //                .addData("Right Tgt POS:" ,  newRightMidTarget);
@@ -137,19 +131,23 @@ public class Hardware4Motor extends Hardware {
 //                .addData("Right Tgt POS: ", newRightBackTarget);
 //        caller.telemetry.update();
 
-        boolean lmEncoderSet = false;
-        boolean rmEncoderSet = false;
+        boolean lfEncoderSet = false;
+        boolean rfEncoderSet = false;
         boolean lbEncoderSet = false;
         boolean rbEncoderSet = false;
 
+        lfEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
+        rfEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
         lbEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
         rbEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
         //  if ( robotType == FULLAUTO ) {
         //    lmEncoderSet = setEncoderPosition(caller, leftMidDrive, newLeftMidTarget, encoderTimeout);
         //     rmEncoderSet = setEncoderPosition(caller, rightMidDrive, newRightMidTarget, encoderTimeout);
         //} else {
-        lmEncoderSet = true;
-        rmEncoderSet = true;
+        lfEncoderSet = true;
+        rfEncoderSet = true;
+        lbEncoderSet = true;
+        rbEncoderSet = true;
         //  }
 //        caller.telemetry.addLine("EncoderSet:")
 //                .addData("LB: ", lbEncoderSet)
@@ -157,7 +155,7 @@ public class Hardware4Motor extends Hardware {
 //                .addData("LM: ", lmEncoderSet)
 //                .addData("RM: ", rmEncoderSet);
 //        caller.telemetry.update();
-        if ( ! (lmEncoderSet && lbEncoderSet && rmEncoderSet && rbEncoderSet) ) {
+        if ( ! (lfEncoderSet && lbEncoderSet && rfEncoderSet && rbEncoderSet) ) {
             caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
             caller.telemetry.update();
             caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
@@ -174,34 +172,49 @@ public class Hardware4Motor extends Hardware {
         boolean isBusy;
         int lfCurPos;
         int rfCurPos;
+        int lbCurPos;
+        int rbCurPob;
         double stopTime = runtime.seconds() + timeoutS;
         double leftFrontPower;
         double rightFrontPower;
+        double leftBackPower;
+        double rightBackPower;
         double lastSetTime = runtime.milliseconds();
         int HeadingLoop;
 
         do {
             leftFrontPower = speed;
             rightFrontPower = speed;
+            leftBackPower = speed;
+            rightBackPower = speed;
             if (leftFrontPower <= 0.01) {
                 lastSetTime = runtime.milliseconds();
                 leftFrontPower = speed;
                 rightFrontPower = speed;
+                leftBackPower = speed;
+                rightBackPower = speed;
             }
 
             leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
+            leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
+            rightBackPower = Range.clip(rightBackPower, -1.0, 1.0);
             LFront.setPower(leftFrontPower);
             RFront.setPower(rightFrontPower);
+            LBack.setPower(leftBackPower);
+            RBack.setPower(rightBackPower);
 
             //   if(robotType == FULLAUTO){
             //     leftMidDrive.setPower(leftBackPower);
             //   rightMidDrive.setPower(rightBackPower);
             //}
-            caller.telemetry.addData("Power:", "Left Power %.2f, Right Power %.2f", leftFrontPower, rightFrontPower);
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f" +
+                            leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
+            lbCurPos = LBack.getCurrentPosition();
+            rbCurPob = RBack.getCurrentPosition();
             //   if ( robotType == FULLAUTO ) {
             //      lmCurPos = leftMidDrive.getCurrentPosition();
             //      rmCurPos = rightMidDrive.getCurrentPosition();
@@ -210,13 +223,15 @@ public class Hardware4Motor extends Hardware {
             //  }
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
             //     if ( robotType == FULLAUTO )
-            //        isBusy = isBusy && (Math.abs(lmCurPos - newLeftMidTarget) >= 5) && (Math.abs(rmCurPos - newRightMidTarget) >= 5);
+            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPob - newRightBackTarget) >= 5);
         }
         while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
 
         // Stop all motion;
         LFront.setPower(0);
         RFront.setPower(0);
+        LBack.setPower(0);
+        RBack.setPower(0);
         // if ( robotType == FULLAUTO ) {
         //    leftMidDrive.setPower(0);
         //    rightMidDrive.setPower(0);
@@ -226,6 +241,8 @@ public class Hardware4Motor extends Hardware {
 
         LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //  if ( robotType == FULLAUTO ) {
         //      leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //      rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

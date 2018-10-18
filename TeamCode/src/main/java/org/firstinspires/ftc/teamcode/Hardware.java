@@ -64,24 +64,14 @@ public class Hardware {
     protected HardwareMap hwMap = null;
 
     /**
-     * Constructor for Hardware types, takes the HardwareMap from the OpMode and saves it for later.
-     * Each sub-class should call super.Hardware(hw) in case any of the classes in the hierarchy
-     * wants to do something at construction time.
-     *
-     * @param hw    The hardware map we'll use for this particular OpMode run
-     */
-    public Hardware(HardwareMap hw) {
-        hwMap = hw;
-    }
-
-    /**
      * This is the super-class robot_init() and it will call each initMotor(), initServo() and
      * initSensor() which should exist in the sub-classes, through polymorphism.  Each sub-class
      * that has motors should at least have a call to the right flavor of super.initMotor() to get
      * the back motors to work.  There aren't any servo's in the base class, but there's a super
      * catcher anyway just in case.
      */
-    public void robot_init() {
+    public void robot_init(HardwareMap hw) {
+        this.hwMap = hw;
         initIMU();        // Probably just the one in this base class
         initMotor();      // Polymorphism should call one of my sub-classes initMotor().
         initServo();      // Ditto
@@ -104,9 +94,9 @@ public class Hardware {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hwMap.get(BNO055IMU.class, Constants.IMU);
-        imu2 = hwMap.get(BNO055IMU.class, Constants.IMU2);
+        //imu2 = hwMap.get(BNO055IMU.class, Constants.IMU2);
         imu.initialize(parameters);
-        imu2.initialize(parameters);    // Use the same params, note will need different if orientation
+        //imu2.initialize(parameters);    // Use the same params, note will need different if orientation
 
     }
 
