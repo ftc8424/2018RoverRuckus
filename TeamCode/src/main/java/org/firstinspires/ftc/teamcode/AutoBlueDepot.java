@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
 // TODO: Things needed for Mineral Detector:
     // TODO:  Import Module for the DogeCV and OpenCV classes into AndroidStudio in this branch
     // TODO:  Incorporate the testing bits from the DogeCV into this branch, test those opModes
-    // TODO:  MERGE the origin/master branch into this one, to pick up the Mecanum refactoring done by Shriya and Jeffery
+    // TODO:  MERGE the origin/master branch into this one, to get the latest from Shriya and Jeffery
     // TODO:  Update THIS OpMode to start the basis of your Autonomous, blue side facing Depot including moves and such
 
 @TeleOp(name="Blue Depot", group="Test")
