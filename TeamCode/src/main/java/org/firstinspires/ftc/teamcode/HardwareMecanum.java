@@ -78,6 +78,8 @@ public class HardwareMecanum extends Hardware4Motor {
         return power;
     }
 
+    // TODO:  Does this actually work?  I thought it would require some calling to motorPower() to get the values for power
+    
     public void encoderDrive(LinearOpMode caller,
                              double speed,
                              double leftInches, double rightInches,

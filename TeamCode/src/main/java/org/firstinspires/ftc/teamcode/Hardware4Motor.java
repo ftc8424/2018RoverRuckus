@@ -37,6 +37,9 @@ public class Hardware4Motor extends Hardware {
      *
      * @param revLeft Should I reverse the left motors?
      */
+
+    // TODO: You pulled in the declaration of LBack and RBack into this method, super() should do that, no need to do it here.
+
     @Override
     public void initMotor(boolean revLeft) {
         LFront = hwMap.dcMotor.get(Constants.LFRONT);
@@ -49,6 +52,7 @@ public class Hardware4Motor extends Hardware {
         RBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // TODO:  Look closely and answer this:  Under what condition does LBack get set to REVERSE?
         if (revLeft)
             LFront.setDirection(DcMotorSimple.Direction.REVERSE);
             LBack.setDirection(DcMotorSimple.Direction.REVERSE);
