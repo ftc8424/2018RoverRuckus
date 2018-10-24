@@ -38,32 +38,27 @@ public class Hardware4Motor extends Hardware {
      * @param revLeft Should I reverse the left motors?
      */
 
-    // TODO: You pulled in the declaration of LBack and RBack into this method, super() should do that, no need to do it here.
+
 
     @Override
     public void initMotor(boolean revLeft) {
+
         LFront = hwMap.dcMotor.get(Constants.LFRONT);
         RFront = hwMap.dcMotor.get(Constants.RFRONT);
-        LBack = hwMap.dcMotor.get(Constants.LBACK);
-        RBack = hwMap.dcMotor.get(Constants.RBACK);
 
         RFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        RBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // TODO:  Look closely and answer this:  Under what condition does LBack get set to REVERSE?
-        if (revLeft)
+
+        if (revLeft) {
             LFront.setDirection(DcMotorSimple.Direction.REVERSE);
-            LBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+
+        super.initMotor(revLeft);
 
         this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
         LFront.setPower(0);
         RFront.setPower(0);
-        LBack.setPower(0);
-        RBack.setPower(0);
-
-        super.initMotor(revLeft);
     }
 
     /**
@@ -76,7 +71,7 @@ public class Hardware4Motor extends Hardware {
     public void setEncoderMode(DcMotor.RunMode mode) {
         LFront.setMode(mode);
         RFront.setMode(mode);
-        super.setEncoderMode(mode);
+        //super.setEncoderMode(mode);
     }
 
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower, double leftFrontPower, double rightFrontPower) {
@@ -219,7 +214,7 @@ public class Hardware4Motor extends Hardware {
             //     leftMidDrive.setPower(leftBackPower);
             //   rightMidDrive.setPower(rightBackPower);
             //}
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f" +
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
                             leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();

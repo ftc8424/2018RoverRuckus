@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by aagrockstar on 4/17/2018.
  */
@@ -122,13 +124,14 @@ public class HardwareMecanum extends Hardware4Motor {
         newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
         newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
         newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-//        caller.telemetry.addLine("encoderDrive-MID:")
-//                .addData("Left Tgt POS: ", newLeftMidTarget)
-//                .addData("Right Tgt POS:" ,  newRightMidTarget);
-//        caller.telemetry.addLine("EncoderDrive-BCK:")
-//                .addData("Left Tgt POS: ", newLeftBackTarget)
-//                .addData("Right Tgt POS: ", newRightBackTarget);
-//        caller.telemetry.update();
+        caller.telemetry.addLine("encoderDrive-MID:")
+               .addData("Left Tgt POS: ", newLeftFrontTarget)
+                .addData("Right Tgt POS:" ,  newRightFrontTarget);
+        caller.telemetry.addLine("EncoderDrive-BCK:")
+                .addData("Left Tgt POS: ", newLeftBackTarget)
+                .addData("Right Tgt POS: ", newRightBackTarget);
+       caller.telemetry.update();
+       sleep(1000);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;
@@ -207,13 +210,16 @@ public class HardwareMecanum extends Hardware4Motor {
             //     leftMidDrive.setPower(leftBackPower);
             //   rightMidDrive.setPower(rightBackPower);
             //}
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f" +
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
                     leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
             rbCurPob = RBack.getCurrentPosition();
+            caller.telemetry.addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
+                    lfCurPos, rfCurPos, lbCurPos, rbCurPob);
+            caller.telemetry.update();
             //   if ( robotType == FULLAUTO ) {
             //      lmCurPos = leftMidDrive.getCurrentPosition();
             //      rmCurPos = rightMidDrive.getCurrentPosition();
@@ -250,3 +256,7 @@ public class HardwareMecanum extends Hardware4Motor {
 
     }
 }
+
+
+
+

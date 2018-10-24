@@ -70,10 +70,12 @@ public class Hardware {
      * the back motors to work.  There aren't any servo's in the base class, but there's a super
      * catcher anyway just in case.
      */
-    public void robot_init(HardwareMap hw) {
+    public void robot_init(HardwareMap hw) { robot_init(hw, false); }
+    public void robot_init(HardwareMap hw, boolean revLeft) {
         this.hwMap = hw;
         initIMU();        // Probably just the one in this base class
-        initMotor();      // Polymorphism should call one of my sub-classes initMotor().
+        initMotor(revLeft);      // Polymorphism should call one of my sub-classes initMotor().
+
         initServo();      // Ditto
         initSensor();     // Ditto squared
         runtime.reset();  // Reset the runtime to be now, when we initialized
