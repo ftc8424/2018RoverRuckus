@@ -21,6 +21,8 @@ public final class Constants {
     public static final String LFRONT = "l front";
     public static final String RFRONT = "r front";
 
+    public static final String ColorSensor = "Color Sensor";
+
     /**
      * The Vuforia license key, used by all opModes
      *
