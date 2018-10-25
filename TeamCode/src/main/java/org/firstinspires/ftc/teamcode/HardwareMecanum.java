@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Thread.sleep;
@@ -12,6 +13,14 @@ import static java.lang.Thread.sleep;
 
 
 public class HardwareMecanum extends Hardware4Motor {
+
+    public void initMotor(boolean revLeft) {
+        super.initMotor(revLeft);
+        LFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        RFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        LBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        RBack.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
 
     /**
      * This method takes the values from the x and y of game pad and turns them into proper power
@@ -81,7 +90,7 @@ public class HardwareMecanum extends Hardware4Motor {
     }
 
     // TODO:  Does this actually work?  I thought it would require some calling to motorPower() to get the values for power
-    
+
     public void encoderDrive(LinearOpMode caller,
                              double speed,
                              double leftInches, double rightInches,
@@ -101,37 +110,19 @@ public class HardwareMecanum extends Hardware4Motor {
         RFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // if ( robotType == FULLAUTO ) {
-        // leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //}
 
-
-
-        /*
-         * Determine new target position and pass to motor controller
-         */
-        // if ( robotType == FULLAUTO ) {
-        //   newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-        // newRightMidTarget = rightMidDrive.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-        //} else {
-        newLeftFrontTarget = 0;
-        newRightFrontTarget = 0;
-        newRightBackTarget = 0;
-        newLeftBackTarget = 0;
-        // }
         newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
         newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
         newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
         newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-        caller.telemetry.addLine("encoderDrive-MID:")
-               .addData("Left Tgt POS: ", newLeftFrontTarget)
-                .addData("Right Tgt POS:" ,  newRightFrontTarget);
-        caller.telemetry.addLine("EncoderDrive-BCK:")
-                .addData("Left Tgt POS: ", newLeftBackTarget)
-                .addData("Right Tgt POS: ", newRightBackTarget);
+        caller.telemetry.addLine("encoderDrive-Front")
+               .addData("Left Tgt POS", newLeftFrontTarget)
+                .addData("Right Tgt POS" ,  newRightFrontTarget);
+        caller.telemetry.addLine("EncoderDrive-Back:")
+                .addData("Left Tgt POS", newLeftBackTarget)
+                .addData("Right Tgt POS", newRightBackTarget);
        caller.telemetry.update();
-       sleep(1000);
+       sleep(2000);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;
@@ -140,23 +131,8 @@ public class HardwareMecanum extends Hardware4Motor {
 
         lfEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
         rfEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
-        lbEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
-        rbEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
-        //  if ( robotType == FULLAUTO ) {
-        //    lmEncoderSet = setEncoderPosition(caller, leftMidDrive, newLeftMidTarget, encoderTimeout);
-        //     rmEncoderSet = setEncoderPosition(caller, rightMidDrive, newRightMidTarget, encoderTimeout);
-        //} else {
-        lfEncoderSet = true;
-        rfEncoderSet = true;
-        lbEncoderSet = true;
-        rbEncoderSet = true;
-        //  }
-//        caller.telemetry.addLine("EncoderSet:")
-//                .addData("LB: ", lbEncoderSet)
-//                .addData("RB: ", rbEncoderSet)
-//                .addData("LM: ", lmEncoderSet)
-//                .addData("RM: ", rmEncoderSet);
-//        caller.telemetry.update();
+        lbEncoderSet = setEncoderPosition(caller, LBack, newLeftBackTarget, encoderTimeout);
+        rbEncoderSet = setEncoderPosition(caller, RBack, newRightBackTarget, encoderTimeout);
         if (!(lfEncoderSet && lbEncoderSet && rfEncoderSet && rbEncoderSet)) {
             caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
             caller.telemetry.update();
@@ -164,18 +140,12 @@ public class HardwareMecanum extends Hardware4Motor {
             return;
         }
 
-        // reset the timeout time and start motion.
-
-//        caller.telemetry.addLine("Encoder Drive: ")
-//                .addData("PowerSet: ", "%.4f", Math.abs(speed));
-//        caller.telemetry.update();
-
         // keep looping while we are still active, and there is time left, and motors haven't made position.
         boolean isBusy;
         int lfCurPos;
         int rfCurPos;
         int lbCurPos;
-        int rbCurPob;
+        int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
         double leftFrontPower;
         double rightFrontPower;
@@ -206,29 +176,17 @@ public class HardwareMecanum extends Hardware4Motor {
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
 
-            //   if(robotType == FULLAUTO){
-            //     leftMidDrive.setPower(leftBackPower);
-            //   rightMidDrive.setPower(rightBackPower);
-            //}
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
-                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
-            caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
-            rbCurPob = RBack.getCurrentPosition();
-            caller.telemetry.addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
-                    lfCurPos, rfCurPos, lbCurPos, rbCurPob);
+            rbCurPos = RBack.getCurrentPosition();
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
+                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower)
+                   .addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
+                    lfCurPos, rfCurPos, lbCurPos, rbCurPos);
             caller.telemetry.update();
-            //   if ( robotType == FULLAUTO ) {
-            //      lmCurPos = leftMidDrive.getCurrentPosition();
-            //      rmCurPos = rightMidDrive.getCurrentPosition();
-            //  } else {
-
-            //  }
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
-            //     if ( robotType == FULLAUTO )
-            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPob - newRightBackTarget) >= 5);
+            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
         }
         while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
 
@@ -237,21 +195,12 @@ public class HardwareMecanum extends Hardware4Motor {
         RFront.setPower(0);
         LBack.setPower(0);
         RBack.setPower(0);
-        // if ( robotType == FULLAUTO ) {
-        //    leftMidDrive.setPower(0);
-        //    rightMidDrive.setPower(0);
-        // }
-
-        // Turn off RUN_TO_POSITION
 
         LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //  if ( robotType == FULLAUTO ) {E
-        //      leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //      rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //  }
+
         // TODO:  Add encoderDrive() method for driving by encoders using Mecanum drive power sets
 
     }

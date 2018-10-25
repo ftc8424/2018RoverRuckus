@@ -70,9 +70,26 @@ public class MecanumEncoderTest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        robot.encoderDrive(this, 0.75, 24, 24 ,1);
-        sleep(2000);
-        robot.encoderDrive(this, 0.75, -24, -24 ,1);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(1000);
+        robot.encoderDrive(this, 0.75, 24, 24 ,10);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(5000);
+        robot.encoderDrive(this, 0.75, -24, -24 ,10);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(5000);
 
     }
 }

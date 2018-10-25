@@ -51,9 +51,11 @@ public class Hardware {
     /*
      * Protected instance variables (meaning, my sub-classes can see these as well).
      */
+    // TODO: Create class of encoder values for all different motor encoders and allow classes to select/override per robot type
+
     /* Wheel ratio values for the encoders (see end of this file for calculations). */
-    protected static final int   COUNTS_PER_SECOND_MAX = 2800;  // AndyMark NeveRest 40:1/20:1
-    protected static final double COUNTS_PER_MOTOR_REV = 1120;  // AndyMark NeveRest 40:1 CPR
+    protected static final int   COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
+    protected static final double COUNTS_PER_MOTOR_REV = 288;  // AndyMark NeveRest 40:1 CPR
     protected static final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
     protected static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
 
@@ -392,5 +394,28 @@ public class Hardware {
  *
  * So, for these two motors, the encoder COUNTS_PER_MOTOR_REV above would be 1,120 for the 40:1
  * and 560 for the 20:1, and the COUNTS_PER_SECOND_MAX above would be 2800 for both.
+ *
+ * Here are the values for the REV Robotics Core Hex and HD Hex gearboxes
+ *
+ *     REV Core Hex Motors:
+ *     --------------------
+ *          4 cycles per rotation of encoder shaft and a 72:1 gearbox, so 4*72
+ *        288 counts per revolution of the OUTPUT SHAFT (e.g., the motor shaft)
+ *        125 revolutions per minute of output shaft (RPM), so (288 * 125) / 60 ==
+ *        600 counts per second is the max Speed setting of the encoders on this motor
+ *
+ *     REV HD Hex Motors (40:1 Gearbox):
+ *     ----------------------------------
+ *         28 cycles per rotation of encoder shaft and a 40:1 gearbox, so 28*40
+ *       1120 counts per revolution of the OUTPUT SHAFT (e.g., the motor shaft)
+ *        150 revolutions per minute of output shaft (RPM), so (1120 * 150) / 60 ==
+ *       2800 counts per second is the max Speed setting of the encoders on this motor
+ *
+ *     REV HD Hex Motors (20:1 Gearbox):
+ *     ----------------------------------
+ *         28 cycles per rotation of encoder shaft and a 20:1 gearbox, so 28*20
+ *        560 counts per revolution of the OUTPUT SHAFT (e.g., the motor shaft)
+ *        300 revolutions per minute of output shaft (RPM), so (560 * 300) / 60 ==
+ *       2800 counts per second is the max Speed setting of the encoders on this motor
  *
  *************************************************************************************************/

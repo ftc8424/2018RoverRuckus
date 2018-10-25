@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -69,6 +70,15 @@ public class Mecanum_Drive extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap);
+        robot.LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -114,17 +124,17 @@ public class Mecanum_Drive extends OpMode {
        * Math.atan2().
        */
 
-        double[] wheelPower = robot.motorPower(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        double[] wheelPower = robot.motorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, -gamepad1.right_stick_x);
 
         robot.LFront.setPower(wheelPower[0]);
         robot.RFront.setPower(wheelPower[1]);
         robot.LBack.setPower(wheelPower[2]);
         robot.RBack.setPower(wheelPower[3]);
 
-        telemetry.addData("Left Front Power", wheelPower[0])
-                 .addData("Right Front Power", wheelPower[1])
-                 .addData("Left Back Power", wheelPower[2])
-                 .addData("Right Back Power", wheelPower[3]);
+        telemetry.addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
+                 .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
+                 .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
+                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
 
     } // loop
 
