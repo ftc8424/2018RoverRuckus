@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -22,20 +22,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
  * It is NOT an OpMode or any of the others, it's a helper class that has the hardware
  * map and some of the helper methods that are needed for all OpModes.
  *
- * Starting in the 2018-19 season, this is no longer the HardwareHepler class, but the Hardware
+ * Starting in the 2018-19 season, this is no longer the HardwareHepler class, but the Base
  * base class which supports a two-wheel robot and two IMU's (REV electronics).
  * All other components of a robot will extend this class to define the characteristics of that
  * particular robot (e.g., a 4-wheel robot).  This will then build a full class hierarchy of
- * Hardware components so if the robot is a 4-motor robot with just a manipulator, then it might
- * be defined as class Manip4Motor extends Hardware4Motor {} with class Hardware4Motor
- * extends Hardware {}.
+ * Base components so if the robot is a 4-motor robot with just a manipulator, then it might
+ * be defined as class Manip4Motor extends Motor4 {} with class Motor4
+ * extends Base {}.
  *
  * This class relies on the Constants class for pulling the values for the things in the
  * configuration file of the robot controller.
  *
  */
 
-public class Hardware {
+public class Base {
 
     /* Keep track of the time, available to me and to sub-classes. */
 

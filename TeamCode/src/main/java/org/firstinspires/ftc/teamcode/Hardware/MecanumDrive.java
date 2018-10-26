@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +12,7 @@ import static java.lang.Thread.sleep;
  */
 
 
-public class HardwareMecanum extends Hardware4Motor {
+public class MecanumDrive extends Motor4 {
 
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);

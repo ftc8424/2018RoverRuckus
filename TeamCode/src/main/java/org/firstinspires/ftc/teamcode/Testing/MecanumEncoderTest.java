@@ -27,15 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 
 
 /**
@@ -51,24 +49,22 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Crater", group="Linear Opmode")
-public class AutoBlueCrater extends LinearOpMode {
+@Autonomous(name="Mec Encoder Test", group="Linear Opmode")
+public class MecanumEncoderTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
-    private HardwareMecanum robot = new HardwareMecanum();
-    int yellowValue = 0;
-    int whiteValue = 0;
+    private MecanumDrive robot = new MecanumDrive();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+        robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
 
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
@@ -78,20 +74,20 @@ public class AutoBlueCrater extends LinearOpMode {
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(1000);
-        robot.encoderDrive(this, 0.75, 19, 19, 10);
+        robot.encoderDrive(this, 0.75, 24, 24 ,10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        if (){
+        sleep(5000);
+        robot.encoderDrive(this, 0.75, -24, -24 ,10);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(5000);
 
-        
-        telemetry.addData("color yellow", yellowValue);
-        telemetry.addData("color white", whiteValue);
     }
 }
-
-
-
-
