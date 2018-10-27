@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  */
 
 @Autonomous(name="Auto Blue Crater", group="Linear Opmode")
-public class AutoBlueCrater extends LinearOpMode {
+public class AutoRedCrater extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
