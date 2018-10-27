@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -14,12 +15,33 @@ import static java.lang.Thread.sleep;
 
 public class MecanumDrive extends Motor4 {
 
+    private MecanumDrive robot = new MecanumDrive();
+
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
         LFront.setDirection(DcMotorSimple.Direction.REVERSE);
         RFront.setDirection(DcMotorSimple.Direction.REVERSE);
         LBack.setDirection(DcMotorSimple.Direction.REVERSE);
         RBack.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+    @Override
+    public void initSensor(){
+        super.initSensor();
+        color = hwMap.colorSensor.get(Constants.ColorSensor);
+    }
+
+    public boolean isGold(){
+        int redValue = robot.color.red();
+        int blueValue = robot.color.blue();
+        int greenValue = robot.color.green();
+        if (blueValue > 10 && greenValue > 10 && redValue > 15){
+            return false;
+        }
+        else if (blueValue < 10 && greenValue < 10 && redValue > 10) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

@@ -59,7 +59,7 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  */
 @TeleOp(name="Mecanum Trollbot", group="Iterative Opmode")
 
-public class Mecanum_Drive extends OpMode {
+public class MecanumTest extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -137,6 +137,14 @@ public class Mecanum_Drive extends OpMode {
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
                  .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
+        int redValue = robot.color.red();
+        int blueValue = robot.color.blue();
+        int greenValue = robot.color.green();
+        telemetry.addData("color blue", blueValue);
+        telemetry.addData("color red", redValue);
+        telemetry.addData("color green", greenValue);
+        telemetry.addData("isGold", robot.isGold());
+
 
     } // loop
 

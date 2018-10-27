@@ -167,7 +167,7 @@ public class Base {
      * This method is catcher for super.initSensor() calls, but there are no sensors (other than
      * IMU) in this base class, so this call just returns immediately.
      */
-    private void initSensor() {
+    public void initSensor() {
         // No sensors in this base class, but needs to be here to catch super.initSensor();
     }
 
