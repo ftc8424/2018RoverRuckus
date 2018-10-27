@@ -89,8 +89,15 @@ public class MecanumDrive extends Motor4 {
         return power;
     }
 
-    // TODO:  Does this actually work?  I thought it would require some calling to motorPower() to get the values for power
+    // TODO:  Replace encoderStrafe() stub with real code that makes it go right/left based on inches
 
+    public void encoderStrafe(LinearOpMode caller,
+                              double speed,
+                              double leftInches, double rightInches,
+                              double timeoutS) throws InterruptedException {
+        encoderDrive(caller, speed, leftInches, rightInches, timeoutS);
+    }
+    
     public void encoderDrive(LinearOpMode caller,
                              double speed,
                              double leftInches, double rightInches,

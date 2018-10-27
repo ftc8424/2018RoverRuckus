@@ -50,13 +50,11 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Crater", group="Linear Opmode")
-public class AutoRedCrater extends LinearOpMode {
+@Autonomous(name="Auto Depot", group="Linear Opmode")
+public class AutoDepot extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
     private MecanumDrive robot = new MecanumDrive();
     boolean yellowValue = false;
     boolean whiteValue = false;
@@ -83,34 +81,85 @@ public class AutoRedCrater extends LinearOpMode {
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        if (whiteValue) {
-            robot.encoderStrafe(this, 0.75, 0, 19, 10);  // TODO Strafe right 15 inches
+        if (yellowValue) {
+            robot.encoderDrive(this, 0.75, 4, 4, 10);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                     .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
             telemetry.update();
             sleep(1000);
-            if (whiteValue) {
-                robot.encoderStrafe(this, 0.75, 0, 19, 10);  // TODO Strafe right 15 inches
+            robot.encoderDrive(this, 0.75, -4, -4, 10);
+            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+            robot.encoderStrafe(this, 0.75, 0, 84, 10);  // TODO Strafe right 84 inches
+            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+        } else {
+            robot.encoderStrafe(this, 0.75, 0, 84, 10);  // TODO Strafe right 15 inches
+            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.update();
+            sleep(1000);
+            if (yellowValue) {
+
+                robot.encoderDrive(this, 0.75, 4, 4, 10);
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                         .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                 telemetry.update();
                 sleep(1000);
+                robot.encoderDrive(this, 0.75, -4, -4, 10);
+                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.update();
+                sleep(1000);
+                robot.encoderStrafe(this, 0.75, 0, 69, 10);  // TODO Strafe right 69 inches
+                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.update();
+                sleep(1000);
+            } else {
+                robot.encoderDrive(this, 0.75, 4, 4, 10);
+                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.update();
+                sleep(1000);
+                robot.encoderDrive(this, 0.75, -4, -4, 10);
+                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.update();
+                sleep(1000);
+                robot.encoderStrafe(this, 0.75, 0, 54, 10);  // TODO Strafe right 54 inches
+                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.update();
+                sleep(1000);
+
             }
         }
-             else {
-        robot.encoderDrive(this, 0.75, 18, 18, 10);
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.update();
-        }
 
-        
         telemetry.addData("color yellow", yellowValue);
         telemetry.addData("color white", whiteValue);
     }

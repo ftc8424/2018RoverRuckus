@@ -50,13 +50,11 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Crater", group="Linear Opmode")
-public class AutoBlueCrater extends LinearOpMode {
+@Autonomous(name="Auto Crater", group="Linear Opmode")
+public class AutoCrater extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
     private MecanumDrive robot = new MecanumDrive();
     boolean yellowValue = false;
     boolean whiteValue = false;
