@@ -15,8 +15,6 @@ import static java.lang.Thread.sleep;
 
 public class MecanumDrive extends Motor4 {
 
-    private MecanumDrive robot = new MecanumDrive();
-
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
         LFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -31,9 +29,9 @@ public class MecanumDrive extends Motor4 {
     }
 
     public boolean isGold(){
-        int redValue = robot.color.red();
-        int blueValue = robot.color.blue();
-        int greenValue = robot.color.green();
+        int redValue = color.red();
+        int blueValue = color.blue();
+        int greenValue = color.green();
         if (blueValue > 10 && greenValue > 10 && redValue > 15){
             return false;
         }

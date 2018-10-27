@@ -59,7 +59,7 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  */
 @TeleOp(name="Mecanum Trollbot", group="Iterative Opmode")
 
-public class MecanumTest extends OpMode {
+public class MecanumTrollbot extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -72,6 +72,7 @@ public class MecanumTest extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap);
+/*
         robot.LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -81,6 +82,7 @@ public class MecanumTest extends OpMode {
         robot.RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+*/
         telemetry.addData("Status", "Initialized");
     }
 
