@@ -62,6 +62,7 @@ public class AutoCrater extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -69,49 +70,54 @@ public class AutoCrater extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.update();
-        sleep(1000);
         robot.encoderDrive(this, 0.75, 19, 19, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.addData("is it gold", robot.isGold());
+        telemetry.addData("blueValue", robot.color.blue());
+        telemetry.addData("redValue", robot.color.red());
+        telemetry.addData("greenValue", robot.color.green());
         telemetry.update();
-        if (whiteValue) {
-            robot.encoderStrafe(this, 0.75, 0, 19, 10);  // TODO Strafe right 15 inches
+        if (robot.isGold() == false) {
+            robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                     .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.addData("is it gold", robot.isGold());
+            telemetry.addData("blueValue", robot.color.blue());
+            telemetry.addData("redValue", robot.color.red());
+            telemetry.addData("greenValue", robot.color.green());
             telemetry.update();
-            sleep(1000);
-            if (whiteValue) {
-                robot.encoderStrafe(this, 0.75, 0, 19, 10);  // TODO Strafe right 15 inches
+            if (robot.isGold() == false) {
+                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                         .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                 telemetry.update();
-                sleep(1000);
+                if (robot.isGold() == true) {
+                    robot.encoderDrive(this, 0.75, 5, 5, 10);
+                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                    telemetry.update();
+                } else {
+                    telemetry.addData("IS NOT GOLD", "EXITING");
+                    telemetry.update();
+                    sleep(2000);
+                }
+            } else {
+                robot.encoderDrive(this, 0.75, 5, 5, 10);
             }
+        } else {
+            robot.encoderDrive(this, 0.75, 5, 5, 10);
         }
-             else {
-        robot.encoderDrive(this, 0.75, 18, 18, 10);
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.update();
-        }
-
-        
-        telemetry.addData("color yellow", yellowValue);
-        telemetry.addData("color white", whiteValue);
-    }
+        // TODO: Put rest of movement, for crater park and/or deploy marker
+   }
 }
 
 

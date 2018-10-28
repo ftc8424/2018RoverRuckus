@@ -62,6 +62,7 @@ public class AutoDepot extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
