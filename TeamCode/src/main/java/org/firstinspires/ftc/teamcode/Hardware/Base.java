@@ -127,17 +127,17 @@ public class Base {
      * If this is a holonomic drive (e.g., Mecanum or omni-wheel in crab-drive format) then you
      * don't want to do that, so pass with false (or just call the version without parameters).
      *
-     * @param revLeft    Should I reverse the left motors?
+     * @param revRight    Should I reverse the left motors?
      */
-    public void initMotor(boolean revLeft) {
+    public void initMotor(boolean revRight) {
         LBack = hwMap.dcMotor.get(Constants.LBACK);
         RBack = hwMap.dcMotor.get(Constants.RBACK);
 
         RBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (revLeft)
-            LBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (revRight)
+            RBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
         LBack.setPower(0);

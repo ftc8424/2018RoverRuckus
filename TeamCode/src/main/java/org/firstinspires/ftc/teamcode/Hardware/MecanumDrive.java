@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -15,8 +14,8 @@ import static java.lang.Thread.sleep;
 
 public class MecanumDrive extends Motor4 {
 
-    public void initMotor(boolean revLeft) {
-        super.initMotor(revLeft);
+    public void initMotor(boolean revRight) {
+        super.initMotor(revRight);
         LFront.setDirection(DcMotorSimple.Direction.REVERSE);
         RFront.setDirection(DcMotorSimple.Direction.REVERSE);
         LBack.setDirection(DcMotorSimple.Direction.REVERSE);
