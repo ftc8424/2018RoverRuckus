@@ -182,7 +182,7 @@ public class Base {
     }
 
     /**
-     * Get the heading of the IMU specified in a 0-359 format, with 0-180 being left and 181-359 right
+     * Get the heading of the IMU specified in a 0-359 format, with 0-180 being right and 181-359 left
      * of primary orientation.
      *
      * @param imu    The specific IMU to use (e.g., robot.imu2 or robot.imu)

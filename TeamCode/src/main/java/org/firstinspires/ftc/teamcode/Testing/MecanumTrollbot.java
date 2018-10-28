@@ -146,7 +146,7 @@ public class MecanumTrollbot extends OpMode {
         telemetry.addData("color red", redValue);
         telemetry.addData("color green", greenValue);
         telemetry.addData("isGold", robot.isGold());
-
+        telemetry.addData ("heading", robot.getHeading());
 
     } // loop
 
