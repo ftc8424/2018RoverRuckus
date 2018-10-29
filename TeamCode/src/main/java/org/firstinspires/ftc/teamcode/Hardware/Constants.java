@@ -23,6 +23,8 @@ public final class Constants {
 
     public static final String ColorSensor = "Color Sensor";
 
+    public static final double TURN_SPEED = 0.3;
+
     /**
      * The Vuforia license key, used by all opModes
      *

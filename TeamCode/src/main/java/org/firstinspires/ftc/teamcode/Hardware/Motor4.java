@@ -73,6 +73,12 @@ public class Motor4 extends Base {
         //super.setEncoderMode(mode);
     }
 
+    public void normalDrive (OpMode caller, double leftPower, double rightPower) {
+        super.normalDrive(caller, leftPower, rightPower);
+        LFront.setPower(leftPower);
+        LBack.setPower(rightPower);
+    }
+
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower, double leftFrontPower, double rightFrontPower) {
         LFront.setPower(leftFrontPower);
         RFront.setPower(rightFrontPower);

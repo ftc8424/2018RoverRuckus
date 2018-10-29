@@ -205,6 +205,61 @@ public class Base {
         }
         return retVal;
     }
+    /**
+     * TODO THIS ROUTINE NEEDS TO BE REPLACED - REVERTED due to other errors
+     *
+     * The code shuld come from the PushbotAutoDriveByGyro.java file as well as the helper
+     * methods such as onHeading, gyroHold, etc., but it needs to take into account the robotType
+     * so that it only sends power to the appropriate motors.
+     *
+     * @param caller
+     * @param heading
+     * @param timeoutS
+     * @return
+     * @throws InterruptedException
+     */
+    public boolean gyroTurn(LinearOpMode caller,
+                            double heading,
+                            double timeoutS) throws InterruptedException {
+        int zValue;
+        double gHeading;
+        int heading360;
+        int absHeading;
+        double deltaHeading;
+        double rightPower;
+        double leftPower;
+        double turnspeed = Constants.TURN_SPEED;
+        double stopTime = runtime.seconds() + timeoutS;
+
+        do {
+            gHeading = getHeading();
+
+            caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
+            caller.telemetry.update();
+            /*
+             * Turn left if the difference from where we're heading to where we want to head
+             * is smaller than -180 or is between 1 and 180.  All else (including the 0 and 180
+             * situations) turn right.
+             */
+            deltaHeading = gHeading - heading;
+            if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
+                leftPower = -turnspeed;
+                rightPower = turnspeed;
+            } else {
+                leftPower = turnspeed;
+                rightPower = -turnspeed;
+            }
+            normalDrive(caller, leftPower, rightPower);
+            gHeading = getHeading();
+        }
+        while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 0.4 && runtime.seconds() < stopTime );
+
+        normalDrive(caller, 0.0, 0.0);
+        if ( Math.abs(gHeading - heading) <= 1 )
+            return true;
+        else
+            return false;
+    }
 
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower) {
         LBack.setPower(leftBackPower);
