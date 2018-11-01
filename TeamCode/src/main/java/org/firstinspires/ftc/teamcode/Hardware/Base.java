@@ -226,14 +226,16 @@ public class Base {
         int heading360;
         int absHeading;
         double deltaHeading;
+        double deltaAngle = Math.abs(deltaHeading);
         double rightPower;
         double leftPower;
-        double turnspeed = Constants.TURN_SPEED;
+        double turnspeed;
+        double turnFloor = .1
         double stopTime = runtime.seconds() + timeoutS;
-        double BlueDepotAngle = 30
-        double BlueCraterAngle = 120
-        double RedDepotAngle = 210
-        double RedCraterAngle = 300
+        double BlueDepotAngle = 30;
+        double BlueCraterAngle = 120;
+        double RedDepotAngle = 210;
+        double RedCraterAngle = 300;
 
         do {
             gHeading = getHeading();
@@ -246,6 +248,10 @@ public class Base {
              * situations) turn right.
              */
             deltaHeading = gHeading - heading;
+            turnspeed = deltaAngle/360
+            if (turnspeed < .1){
+                turnspeed = turnFloor;
+            }
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
                 rightPower = turnspeed;
