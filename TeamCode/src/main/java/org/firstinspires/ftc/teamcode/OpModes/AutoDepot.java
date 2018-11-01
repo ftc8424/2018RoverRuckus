@@ -84,20 +84,13 @@ public class AutoDepot extends LinearOpMode {
         public boolean gyroTurn(LinearOpMode caller,
         double heading,
         double timeoutS) throws InterruptedException {
-            int zValue;
-            double gHeading;
-            int heading360;
-            int absHeading;
-            double deltaHeading;
-            double rightPower;
-            double leftPower;
-            double turnspeed = Constants.TURN_SPEED;
-            double stopTime = runtime.seconds() + timeoutS;
+            double BlueDepotAngle = 30
+            double BlueCraterAngle = 120
+            double RedDepotAngle = 210
+            double RedCraterAngle = 300
 
-            do {
-                gHeading = getHeading();
 
-                caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
+            caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
                 caller.telemetry.update();
             robot.encoderDrive(this, 0.75, 19, 19, 10);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
