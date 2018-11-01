@@ -58,6 +58,8 @@ public class AutoCrater extends LinearOpMode {
     private MecanumDrive robot = new MecanumDrive();
     boolean yellowValue = false;
     boolean whiteValue = false;
+    protected double initialHeading = 0;
+    protected double timeoutS = 2;
 
 
     @Override
@@ -68,20 +70,28 @@ public class AutoCrater extends LinearOpMode {
 
 
         waitForStart();
-        runtime.reset();
+        boolean b = robot.gyroTurn(this, initialHeading, timeoutS);
+        if (b) {
+            public boolean gyroTurn(LinearOpMode caller,
+            double heading,
+            double timeoutS) throws InterruptedException {
+                int zValue;
+                double gHeading;
+                int heading360;
+                int absHeading;
+                double deltaHeading;
+                double rightPower;
+                double leftPower;
+                double turnspeed = Constants.TURN_SPEED;
+                double stopTime = runtime.seconds() + timeoutS;
 
-        robot.encoderDrive(this, 0.75, 19, 19, 10);
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.addData("is it gold", robot.isGold());
-        telemetry.addData("blueValue", robot.color.blue());
-        telemetry.addData("redValue", robot.color.red());
-        telemetry.addData("greenValue", robot.color.green());
-        telemetry.update();
-        if (robot.isGold() == false) {
-            robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
+                do {
+                    gHeading = getHeading();
+
+                    caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
+                    caller.telemetry.update();
+            runtime.reset();
+            robot.encoderDrive(this, 0.75, 19, 19, 10);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -91,32 +101,55 @@ public class AutoCrater extends LinearOpMode {
             telemetry.addData("redValue", robot.color.red());
             telemetry.addData("greenValue", robot.color.green());
             telemetry.update();
+
+
             if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
+                robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                         .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.addData("is it gold", robot.isGold());
+                telemetry.addData("blueValue", robot.color.blue());
+                telemetry.addData("redValue", robot.color.red());
+                telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
-                if (robot.isGold() == true) {
-                    robot.encoderDrive(this, 0.75, 5, 5, 10);
+                if (robot.isGold() == false) {
+                    robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                     telemetry.update();
+                    if (robot.isGold() == true) {
+                        robot.encoderDrive(this, 0.75, 5, 5, 10);
+                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                        telemetry.update();
+                    } else {
+                        telemetry.addData("IS NOT GOLD", "EXITING");
+                        telemetry.update();
+                        sleep(2000);
+                    }
                 } else {
-                    telemetry.addData("IS NOT GOLD", "EXITING");
-                    telemetry.update();
-                    sleep(2000);
+                    robot.encoderDrive(this, 0.75, 5, 5, 10);
                 }
             } else {
                 robot.encoderDrive(this, 0.75, 5, 5, 10);
             }
-        } else {
-            robot.encoderDrive(this, 0.75, 5, 5, 10);
         }
-        // TODO: Put rest of movement, for crater park and/or deploy marker
+        else {
+            // TODO: Put rest of movement, for crater park and/or deploy marker
+            robot.encoderDrive(this, 0.75, 5, 5, 10);
+            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.update();
+
+        }
    }
 }
 
