@@ -239,7 +239,6 @@ public class Base {
 
         do {
             gHeading = getHeading();
-
             caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
             caller.telemetry.update();
             /*
