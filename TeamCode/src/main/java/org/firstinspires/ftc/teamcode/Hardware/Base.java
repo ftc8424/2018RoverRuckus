@@ -230,10 +230,10 @@ public class Base {
         double leftPower;
         double turnspeed = Constants.TURN_SPEED;
         double stopTime = runtime.seconds() + timeoutS;
-        double BlueDepotAngle = 30
-        double BlueCraterAngle = 120
-        double RedDepotAngle = 210
-        double RedCraterAngle = 300
+        double BlueDepotAngle = 30;
+        double BlueCraterAngle = 120;
+        double RedDepotAngle = 210;
+        double RedCraterAngle = 300;
 
         do {
             gHeading = getHeading();
