@@ -70,7 +70,32 @@ public class AutoCrater extends LinearOpMode {
 
 
         waitForStart();
-        boolean b = robot.gyroTurn(this, initialHeading, timeoutS);
+        boolean b = false;
+        int times = 0;
+        do {
+            b = robot.gyroTurn(this, initialHeading, timeoutS);
+            if (b = false) {
+                double heading = robot.getHeading();
+                switch (times) {
+                    case 0:
+                        robot.encoderStrafe(this,.75, 2, 0, 2);
+                        break;
+                    case 1:
+                        robot.encoderStrafe(this, .75, 0, 4, 2);
+                        break;
+                    case 2:
+                        if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
+                        if (heading >= 91 && heading <= 180) robot.encoderDrive(this, .75, -4, -4, 2);
+                        if (heading >= 181 && heading <= 269) robot.encoderDrive(this, .75, 4, 4, 2);
+                        if (heading >= 270 && heading <= 359) robot.encoderDrive(this, .75, -4, -4, 2);
+                        break;
+                }
+            }
+
+
+        }
+        while (opModeIsActive() && b == false && times++ < 3);
+
         if (b) {
             public boolean gyroTurn(LinearOpMode caller,
             double heading,
