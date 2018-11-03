@@ -226,11 +226,11 @@ public class Base {
         int heading360;
         int absHeading;
         double deltaHeading;
-        double deltaAngle = Math.abs(deltaHeading);
+        double deltaAngle;
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .1
+        double turnFloor = .3;
         double stopTime = runtime.seconds() + timeoutS;
         double BlueDepotAngle = 30;
         double BlueCraterAngle = 120;
@@ -247,9 +247,19 @@ public class Base {
              * situations) turn right.
              */
             deltaHeading = gHeading - heading;
-            turnspeed = deltaAngle/360
-            if (turnspeed < .1){
+            deltaAngle = Math.abs(deltaHeading);
+            turnspeed = deltaAngle/360;
+            if (turnspeed < .1 || deltaAngle < 30){
                 turnspeed = turnFloor;
+            }
+            if (31 < deltaAngle && deltaAngle < 75){
+                turnspeed = .50;
+            }
+            if (76 < deltaAngle && deltaAngle < 120){
+                turnspeed = .75;
+            }
+            if (121 < deltaAngle && deltaAngle < 180){
+                turnspeed = .9;
             }
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
@@ -259,7 +269,7 @@ public class Base {
                 rightPower = -turnspeed;
             }
             normalDrive(caller, leftPower, rightPower);
-            gHeading = getHeading();
+            caller.telemetry.update();
         }
         while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 0.4 && runtime.seconds() < stopTime );
 
@@ -273,7 +283,7 @@ public class Base {
     public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower) {
         LBack.setPower(leftBackPower);
         RBack.setPower(rightBackPower);
-        caller.telemetry.addData("normalDrive:", "Back Power set to L:%.2f, R:%.2f", leftBackPower, rightBackPower);
+        caller.telemetry.addData("Base-normalDrive:", "Back Power set to L:%.2f, R:%.2f", leftBackPower, rightBackPower);
 
     }
 

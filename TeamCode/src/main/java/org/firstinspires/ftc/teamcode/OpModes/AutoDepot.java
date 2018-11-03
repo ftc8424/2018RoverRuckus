@@ -58,8 +58,8 @@ public class AutoDepot extends LinearOpMode {
     private MecanumDrive robot = new MecanumDrive();
     boolean yellowValue = false;
     boolean whiteValue = false;
-    protected double initialHeading = 0;
-    protected double timeoutS = 2;
+    protected double initialHeading = 40;
+    protected double timeoutS = 5;
 
 
     @Override
@@ -70,6 +70,7 @@ public class AutoDepot extends LinearOpMode {
 
 
         waitForStart();
+        runtime.reset();
         boolean b = robot.gyroTurn(this, initialHeading, timeoutS);
         int times = 0;
         do {
@@ -97,122 +98,64 @@ public class AutoDepot extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
         
         if (b) {
-            runtime.reset();
-
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-            telemetry.update();
-            sleep(1000);
-
-        public boolean gyroTurn(LinearOpMode caller,
-        double heading,
-        double timeoutS) throws InterruptedException {
-            double BlueDepotAngle = 30
-            double BlueCraterAngle = 120
-            double RedDepotAngle = 210
-            double RedCraterAngle = 300
-
-
-            caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
-                caller.telemetry.update();
-            robot.encoderDrive(this, 0.75, 19, 19, 10);
+            robot.encoderDrive(this, .75, 13, 10, 2);
+            robot.encoderStrafe(this, 0.75, 13, 0, 4);
+            robot.encoderDrive(this, 0.75, 6, 9, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                     .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
             telemetry.update();
 
-            if (yellowValue) {
-                robot.encoderDrive(this, 0.75, 4, 4, 10);
+            if (robot.isGold() == false) {
+                robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                         .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                telemetry.addData("is it gold", robot.isGold());
+                telemetry.addData("blueValue", robot.color.blue());
+                telemetry.addData("redValue", robot.color.red());
+                telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
-                sleep(1000);
-                robot.encoderDrive(this, 0.75, -4, -4, 10);
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.update();
-                sleep(1000);
-                robot.encoderStrafe(this, 0.75, 0, 84, 10);  // TODO Strafe right 84 inches
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.update();
-                sleep(1000);
-            } else {
-                robot.encoderStrafe(this, 0.75, 0, 84, 10);  // TODO Strafe right 15 inches
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.update();
-                sleep(1000);
-                if (yellowValue) {
-
-                    robot.encoderDrive(this, 0.75, 4, 4, 10);
+                if (robot.isGold() == false) {
+                    robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                     telemetry.update();
-                    sleep(1000);
-                    robot.encoderDrive(this, 0.75, -4, -4, 10);
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    sleep(1000);
-                    robot.encoderStrafe(this, 0.75, 0, 69, 10);  // TODO Strafe right 69 inches
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    sleep(1000);
+                    if (robot.isGold() == true) {
+                        robot.encoderDrive(this, 0.75, 5, 5, 10);
+                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                        telemetry.update();
+                        robot.encoderDrive(this, -.75, 5, 5, 1);
+                        robot.gyroTurn(this, 50, 4);
+                        robot.encoderStrafe(this, .75, 0, 90, 10);
+                    } else {
+                        telemetry.addData("IS NOT GOLD", "EXITING");
+                        telemetry.update();
+                        sleep(2000);
+                        robot.gyroTurn(this, 50, 4);
+                        robot.encoderStrafe(this, .75, 0, 60, 10);
+                    }
                 } else {
-                    robot.encoderDrive(this, 0.75, 4, 4, 10);
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    sleep(1000);
-                    robot.encoderDrive(this, 0.75, -4, -4, 10);
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    sleep(1000);
-                    robot.encoderStrafe(this, 0.75, 0, 54, 10);  // TODO Strafe right 54 inches
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    sleep(1000);
-
+                    robot.encoderDrive(this, 0.75, 5, 5, 10);
+                    robot.gyroTurn(this, 50, 4);
+                    robot.encoderStrafe(this, .75, 0, 75, 10);
                 }
+            } else {
+                robot.encoderDrive(this, 0.75, 5, 5, 10);
+                robot.gyroTurn(this, 50, 4);
+                robot.encoderStrafe(this, .75, 0, 90, 10);
             }
-
-            telemetry.addData("color yellow", yellowValue);
-            telemetry.addData("color white", whiteValue);
         }
         else {
             // TODO: Put rest of movement, for crater park and/or deploy marker
-            robot.encoderDrive(this, 0.75, 5, 5, 10);
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.addData("Can't turn towards target", initialHeading);
             telemetry.update();
 
         }

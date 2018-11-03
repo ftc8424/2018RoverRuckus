@@ -59,7 +59,7 @@ public class AutoCrater extends LinearOpMode {
     boolean yellowValue = false;
     boolean whiteValue = false;
     protected double initialHeading = 0;
-    protected double timeoutS = 2;
+    protected double timeoutS = 5;
 
 
     @Override
@@ -70,6 +70,10 @@ public class AutoCrater extends LinearOpMode {
 
 
         waitForStart();
+        runtime.reset();
+        // TODO: This is testing ONLY for Blue/Red crater setting, Remove this before first competition
+        initialHeading = 130;
+
         boolean b = false;
         int times = 0;
         do {
@@ -97,18 +101,6 @@ public class AutoCrater extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
 
         if (b) {
-            public boolean gyroTurn(LinearOpMode caller,
-            double heading,
-            double timeoutS) throws InterruptedException {
-                double BlueDepotAngle = 30
-                double BlueCraterAngle = 120
-                double RedDepotAngle = 210
-                double RedCraterAngle = 300
-
-
-                    caller.telemetry.addData("gyroTurn:", "gHeading: %.1f, going to %.1f", gHeading, heading);
-                    caller.telemetry.update();
-            runtime.reset();
             robot.encoderDrive(this, 0.75, 19, 19, 10);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -146,25 +138,33 @@ public class AutoCrater extends LinearOpMode {
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                         telemetry.update();
+                        robot.encoderStrafe(this, .75, 0, 10, 2);
+                        robot.encoderDrive(this, .75, 6, 6, 3);
                     } else {
+                        robot.encoderStrafe(this, .75, 0, 10, 2);
+                        robot.encoderDrive(this, .75, 6, 6, 3);
                         telemetry.addData("IS NOT GOLD", "EXITING");
                         telemetry.update();
-                        sleep(2000);
+
                     }
                 } else {
                     robot.encoderDrive(this, 0.75, 5, 5, 10);
+                    sleep(500);
+                    robot.encoderDrive(this, -0.75, 5, 5, 10);
+                    robot.encoderStrafe(this, .75, 0, 25, 3);
+                    robot.encoderDrive(this, .75, 6, 6, 3);
                 }
             } else {
                 robot.encoderDrive(this, 0.75, 5, 5, 10);
+                sleep(500);
+                robot.encoderDrive(this, -0.75, 5, 5, 10);
+                robot.encoderStrafe(this, .75, 0, 35, 3);
+                robot.encoderDrive(this, .75, 6, 6, 3);
             }
         }
         else {
             // TODO: Put rest of movement, for crater park and/or deploy marker
-            robot.encoderDrive(this, 0.75, 5, 5, 10);
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+            telemetry.addData("Can't turn towards target", initialHeading);
             telemetry.update();
 
         }

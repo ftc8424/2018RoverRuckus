@@ -76,20 +76,10 @@ public class Motor4 extends Base {
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
         super.normalDrive(caller, leftPower, rightPower);
         LFront.setPower(leftPower);
-        LBack.setPower(rightPower);
+        RFront.setPower(rightPower);
+        caller.telemetry.addData("M4-normalDrive:", "Front Power set to L:%.2f, R:%.2f", leftPower, rightPower);
+
     }
-
-    public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower, double leftFrontPower, double rightFrontPower) {
-        LFront.setPower(leftFrontPower);
-        RFront.setPower(rightFrontPower);
-        //LBack.setPower(leftBackPower);
-        //RBack.setPower(rightBackPower);
-        caller.telemetry.addData("normalDrive:", "Front Power set to L:%.2f, R:%.2f", leftFrontPower, rightFrontPower);
-
-
-        super.normalDrive(caller, leftBackPower, rightBackPower);
-    }
-
 
     @Override
     public void encoderDrive(LinearOpMode caller,
