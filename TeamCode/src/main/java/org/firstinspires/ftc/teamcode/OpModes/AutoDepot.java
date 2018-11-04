@@ -63,11 +63,11 @@ public abstract class AutoDepot extends LinearOpMode {
     public void reallyRunOpMode() throws InterruptedException {
 
         runtime.reset();
-        boolean b = robot.gyroTurn(this, initialHeading, timeoutS);
+        boolean b = false;
         int times = 0;
         do {
             b = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (b = false) {
+            if (b == false) {
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
@@ -90,9 +90,9 @@ public abstract class AutoDepot extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
         
         if (b) {
-            robot.encoderDrive(this, .75, 13, 10, 2);
-            robot.encoderStrafe(this, 0.75, 13, 0, 4);
-            robot.encoderDrive(this, 0.75, 6, 9, 2);
+            robot.encoderDrive(this, .75, 18, 18, 2);
+            robot.encoderStrafe(this, 0.75, 18, 0, 4);
+            robot.encoderDrive(this, 0.75, 7, 9, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())

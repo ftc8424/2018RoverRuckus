@@ -73,7 +73,7 @@ public abstract class AutoCrater extends LinearOpMode {
         int times = 0;
         do {
             b = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (b = false) {
+            if (b == false) {
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
