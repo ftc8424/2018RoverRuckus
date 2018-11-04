@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Blue Crater", group="Blue OpMode")
-public class BlueCrater extends AutoCrater {
+public class BlueCrater extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
@@ -13,7 +13,7 @@ public class BlueCrater extends AutoCrater {
         telemetry.update();
 
         waitForStart();
-        super.reallyRunOpMode();
+        super.runCrater();
 
 
     }

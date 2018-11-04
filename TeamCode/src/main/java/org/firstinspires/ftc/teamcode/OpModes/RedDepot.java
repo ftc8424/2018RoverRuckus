@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Red Depot", group="Red OpMode")
-public class RedDepot extends AutoDepot {
+public class RedDepot extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
@@ -14,7 +14,7 @@ public class RedDepot extends AutoDepot {
         telemetry.update();
 
         waitForStart();
-        super.reallyRunOpMode();
+        super.runDepot();
 
 
     }

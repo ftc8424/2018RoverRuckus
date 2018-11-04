@@ -232,10 +232,7 @@ public class Base {
         double turnspeed;
         double turnFloor = .3;
         double stopTime = runtime.seconds() + timeoutS;
-        double BlueDepotAngle = 30;
-        double BlueCraterAngle = 120;
-        double RedDepotAngle = 210;
-        double RedCraterAngle = 300;
+
 
         do {
             gHeading = getHeading();
