@@ -51,25 +51,17 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  */
 
 @Autonomous(name="Auto Depot", group="Linear Opmode")
-public class AutoDepot extends LinearOpMode {
+public abstract class AutoDepot extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new MecanumDrive();
-    boolean yellowValue = false;
-    boolean whiteValue = false;
-    protected double initialHeading = 40;
+    protected MecanumDrive robot = new MecanumDrive();
+    protected double initialHeading = 0;
     protected double timeoutS = 5;
 
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        robot.robot_init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    public void reallyRunOpMode() throws InterruptedException {
 
-
-        waitForStart();
         runtime.reset();
         boolean b = robot.gyroTurn(this, initialHeading, timeoutS);
         int times = 0;

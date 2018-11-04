@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -51,27 +52,21 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
  */
 
 @Autonomous(name="Auto Crater", group="Linear Opmode")
-public class AutoCrater extends LinearOpMode {
+@Disabled
+public abstract class AutoCrater extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new MecanumDrive();
+    protected MecanumDrive robot = new MecanumDrive();
     boolean yellowValue = false;
     boolean whiteValue = false;
     protected double initialHeading = 0;
     protected double timeoutS = 5;
 
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        robot.robot_init(hardwareMap);
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    public void reallyRunOpMode() throws InterruptedException {
 
-
-        waitForStart();
         runtime.reset();
-        // TODO: This is testing ONLY for Blue/Red crater setting, Remove this before first competition
         initialHeading = 130;
 
         boolean b = false;
