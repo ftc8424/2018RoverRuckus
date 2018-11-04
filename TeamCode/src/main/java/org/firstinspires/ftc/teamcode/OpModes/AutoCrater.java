@@ -67,7 +67,7 @@ public abstract class AutoCrater extends LinearOpMode {
     public void reallyRunOpMode() throws InterruptedException {
 
         runtime.reset();
-        initialHeading = 130;
+       // initialHeading = 130;
 
         boolean b = false;
         int times = 0;
@@ -96,7 +96,9 @@ public abstract class AutoCrater extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
 
         if (b) {
-            robot.encoderDrive(this, 0.75, 19, 19, 10);
+            robot.encoderDrive(this, .75, 18, 18, 2);
+            robot.encoderStrafe(this, 0.75, 15, 0, 4);
+            robot.encoderDrive(this, 0.75, 6, 6, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -109,7 +111,7 @@ public abstract class AutoCrater extends LinearOpMode {
 
 
             if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
+                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -120,7 +122,7 @@ public abstract class AutoCrater extends LinearOpMode {
                 telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
                 if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
+                    robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -134,10 +136,10 @@ public abstract class AutoCrater extends LinearOpMode {
                                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                         telemetry.update();
                         robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 6, 6, 3);
+                        robot.encoderDrive(this, .75, 10, 10, 3);
                     } else {
                         robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 6, 6, 3);
+                        robot.encoderDrive(this, .75, 10, 10, 3);
                         telemetry.addData("IS NOT GOLD", "EXITING");
                         telemetry.update();
 
@@ -145,16 +147,16 @@ public abstract class AutoCrater extends LinearOpMode {
                 } else {
                     robot.encoderDrive(this, 0.75, 5, 5, 10);
                     sleep(500);
-                    robot.encoderDrive(this, -0.75, 5, 5, 10);
-                    robot.encoderStrafe(this, .75, 0, 25, 3);
-                    robot.encoderDrive(this, .75, 6, 6, 3);
+                    robot.encoderDrive(this, 0.75, -5, -5, 10);
+                    robot.encoderStrafe(this, .75, 0, 27, 3);
+                    robot.encoderDrive(this, .75, 10, 10, 3);
                 }
             } else {
                 robot.encoderDrive(this, 0.75, 5, 5, 10);
                 sleep(500);
-                robot.encoderDrive(this, -0.75, 5, 5, 10);
-                robot.encoderStrafe(this, .75, 0, 35, 3);
-                robot.encoderDrive(this, .75, 6, 6, 3);
+                robot.encoderDrive(this, 0.75, -5, -5, 10);
+                robot.encoderStrafe(this, .75, 0, 44, 3);
+                robot.encoderDrive(this, .75, 10, 10, 3);
             }
         }
         else {

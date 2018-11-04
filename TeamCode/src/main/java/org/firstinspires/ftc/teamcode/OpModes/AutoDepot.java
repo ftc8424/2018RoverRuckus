@@ -58,6 +58,7 @@ public abstract class AutoDepot extends LinearOpMode {
     protected MecanumDrive robot = new MecanumDrive();
     protected double initialHeading = 0;
     protected double timeoutS = 5;
+    protected double finalHeading;
 
 
     public void reallyRunOpMode() throws InterruptedException {
@@ -91,8 +92,8 @@ public abstract class AutoDepot extends LinearOpMode {
         
         if (b) {
             robot.encoderDrive(this, .75, 18, 18, 2);
-            robot.encoderStrafe(this, 0.75, 18, 0, 4);
-            robot.encoderDrive(this, 0.75, 7, 9, 2);
+            robot.encoderStrafe(this, 0.75, 15, 0, 4);
+            robot.encoderDrive(this, 0.75, 6, 6, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -100,7 +101,7 @@ public abstract class AutoDepot extends LinearOpMode {
             telemetry.update();
 
             if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
+                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -111,7 +112,7 @@ public abstract class AutoDepot extends LinearOpMode {
                 telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
                 if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, 0.75, 0, 15, 10);  // TODO Strafe right 15 inches
+                    robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -124,25 +125,28 @@ public abstract class AutoDepot extends LinearOpMode {
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                         telemetry.update();
-                        robot.encoderDrive(this, -.75, 5, 5, 1);
-                        robot.gyroTurn(this, 50, 4);
-                        robot.encoderStrafe(this, .75, 0, 90, 10);
+                        //robot.encoderDrive(this, .75, -5, -5, 1);
+                        robot.encoderStrafe(this, .75, 0, 33, 10);
+                        robot.gyroTurn(this, finalHeading, 4);
+                        robot.encoderDrive(this, .75, -20,-20, 10);
                     } else {
                         telemetry.addData("IS NOT GOLD", "EXITING");
                         telemetry.update();
-                        sleep(2000);
-                        robot.gyroTurn(this, 50, 4);
-                        robot.encoderStrafe(this, .75, 0, 60, 10);
+                        //sleep(2000);
+                        //robot.encoderDrive(this, .75, -5, -5, 1);
+                        robot.encoderStrafe(this, .75, 0, 33, 10);
+                        robot.gyroTurn(this, finalHeading, 4);
+                        robot.encoderDrive(this, .75, -20,-20, 10);
                     }
                 } else {
-                    robot.encoderDrive(this, 0.75, 5, 5, 10);
-                    robot.gyroTurn(this, 50, 4);
-                    robot.encoderStrafe(this, .75, 0, 75, 10);
+                    robot.encoderStrafe(this, .75, 0, 50, 10);
+                    robot.gyroTurn(this, finalHeading, 4);
+                    robot.encoderDrive(this, .75, -20,-20, 10);
                 }
             } else {
-                robot.encoderDrive(this, 0.75, 5, 5, 10);
-                robot.gyroTurn(this, 50, 4);
-                robot.encoderStrafe(this, .75, 0, 90, 10);
+                robot.encoderStrafe(this, .75, 0, 67, 10);
+                robot.gyroTurn(this, finalHeading, 4);
+                robot.encoderDrive(this, .75, -20,-20, 10);
             }
         }
         else {

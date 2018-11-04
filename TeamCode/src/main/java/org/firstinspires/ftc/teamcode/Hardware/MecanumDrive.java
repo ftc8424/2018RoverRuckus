@@ -151,7 +151,7 @@ public class MecanumDrive extends Motor4 {
                 .addData("Left Tgt POS", newLeftBackTarget)
                 .addData("Right Tgt POS", newRightBackTarget);
         caller.telemetry.update();
-        sleep(2000);
+        //sleep(2000);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;
@@ -262,7 +262,7 @@ public class MecanumDrive extends Motor4 {
                 .addData("Left Tgt POS", newLeftBackTarget)
                 .addData("Right Tgt POS", newRightBackTarget);
        caller.telemetry.update();
-       sleep(2000);
+       //sleep(2000);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;

@@ -7,7 +7,7 @@ public class RedCrater extends AutoCrater {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 300;
+        initialHeading = 310;
         robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();

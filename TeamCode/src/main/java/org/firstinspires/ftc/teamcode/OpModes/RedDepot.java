@@ -7,7 +7,8 @@ public class RedDepot extends AutoDepot {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 210;
+        initialHeading = 220;
+        finalHeading = 180;
         robot.robot_init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
