@@ -34,7 +34,6 @@ package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
@@ -46,21 +45,13 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
  */
 
 /**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ * This test just takes A, B, X and Y and has motors Left Front, Right Front, Left Back
+ * and Right Back with positive power respectively
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name="Mecanum Trollbot", group="Test Opmode")
+@TeleOp(name="Mecanum Test Motors", group="Test Opmode")
 
-public class MecanumTrollbot extends OpMode {
+public class MecanumTestMotors extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -73,11 +64,18 @@ public class MecanumTrollbot extends OpMode {
      */
     @Override
     public void init() {
-        robot.robot_init(hardwareMap, true);
+        robot.robot_init(hardwareMap);
+/*
+        robot.LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.RFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+*/
         telemetry.addData("Status", "Initialized");
     }
 
@@ -103,13 +101,40 @@ public class MecanumTrollbot extends OpMode {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
+        if ( gamepad1.a && lastpress + 500 < runtime.milliseconds() ) {
+            robot.LFront.setPower(1);
+            robot.RFront.setPower(0);
+            robot.LBack.setPower(0);
+            robot.RBack.setPower(0);
+            lastpress = runtime.milliseconds();
+        } else if ( gamepad1.b && lastpress + 500 < runtime.milliseconds() ) {
+            robot.LFront.setPower(0);
+            robot.RFront.setPower(1);
+            robot.LBack.setPower(0);
+            robot.RBack.setPower(0);
+            lastpress = runtime.milliseconds();
+        } else if ( gamepad1.x && lastpress + 500 < runtime.milliseconds() ) {
+            robot.LFront.setPower(0);
+            robot.RFront.setPower(0);
+            robot.LBack.setPower(1);
+            robot.RBack.setPower(0);
+            lastpress = runtime.milliseconds();
+        } else if ( gamepad1.y && lastpress + 500 < runtime.milliseconds() ) {
+            robot.LFront.setPower(0);
+            robot.RFront.setPower(0);
+            robot.LBack.setPower(0);
+            robot.RBack.setPower(1);
+            lastpress = runtime.milliseconds();
+        } else {
+/*
+            wheelPower = robot.motorPower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        wheelPower = robot.motorPower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
+            robot.LFront.setPower(wheelPower[0]);
+            robot.RFront.setPower(wheelPower[1]);
+            robot.LBack.setPower(wheelPower[2]);
+            robot.RBack.setPower(wheelPower[3]);
+*/
+        }
 
         telemetry.addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())

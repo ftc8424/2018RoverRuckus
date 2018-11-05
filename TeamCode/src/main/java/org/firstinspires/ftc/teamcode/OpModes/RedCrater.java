@@ -8,7 +8,7 @@ public class RedCrater extends AutoBase {
 
     public void runOpMode() throws InterruptedException {
         initialHeading = 310;
-        robot.robot_init(hardwareMap);
+        robot.robot_init(hardwareMap,true);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

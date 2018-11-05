@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Thread.sleep;
@@ -14,13 +14,12 @@ import static java.lang.Thread.sleep;
 
 public class MecanumDrive extends Motor4 {
 
-    public void initMotor(boolean revRight) {
-        super.initMotor(revRight);
-        LFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        RFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        LBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        RBack.setDirection(DcMotorSimple.Direction.REVERSE);
+    public ColorSensor color = null;
+
+    public void initMotor(boolean revLeft) {
+        super.initMotor(revLeft);
     }
+
     @Override
     public void initSensor(){
         super.initSensor();
@@ -51,23 +50,44 @@ public class MecanumDrive extends Motor4 {
      * @return An array of doubles for power values to left front, right front, left back and right back
      */
 
-    public double[] motorPower(double leftX, double leftY, double rightX) {
+    public double[] motorPower(double leftY, double leftX, double rightX) {
         double[] power = {0.0, 0.0, 0.0, 0.0};
 
-        double magnitude = Math.hypot(leftY, leftX);
-        double angle = Math.atan2(leftX, leftY) + Math.PI / 4;
-        double rotation = -rightX;
+        /*
+         * The three elements needed by drive.motorPower() method are the Magnitude (or force
+         * to apply), the angle to drive and then the rotation for the front of the robot.
+         * You get these on the driver game pads by using a combination of geometry and trig
+         * functions.  The right angle formed by the game pad's left stick can e used for
+         * both the magnitude and angle.  The magnitude can be applied by finding the
+         * hypotenuse of the right triangle with the x and y values.  That's just done by
+         * applying the Pythagorean Theorm so it's H-squared = X-squared + Y+squared.
+         *
+         * The ANGLE requires trigonometry to figure out.  The TANGENT of an angle of right triangle
+         * is the value of the Opposite side over the Adjacent one.  In this case, we don't know
+         * the angle but we know the Opposite and Adjacent side lengths and NEED to find the angle.
+         * For that, we need the INVERSE of the Tangent function, or the ARCTANGENT.  To get the angle
+         * we need to determine the ARC Tangent of the side OPPOSITE the angle (the Y value of the
+         * game pad) over the ADJACENT side (the X value of the game pad).  That will give us the
+         * ANGLE for that part in 0 - 2*PI values.
+         *
+         * Nicely, the Math class gives us easy methods to use to compute those:  Math.hypot() and
+         * Math.atan2().
+         */
+
+        double magnitude = Math.hypot(-leftX, -leftY);
+        double angle = Math.atan2(-leftY, -leftX) - Math.PI / 4;
+        double rotation = rightX;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
 */
-        power[0] = magnitude * Math.sin(angle) + rotation;
+        power[0] = magnitude * Math.cos(angle) + rotation;
 
-        power[1] = magnitude * Math.cos(angle) - rotation;
+        power[1] = magnitude * Math.sin(angle) - rotation;
 
-        power[2] = magnitude * Math.cos(angle) + rotation;
+        power[2] = magnitude * Math.sin(angle) + rotation;
 
-        power[3] = magnitude * Math.sin(angle) - rotation;
+        power[3] = magnitude * Math.cos(angle) - rotation;
 
         return scalePower(power[0], power[1], power[2], power[3]);
         //return power;

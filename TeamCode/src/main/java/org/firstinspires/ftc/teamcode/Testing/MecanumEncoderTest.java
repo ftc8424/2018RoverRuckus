@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
 
 
 /**
@@ -54,12 +55,12 @@ public class MecanumEncoderTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new MecanumDrive();
+    private MecanumDrive robot = new Meet1Robot();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.robot_init(hardwareMap);
+        robot.robot_init(hardwareMap, true);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -48,7 +47,6 @@ public class Base {
     /* These are values that can be used by the opModes (e.g., robot.LBack.setPower(); */
     public DcMotor LBack = null;
     public DcMotor RBack = null;
-    public ColorSensor color = null;
 
     /*
      * Protected instance variables (meaning, my sub-classes can see these as well).
@@ -57,7 +55,7 @@ public class Base {
 
     /* Wheel ratio values for the encoders (see end of this file for calculations). */
     protected static final int   COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
-    protected static final double COUNTS_PER_MOTOR_REV = 288;  // AndyMark NeveRest 40:1 CPR
+    protected static final double COUNTS_PER_MOTOR_REV = 1120;  // AndyMark NeveRest 40:1 CPR
     protected static final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
     protected static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
 
@@ -127,17 +125,17 @@ public class Base {
      * If this is a holonomic drive (e.g., Mecanum or omni-wheel in crab-drive format) then you
      * don't want to do that, so pass with false (or just call the version without parameters).
      *
-     * @param revRight    Should I reverse the left motors?
+     * @param revLeft    Should I reverse the left motors?
      */
-    public void initMotor(boolean revRight) {
+    public void initMotor(boolean revLeft) {
         LBack = hwMap.dcMotor.get(Constants.LBACK);
         RBack = hwMap.dcMotor.get(Constants.RBACK);
 
         RBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (revRight)
-            RBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (revLeft)
+            LBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
         LBack.setPower(0);

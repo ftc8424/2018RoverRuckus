@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
 
 
 /**
@@ -55,7 +56,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    protected MecanumDrive robot = new MecanumDrive();
+    protected Meet1Robot robot = new Meet1Robot();
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
