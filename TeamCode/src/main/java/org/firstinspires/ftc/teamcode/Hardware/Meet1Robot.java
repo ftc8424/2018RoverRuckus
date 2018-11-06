@@ -8,7 +8,9 @@ public class Meet1Robot extends MecanumDrive {
     public Servo ColorServo = null;
     private double ColorStart = 0.1;
     private double ColorDeploy = 0.9;
+    private double ColorSample = .5;
     public DcMotor LiftMotor = null;
+
 
     @Override
     public void initServo(){

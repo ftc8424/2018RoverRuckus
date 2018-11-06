@@ -31,7 +31,9 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
@@ -92,9 +94,11 @@ public abstract class AutoBase extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
         
         if (b) {
+            robot.ColorServo.setPosition(.5);
+            robot.LiftMotor.setTargetPosition(0);
             robot.encoderDrive(this, .75, 18, 18, 2);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 6, 6, 2);
+            robot.encoderDrive(this, 0.75, 4, 6, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -120,7 +124,8 @@ public abstract class AutoBase extends LinearOpMode {
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                     telemetry.update();
                     if (robot.isGold() == true) {
-                        robot.encoderDrive(this, 0.75, 5, 5, 10);
+                        robot.ColorServo.setPosition(.9);
+                        robot.ColorServo.setPosition(.1);
                         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -131,6 +136,8 @@ public abstract class AutoBase extends LinearOpMode {
                         robot.gyroTurn(this, finalHeading, 4);
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     } else {
+                        robot.ColorServo.setPosition(.9);
+                        robot.ColorServo.setPosition(.1);
                         telemetry.addData("IS NOT GOLD", "EXITING");
                         telemetry.update();
                         //sleep(2000);
@@ -140,11 +147,15 @@ public abstract class AutoBase extends LinearOpMode {
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     }
                 } else {
+                    robot.ColorServo.setPosition(.9);
+                    robot.ColorServo.setPosition(.1);
                     robot.encoderStrafe(this, .75, 0, 50, 10);
                     robot.gyroTurn(this, finalHeading, 4);
                     robot.encoderDrive(this, .75, -20,-20, 10);
                 }
             } else {
+                robot.ColorServo.setPosition(.9);
+                robot.ColorServo.setPosition(.1);
                 robot.encoderStrafe(this, .75, 0, 67, 10);
                 robot.gyroTurn(this, finalHeading, 4);
                 robot.encoderDrive(this, .75, -20,-20, 10);
@@ -189,9 +200,10 @@ public abstract class AutoBase extends LinearOpMode {
         while (opModeIsActive() && b == false && times++ < 3);
 
         if (b) {
+            robot.ColorServo.setPosition(.5);
             robot.encoderDrive(this, .75, 18, 18, 2);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 6, 6, 2);
+            robot.encoderDrive(this, 0.75, 5, 6, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -222,7 +234,8 @@ public abstract class AutoBase extends LinearOpMode {
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                     telemetry.update();
                     if (robot.isGold() == true) {
-                        robot.encoderDrive(this, 0.75, 5, 5, 10);
+                        robot.ColorServo.setPosition(.9);
+                        robot.ColorServo.setPosition(.1);
                         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -231,6 +244,8 @@ public abstract class AutoBase extends LinearOpMode {
                         robot.encoderStrafe(this, .75, 0, 10, 2);
                         robot.encoderDrive(this, .75, 10, 10, 3);
                     } else {
+                        robot.ColorServo.setPosition(.9);
+                        robot.ColorServo.setPosition(.1);
                         robot.encoderStrafe(this, .75, 0, 10, 2);
                         robot.encoderDrive(this, .75, 10, 10, 3);
                         telemetry.addData("IS NOT GOLD", "EXITING");
@@ -238,14 +253,16 @@ public abstract class AutoBase extends LinearOpMode {
 
                     }
                 } else {
-                    robot.encoderDrive(this, 0.75, 5, 5, 10);
+                    robot.ColorServo.setPosition(.9);
+                    robot.ColorServo.setPosition(.1);
                     sleep(500);
                     robot.encoderDrive(this, 0.75, -5, -5, 10);
                     robot.encoderStrafe(this, .75, 0, 27, 3);
                     robot.encoderDrive(this, .75, 10, 10, 3);
                 }
             } else {
-                robot.encoderDrive(this, 0.75, 5, 5, 10);
+                robot.ColorServo.setPosition(.9);
+                robot.ColorServo.setPosition(.1);
                 sleep(500);
                 robot.encoderDrive(this, 0.75, -5, -5, 10);
                 robot.encoderStrafe(this, .75, 0, 44, 3);
