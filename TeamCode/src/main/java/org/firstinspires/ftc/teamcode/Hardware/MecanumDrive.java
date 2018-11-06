@@ -144,22 +144,19 @@ public class MecanumDrive extends Motor4 {
         if (!caller.opModeIsActive())
             return;
 
-        LFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (leftInches > 0 && rightInches == 0 ) {
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
         }
         else if (rightInches > 0 && leftInches ==0) {
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
         }
         else {
             return;

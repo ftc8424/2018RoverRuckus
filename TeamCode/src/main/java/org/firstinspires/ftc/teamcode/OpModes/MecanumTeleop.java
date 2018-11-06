@@ -58,7 +58,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name="Mecanum Trollbot", group="Test Opmode")
+@TeleOp(name="Mec TeleOp", group="Opmode")
 
 public class MecanumTeleop extends OpMode {
 
@@ -66,6 +66,7 @@ public class MecanumTeleop extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Meet1Robot robot = new Meet1Robot();
     private double lastpress = 0;
+    private double lasta = 0.0;    // Last time we pressed the "gamepad1.a" button
 
 
     /*
@@ -74,11 +75,7 @@ public class MecanumTeleop extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap, true);
-        robot.LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.initMotor(true);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -86,6 +83,10 @@ public class MecanumTeleop extends OpMode {
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
 
+    @Override
+    public void init_loop() {
+
+    }
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -115,19 +116,27 @@ public class MecanumTeleop extends OpMode {
         robot.LBack.setPower(wheelPower[2]);
         robot.RBack.setPower(wheelPower[3]);
 
-        telemetry.addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
+        if ( gamepad1.a && lasta + 500 < runtime.milliseconds() ) {
+            robot.ColorServo.setPosition(robot.ColorSample);
+            lasta = runtime.milliseconds();
+        } else if ( gamepad1.b && lasta + 500 < runtime.milliseconds() ) {
+            robot.ColorServo.setPosition(robot.ColorDeploy);
+            lasta = runtime.milliseconds();
+        } else if ( gamepad1.x && lasta + 500 < runtime.milliseconds() ) {
+            robot.ColorServo.setPosition(robot.ColorStart);
+            lasta = runtime.milliseconds();
+        }
+
+        telemetry.addData("Heading", robot.getHeading())
+                .addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
-                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
-        int redValue = robot.color.red();
-        int blueValue = robot.color.blue();
-        int greenValue = robot.color.green();
-        telemetry.addData("color blue", blueValue);
-        telemetry.addData("color red", redValue);
-        telemetry.addData("color green", greenValue);
-        telemetry.addData("isGold", robot.isGold());
-        telemetry.addData ("heading", robot.getHeading());
-
+                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition())
+                .addData("color blue", robot.color.blue())
+                .addData("color red", robot.color.red())
+                .addData("color green", robot.color.green())
+                .addData("isGold", robot.isGold())
+                .addData("ColorServo Position", robot.ColorServo.getPosition());
     } // loop
 
     /*

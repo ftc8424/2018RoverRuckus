@@ -306,11 +306,7 @@ public class Base {
         if ( !caller.opModeIsActive() )
             return;
 
-        LBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        boolean lmEncoderSet = false;
-        boolean rmEncoderSet = false;
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
         boolean lbEncoderSet = false;
         boolean rbEncoderSet = false;
 
@@ -318,9 +314,7 @@ public class Base {
         newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
         lbEncoderSet = setEncoderPosition(caller, LBack, newLeftBackTarget, encoderTimeout);
         rbEncoderSet = setEncoderPosition(caller, RBack, newRightBackTarget, encoderTimeout);
-        lmEncoderSet = true;
-        rmEncoderSet = true;
-        if ( ! (lmEncoderSet && lbEncoderSet && rmEncoderSet && rbEncoderSet) ) {
+        if ( ! (lbEncoderSet && rbEncoderSet) ) {
             caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
             caller.telemetry.update();
             caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
@@ -364,9 +358,7 @@ public class Base {
         RBack.setPower(0);
 
         // Turn off RUN_TO_POSITION
-
-        LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 

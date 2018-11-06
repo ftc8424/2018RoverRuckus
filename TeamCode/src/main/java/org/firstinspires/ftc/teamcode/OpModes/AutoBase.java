@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,6 +55,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
  */
 
 @Autonomous(name="Auto Depot", group="Linear Opmode")
+@Disabled
 public abstract class AutoBase extends LinearOpMode {
 
     // Declare OpMode members.
@@ -67,11 +69,15 @@ public abstract class AutoBase extends LinearOpMode {
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
-        boolean b = false;
+        boolean turnSuccessful = false;
         int times = 0;
         do {
-            b = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (b == false) {
+            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+            if (turnSuccessful == false) {
+                telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
+                        .addData("Servo Position", robot.ColorServo.getPosition());
+                telemetry.update();
+                sleep(1000);
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
@@ -88,25 +94,29 @@ public abstract class AutoBase extends LinearOpMode {
                         break;
                 }
             }
-
-
         }
-        while (opModeIsActive() && b == false && times++ < 3);
+        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
         
-        if (b) {
-            robot.ColorServo.setPosition(.5);
+        if (turnSuccessful) {
+            robot.ColorServo.setPosition(robot.ColorSample);
             robot.LiftMotor.setTargetPosition(0);
-            robot.encoderDrive(this, .75, 18, 18, 2);
+            telemetry.addData("TURN STATUS", "SUCCESSFUL!  Scanning with Color Sensor")
+                    .addData("Servo Position", robot.ColorServo.getPosition());
+            telemetry.update();
+            sleep(2000);
+            robot.encoderDrive(this, .75, 18, 18, 5);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
             robot.encoderDrive(this, 0.75, 4, 6, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
+                    .addData("is it gold", robot.isGold());
             telemetry.update();
+            sleep(1000);
 
             if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
+                robot.encoderStrafe(this, 0.75, 0, 17, 10);
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -116,46 +126,59 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.addData("redValue", robot.color.red());
                 telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
+                sleep(1000);
                 if (robot.isGold() == false) {
                     robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                    telemetry.addData("is it gold", robot.isGold());
+                    telemetry.addData("blueValue", robot.color.blue());
+                    telemetry.addData("redValue", robot.color.red());
+                    telemetry.addData("greenValue", robot.color.green());
                     telemetry.update();
+                    sleep(1000);
                     if (robot.isGold() == true) {
-                        robot.ColorServo.setPosition(.9);
-                        robot.ColorServo.setPosition(.1);
+                        robot.ColorServo.setPosition(robot.ColorDeploy);
+                        sleep(1500);
+                        robot.ColorServo.setPosition(robot.ColorStart);
                         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                        telemetry.addData("is it gold", robot.isGold());
+                        telemetry.addData("blueValue", robot.color.blue());
+                        telemetry.addData("redValue", robot.color.red());
+                        telemetry.addData("greenValue", robot.color.green());
                         telemetry.update();
+                        sleep(1000);
                         //robot.encoderDrive(this, .75, -5, -5, 1);
                         robot.encoderStrafe(this, .75, 0, 33, 10);
                         robot.gyroTurn(this, finalHeading, 4);
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     } else {
-                        robot.ColorServo.setPosition(.9);
-                        robot.ColorServo.setPosition(.1);
+                        robot.ColorServo.setPosition(robot.ColorStart);
                         telemetry.addData("IS NOT GOLD", "EXITING");
                         telemetry.update();
-                        //sleep(2000);
+                        sleep(2000);
                         //robot.encoderDrive(this, .75, -5, -5, 1);
                         robot.encoderStrafe(this, .75, 0, 33, 10);
                         robot.gyroTurn(this, finalHeading, 4);
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     }
                 } else {
-                    robot.ColorServo.setPosition(.9);
-                    robot.ColorServo.setPosition(.1);
+                    robot.ColorServo.setPosition(robot.ColorDeploy);
+                    sleep(1000);
+                    robot.ColorServo.setPosition(robot.ColorStart);
                     robot.encoderStrafe(this, .75, 0, 50, 10);
                     robot.gyroTurn(this, finalHeading, 4);
                     robot.encoderDrive(this, .75, -20,-20, 10);
                 }
             } else {
-                robot.ColorServo.setPosition(.9);
-                robot.ColorServo.setPosition(.1);
+                robot.ColorServo.setPosition(robot.ColorDeploy);
+                sleep(1000);
+                robot.ColorServo.setPosition(robot.ColorStart);
                 robot.encoderStrafe(this, .75, 0, 67, 10);
                 robot.gyroTurn(this, finalHeading, 4);
                 robot.encoderDrive(this, .75, -20,-20, 10);
@@ -168,16 +191,16 @@ public abstract class AutoBase extends LinearOpMode {
 
         }
     }
+
+
     public void runCrater() throws InterruptedException {
 
         runtime.reset();
-        // initialHeading = 130;
-
-        boolean b = false;
+        boolean turnSuccessful = false;
         int times = 0;
         do {
-            b = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (b == false) {
+            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+            if (turnSuccessful == false) {
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
@@ -197,10 +220,10 @@ public abstract class AutoBase extends LinearOpMode {
 
 
         }
-        while (opModeIsActive() && b == false && times++ < 3);
+        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
-        if (b) {
-            robot.ColorServo.setPosition(.5);
+        if (turnSuccessful) {
+            robot.ColorServo.setPosition(robot.ColorSample);
             robot.encoderDrive(this, .75, 18, 18, 2);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
             robot.encoderDrive(this, 0.75, 5, 6, 2);
@@ -234,8 +257,9 @@ public abstract class AutoBase extends LinearOpMode {
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                     telemetry.update();
                     if (robot.isGold() == true) {
-                        robot.ColorServo.setPosition(.9);
-                        robot.ColorServo.setPosition(.1);
+                        robot.ColorServo.setPosition(robot.ColorDeploy);
+                        sleep(1000);
+                        robot.ColorServo.setPosition(robot.ColorStart);
                         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -244,8 +268,9 @@ public abstract class AutoBase extends LinearOpMode {
                         robot.encoderStrafe(this, .75, 0, 10, 2);
                         robot.encoderDrive(this, .75, 10, 10, 3);
                     } else {
-                        robot.ColorServo.setPosition(.9);
-                        robot.ColorServo.setPosition(.1);
+                        robot.ColorServo.setPosition(robot.ColorDeploy);
+                        sleep(1000);
+                        robot.ColorServo.setPosition(robot.ColorStart);
                         robot.encoderStrafe(this, .75, 0, 10, 2);
                         robot.encoderDrive(this, .75, 10, 10, 3);
                         telemetry.addData("IS NOT GOLD", "EXITING");
@@ -253,17 +278,17 @@ public abstract class AutoBase extends LinearOpMode {
 
                     }
                 } else {
-                    robot.ColorServo.setPosition(.9);
-                    robot.ColorServo.setPosition(.1);
-                    sleep(500);
+                    robot.ColorServo.setPosition(robot.ColorDeploy);
+                    sleep(1000);
+                    robot.ColorServo.setPosition(robot.ColorStart);
                     robot.encoderDrive(this, 0.75, -5, -5, 10);
                     robot.encoderStrafe(this, .75, 0, 27, 3);
                     robot.encoderDrive(this, .75, 10, 10, 3);
                 }
             } else {
-                robot.ColorServo.setPosition(.9);
-                robot.ColorServo.setPosition(.1);
-                sleep(500);
+                robot.ColorServo.setPosition(robot.ColorDeploy);
+                sleep(1000);
+                robot.ColorServo.setPosition(robot.ColorStart);
                 robot.encoderDrive(this, 0.75, -5, -5, 10);
                 robot.encoderStrafe(this, .75, 0, 44, 3);
                 robot.encoderDrive(this, .75, 10, 10, 3);
@@ -277,7 +302,3 @@ public abstract class AutoBase extends LinearOpMode {
         }
     }
 }
-
-
-
-

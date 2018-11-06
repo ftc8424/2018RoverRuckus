@@ -44,20 +44,17 @@ public class Motor4 extends Base {
 
         LFront = hwMap.dcMotor.get(Constants.LFRONT);
         RFront = hwMap.dcMotor.get(Constants.RFRONT);
-
+        LFront.setPower(0);
+        RFront.setPower(0);
         RFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         if (revLeft) {
             LFront.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         super.initMotor(revLeft);
-
-        this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
-        LFront.setPower(0);
-        RFront.setPower(0);
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
     }
 
     /**
@@ -68,9 +65,9 @@ public class Motor4 extends Base {
      */
     @Override
     public void setEncoderMode(DcMotor.RunMode mode) {
+        super.setEncoderMode(mode);
         LFront.setMode(mode);
         RFront.setMode(mode);
-        //super.setEncoderMode(mode);
     }
 
     public void normalDrive (OpMode caller, double leftPower, double rightPower) {
@@ -97,40 +94,12 @@ public class Motor4 extends Base {
         if ( !caller.opModeIsActive() )
             return;
 
-        LFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // if ( robotType == FULLAUTO ) {
-        // leftMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // rightMidDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //}
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
-
-        /*
-         * Determine new target position and pass to motor controller
-         */
-        // if ( robotType == FULLAUTO ) {
-        //   newLeftMidTarget = leftMidDrive.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-        // newRightMidTarget = rightMidDrive.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-        //} else {
-        newLeftFrontTarget = 0;
-        newRightFrontTarget = 0;
-        newRightBackTarget = 0;
-        newLeftBackTarget = 0;
-        // }
         newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
         newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
         newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
         newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
-//        caller.telemetry.addLine("encoderDrive-MID:")
-//                .addData("Left Tgt POS: ", newLeftMidTarget)
-//                .addData("Right Tgt POS:" ,  newRightMidTarget);
-//        caller.telemetry.addLine("EncoderDrive-BCK:")
-//                .addData("Left Tgt POS: ", newLeftBackTarget)
-//                .addData("Right Tgt POS: ", newRightBackTarget);
-//        caller.telemetry.update();
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;
@@ -141,15 +110,6 @@ public class Motor4 extends Base {
         rfEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
         lbEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
         rbEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
-        //  if ( robotType == FULLAUTO ) {
-        //    lmEncoderSet = setEncoderPosition(caller, leftMidDrive, newLeftMidTarget, encoderTimeout);
-        //     rmEncoderSet = setEncoderPosition(caller, rightMidDrive, newRightMidTarget, encoderTimeout);
-        //} else {
-        lfEncoderSet = true;
-        rfEncoderSet = true;
-        lbEncoderSet = true;
-        rbEncoderSet = true;
-        //  }
 //        caller.telemetry.addLine("EncoderSet:")
 //                .addData("LB: ", lbEncoderSet)
 //                .addData("RB: ", rbEncoderSet)
@@ -162,12 +122,6 @@ public class Motor4 extends Base {
             caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
             return;
         }
-
-        // reset the timeout time and start motion.
-
-//        caller.telemetry.addLine("Encoder Drive: ")
-//                .addData("PowerSet: ", "%.4f", Math.abs(speed));
-//        caller.telemetry.update();
 
         // keep looping while we are still active, and there is time left, and motors haven't made position.
         boolean isBusy;
@@ -205,10 +159,6 @@ public class Motor4 extends Base {
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
 
-            //   if(robotType == FULLAUTO){
-            //     leftMidDrive.setPower(leftBackPower);
-            //   rightMidDrive.setPower(rightBackPower);
-            //}
             caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
                             leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             caller.telemetry.update();
@@ -216,12 +166,6 @@ public class Motor4 extends Base {
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
             rbCurPob = RBack.getCurrentPosition();
-            //   if ( robotType == FULLAUTO ) {
-            //      lmCurPos = leftMidDrive.getCurrentPosition();
-            //      rmCurPos = rightMidDrive.getCurrentPosition();
-            //  } else {
-
-            //  }
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
             //     if ( robotType == FULLAUTO )
             isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPob - newRightBackTarget) >= 5);
@@ -233,21 +177,10 @@ public class Motor4 extends Base {
         RFront.setPower(0);
         LBack.setPower(0);
         RBack.setPower(0);
-        // if ( robotType == FULLAUTO ) {
-        //    leftMidDrive.setPower(0);
-        //    rightMidDrive.setPower(0);
-        // }
 
         // Turn off RUN_TO_POSITION
 
-        LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //  if ( robotType == FULLAUTO ) {
-        //      leftMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //      rightMidDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //  }
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 }

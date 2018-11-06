@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Meet1Robot extends MecanumDrive {
 
     public Servo ColorServo = null;
-    private double ColorStart = 0.1;
-    private double ColorDeploy = 0.9;
-    private double ColorSample = .5;
+    public double ColorStart = 0.0;
+    public double ColorDeploy = 1.0;
+    public double ColorSample = 0.5;
     public DcMotor LiftMotor = null;
 
 
@@ -16,7 +16,7 @@ public class Meet1Robot extends MecanumDrive {
     public void initServo(){
         super.initServo();
         ColorServo = hwMap.servo.get(Constants.ColorServo);
-
+        ColorServo.setPosition(ColorStart);
     }
 
     public void initMotor(boolean revLeft) {

@@ -74,10 +74,7 @@ public class MecanumTrollbot extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap, true);
-        robot.LBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.LFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.RFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
 
