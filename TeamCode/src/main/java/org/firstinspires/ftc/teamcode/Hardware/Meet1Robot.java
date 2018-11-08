@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static java.lang.Thread.sleep;
+
 public class Meet1Robot extends MecanumDrive {
 
     public Servo ColorServo = null;
@@ -16,7 +18,11 @@ public class Meet1Robot extends MecanumDrive {
     public void initServo(){
         super.initServo();
         ColorServo = hwMap.servo.get(Constants.ColorServo);
-        ColorServo.setPosition(ColorStart);
+        try {
+            deploy(ColorServo, ColorStart);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initMotor(boolean revLeft) {
@@ -40,11 +46,20 @@ public class Meet1Robot extends MecanumDrive {
      *
      * @param servo
      */
-    public void deploy(Servo servo) {
-        double targetPosition = 0;
-        if (servo.equals(ColorServo)) targetPosition = servo.getPosition()== ColorStart ? ColorDeploy : ColorStart;
-        else return;
-        servo.setPosition(targetPosition);
+    public void deploy(Servo servo, double targetPos) throws InterruptedException {
+        double currentPos = servo.getPosition();
+        if (currentPos > targetPos){
+            for (double d = currentPos; d >= targetPos; d -= 0.1) {
+                servo.setPosition(d);
+                sleep(100);
+            }
+        }
+        else {
+            for (double d = currentPos; d <= targetPos; d += 0.1) {
+                servo.setPosition(d);
+                sleep(100);
+            }
+        }
 
     }
 }

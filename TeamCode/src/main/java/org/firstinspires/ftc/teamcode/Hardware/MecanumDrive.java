@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Thread.sleep;
@@ -25,6 +26,7 @@ public class MecanumDrive extends Motor4 {
         super.initSensor();
         color = hwMap.colorSensor.get(Constants.ColorSensor);
     }
+
 
     public boolean isGold(){
         int redValue = color.red();
@@ -217,9 +219,10 @@ public class MecanumDrive extends Motor4 {
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
             leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
             rightBackPower = Range.clip(rightBackPower, -1.0, 1.0);
-            LFront.setPower(leftFrontPower);
-            RFront.setPower(rightFrontPower);
-            LBack.setPower(leftBackPower);
+            // rightBack motor is an old motor, so we can't change how it performs, so instead, we modified the other motors to turn slower
+            LFront.setPower(leftFrontPower*0.85);
+            RFront.setPower(rightFrontPower*0.85);
+            LBack.setPower(leftBackPower*0.85);
             RBack.setPower(rightBackPower);
 
             lfCurPos = LFront.getCurrentPosition();
@@ -361,6 +364,7 @@ public class MecanumDrive extends Motor4 {
         // TODO:  Add encoderDrive() method for driving by encoders using Mecanum drive power sets
 
     }
+
 }
 
 
