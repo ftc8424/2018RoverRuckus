@@ -69,7 +69,6 @@ public abstract class AutoBase extends LinearOpMode {
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
-        robot.robot_init(hardwareMap);
         boolean turnSuccessful = false;
         int times = 0;
         do {

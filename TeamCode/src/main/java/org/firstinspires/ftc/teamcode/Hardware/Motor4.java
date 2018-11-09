@@ -108,8 +108,8 @@ public class Motor4 extends Base {
 
         lfEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
         rfEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
-        lbEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
-        rbEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
+        lbEncoderSet = setEncoderPosition(caller, LBack, newLeftBackTarget, encoderTimeout);
+        rbEncoderSet = setEncoderPosition(caller, RBack, newRightBackTarget, encoderTimeout);
 //        caller.telemetry.addLine("EncoderSet:")
 //                .addData("LB: ", lbEncoderSet)
 //                .addData("RB: ", rbEncoderSet)
@@ -128,7 +128,7 @@ public class Motor4 extends Base {
         int lfCurPos;
         int rfCurPos;
         int lbCurPos;
-        int rbCurPob;
+        int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
         double leftFrontPower;
         double rightFrontPower;
@@ -159,16 +159,17 @@ public class Motor4 extends Base {
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
 
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
-                            leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
-            caller.telemetry.update();
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
-            rbCurPob = RBack.getCurrentPosition();
+            rbCurPos = RBack.getCurrentPosition();
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
+                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower)
+                    .addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
+                            lfCurPos, rfCurPos, lbCurPos, rbCurPos);
+            caller.telemetry.update();
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
-            //     if ( robotType == FULLAUTO )
-            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPob - newRightBackTarget) >= 5);
+            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
         }
         while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
 
