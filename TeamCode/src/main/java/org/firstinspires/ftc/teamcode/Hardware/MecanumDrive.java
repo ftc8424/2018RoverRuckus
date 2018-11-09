@@ -214,7 +214,6 @@ public class MecanumDrive extends Motor4 {
                 leftBackPower = speed;
                 rightBackPower = speed;
             }
-
             leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
             leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
