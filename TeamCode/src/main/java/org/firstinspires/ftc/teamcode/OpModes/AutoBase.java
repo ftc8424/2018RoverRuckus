@@ -301,9 +301,12 @@ public abstract class AutoBase extends LinearOpMode {
 
         }
     }
+
     public boolean deployLander(int timeout) throws InterruptedException {
+        // TODO: the Zero Power Behavior is already BRAKE in Hardware.Meet1Robot, so you can remove
         robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // TODO: Pull the variable declarations out of this method and put them into encoderLiftMotor
         final int COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
         final double COUNTS_PER_MOTOR_REV = 1680;  // AndyMark NeveRest 60:1 CPR
         final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
@@ -312,17 +315,26 @@ public abstract class AutoBase extends LinearOpMode {
         final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                 (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
 
+        // TODO: You should do the runtime calculations similar to encoderDrive() to see if you deployed or not
+        // TODO: E.g., int stopTime = runtime.seconds() + timeout;
+        // TODO: You need to call encoderLiftMotor(-7.25) to get it to drop 7.25 inches instead of doing the set power and stuff yourself
         robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() - (int)Math.round(7.25*encoderInch));
         robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.LiftMotor.setPower(.6);
 
+        // TODO:  Before you run this, you should do:  if ( !opModeIsActive() || runtime.milliseconds() > stopTime) return false;
+        // TODO:  you
+
         robot.encoderDrive(this, .75, -1, -1 ,1);
 
+        // TODO: You should call encoderLiftMotor(7.25) to get it to pull the lift down the same amount
+        // TODO: But before you call it, you need to again do:  if ( !opModeIsActive() || runtime.milliseconds() > stopTime ) return false;
         robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() + (int)Math.round(7.25*encoderInch));
         robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.LiftMotor.setPower(.6);
 
-
+        // TODO: You've just created a recursion loop because you're calling yourself within yourself, all you need to do here is
+        // TODO:
 
         if (deployLander(10)) {
             return true;
