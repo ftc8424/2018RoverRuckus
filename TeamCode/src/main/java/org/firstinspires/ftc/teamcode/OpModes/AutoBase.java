@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
@@ -64,7 +65,6 @@ public abstract class AutoBase extends LinearOpMode {
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
-
 
     public void runDepot() throws InterruptedException {
 
@@ -301,4 +301,91 @@ public abstract class AutoBase extends LinearOpMode {
 
         }
     }
-}
+    public boolean deployLander(int timeout) throws InterruptedException {
+        robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        final int COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
+        final double COUNTS_PER_MOTOR_REV = 1680;  // AndyMark NeveRest 60:1 CPR
+        final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
+        final double WHEEL_DIAMETER_INCHES = 2.5;   // Diameter of spool
+
+        final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+                (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+
+        robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() - (int)Math.round(7.25*encoderInch));
+        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.LiftMotor.setPower(.6);
+
+        robot.encoderDrive(this, .75, -1, -1 ,1);
+
+        robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() + (int)Math.round(7.25*encoderInch));
+        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.LiftMotor.setPower(.6);
+
+
+
+        if (deployLander(10)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+        public void encoderLiftMotor(LinearOpMode caller,
+        double speed,
+        double encoderInch,
+        double leftInches, double rightInches,
+        double timeoutS) throws InterruptedException {
+
+            int newLiftMotorTarget;
+            //int getHeading = gyro.getIntegratedZValue();
+            long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
+
+            if ( !caller.opModeIsActive() )
+                return;
+
+            robot.setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+            boolean LiftMotorEncoderSet = false;
+
+            newLiftMotorTarget = robot.LiftMotor.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
+            LiftMotorEncoderSet = robot.setEncoderPosition(caller, robot.LiftMotor, newLiftMotorTarget, encoderTimeout);
+
+            if ( ! (LiftMotorEncoderSet) ) {
+                caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
+                caller.telemetry.update();
+                caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
+                return;
+            }
+
+            // keep looping while we are still active, and there is time left, and motors haven't made position.
+            boolean isBusy;
+            int LiftMotorCurPos;
+            double stopTime = runtime.seconds() + timeoutS;
+            double LiftMotorPower;
+            double lastSetTime = runtime.milliseconds();
+            int HeadingLoop;
+
+            do {
+                LiftMotorPower = speed;
+                if (LiftMotorPower <= 0.01) {
+                    lastSetTime = runtime.milliseconds();
+                    LiftMotorPower = speed;
+                    LiftMotorPower = speed;
+                }
+
+               LiftMotorPower = Range.clip(LiftMotorPower, -1.0, 1.0);
+                robot.LiftMotor.setPower(LiftMotorPower);
+
+                caller.telemetry.addData("Power:", "LiftMotorPower %.2f", LiftMotorPower);
+                caller.telemetry.update();
+                LiftMotorCurPos = robot.LiftMotor.getCurrentPosition();
+                isBusy = (Math.abs(LiftMotorCurPos - newLiftMotorTarget) >= 5);
+            }
+            while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
+
+            // Stop all motion;
+            robot.LiftMotor.setPower(0);
+            // Turn off RUN_TO_POSITION
+            robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
