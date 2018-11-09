@@ -55,7 +55,7 @@ public class MecanumTestMotors extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new Meet1Robot();
+    private Meet1Robot robot = new Meet1Robot();
     private double lastpress = 0;
 
 

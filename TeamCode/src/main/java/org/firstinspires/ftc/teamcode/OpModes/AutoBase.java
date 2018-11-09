@@ -69,9 +69,11 @@ public abstract class AutoBase extends LinearOpMode {
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
+        robot.robot_init(hardwareMap);
         boolean turnSuccessful = false;
         int times = 0;
         do {
+            robot.encoderStrafe(this, .37, 0, 10, 5);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
@@ -105,13 +107,9 @@ public abstract class AutoBase extends LinearOpMode {
                     .addData("Servo Position", robot.ColorServo.getPosition());
             telemetry.update();
             sleep(2000);
-            robot.encoderDrive(this, .75, 18, 18, 5);
+            robot.encoderDrive(this, .75, 8, 8, 5);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 4, 6, 2);
-
-            robot.encoderDrive(this, .75,18, 18, 2);
-            robot.encoderStrafe(this, .75, 15, 0, 4);
-            robot.encoderDrive(this, .75, 4, 6, 2);
+            robot.encoderDrive(this, 0.75, 4, 4, 2);
 
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -219,6 +217,7 @@ public abstract class AutoBase extends LinearOpMode {
         int times = 0;
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+            robot.encoderStrafe(this, .75, 0, 10, 5);
             if (turnSuccessful == false) {
                 double heading = robot.getHeading();
                 switch (times) {
@@ -244,9 +243,9 @@ public abstract class AutoBase extends LinearOpMode {
 
         if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
-            robot.encoderDrive(this, .75, 18, 18, 2);
+            robot.encoderDrive(this, .75, 8, 8, 2);
             robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 5, 6, 2);
+            robot.encoderDrive(this, 0.75, 6, 6, 2);
 
 
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())

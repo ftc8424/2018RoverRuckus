@@ -19,6 +19,7 @@ public class Meet1Robot extends MecanumDrive {
         super.initServo();
         ColorServo = hwMap.servo.get(Constants.ColorServo);
         try {
+            deploy(ColorServo, ColorSample);
             deploy(ColorServo, ColorStart);
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -220,9 +220,9 @@ public class MecanumDrive extends Motor4 {
             leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
             rightBackPower = Range.clip(rightBackPower, -1.0, 1.0);
             // rightBack motor is an old motor, so we can't change how it performs, so instead, we modified the other motors to turn slower
-            LFront.setPower(leftFrontPower*0.85);
-            RFront.setPower(rightFrontPower*0.85);
-            LBack.setPower(leftBackPower*0.85);
+            LFront.setPower(leftFrontPower*0.94);
+            RFront.setPower(rightFrontPower*0.94);
+            LBack.setPower(leftBackPower*0.94);
             RBack.setPower(rightBackPower);
 
             lfCurPos = LFront.getCurrentPosition();
