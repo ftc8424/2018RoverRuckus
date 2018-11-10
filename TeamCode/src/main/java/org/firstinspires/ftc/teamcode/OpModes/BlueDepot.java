@@ -8,7 +8,11 @@ public class BlueDepot extends AutoBase {
 
     public void runOpMode() throws InterruptedException {
         initialHeading = 40;
+        deployHeading = 90;
+        halfHeading = 180;
         finalHeading = 0;
+        lastHeading = 145;
+        lastFinalHeading = 155;
         robot.robot_init(hardwareMap,true);
         telemetry.addData("Status", "Initialized");
         telemetry.update();

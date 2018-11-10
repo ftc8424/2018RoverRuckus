@@ -144,11 +144,11 @@ public class MecanumDrive extends Motor4 {
                               double speed,
                               double leftInches, double rightInches,
                               double timeoutS) throws InterruptedException {
-        int newLeftFrontTarget;
-        int newRightFrontTarget;
-        int newLeftBackTarget;
-        int newRightBackTarget;
-        //int getHeading = gyro.getIntegratedZValue();
+        /*/int newLeftFrontTarget;
+        //int newRightFrontTarget;
+        //int newLeftBackTarget;
+        //int newRightBackTarget;
+        int getHeading = gyro.getIntegratedZValue();
         long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
 
         if (!caller.opModeIsActive())
@@ -233,10 +233,15 @@ public class MecanumDrive extends Motor4 {
             // TODO: Check to see if a call to scalePower() might help things with the scaled values
             // TODO:  E.g., double[] power = scalePower(leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             // TODO:  Or:  double[] power = scalePower(leftFrontPower*0.94, rightFrontPower*0.94, leftBackPower*0.94, rightBackPower);
-            LFront.setPower(leftFrontPower*0.94);
-            RFront.setPower(rightFrontPower*0.94);
-            LBack.setPower(leftBackPower*0.94);
-            RBack.setPower(rightBackPower);
+            double[] power = scalePower(leftFrontPower*.94, rightFrontPower*.94, leftBackPower*.94, rightBackPower);
+            LFront.setPower(power[0]);
+            RFront.setPower(power[1]);
+            LBack.setPower(power[2]);
+            RBack.setPower(power[3]);
+            //LFront.setPower(leftFrontPower*0.94);
+            //RFront.setPower(rightFrontPower*0.94);
+            //LBack.setPower(leftBackPower*0.94);
+            //RBack.setPower(rightBackPower);
 
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
@@ -258,7 +263,24 @@ public class MecanumDrive extends Motor4 {
         LBack.setPower(0);
         RBack.setPower(0);
 
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+
+        double currentPos = getHeading();
+        double newPos = currentPos - 90;
+        if(newPos < 0){
+            newPos = 360 - Math.abs(newPos);
+        }else if(newPos> 360){
+            newPos = newPos - 360;
+        }
+        gyroTurn(caller, newPos, 4);
+        if(rightInches > 0 && leftInches == 0){
+            encoderDrive(caller, speed, -rightInches, -rightInches, timeoutS);
+        }
+        else if(leftInches > 0 && rightInches == 0){
+            encoderDrive(caller, speed, leftInches, leftInches, timeoutS);
+
+        }
+        gyroTurn(caller, currentPos, 4);
     }
 
 }

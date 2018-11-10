@@ -228,7 +228,7 @@ public class Base {
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .3;
+        double turnFloor = .1;
         double stopTime = runtime.seconds() + timeoutS;
 
 
@@ -244,17 +244,17 @@ public class Base {
             deltaHeading = gHeading - heading;
             deltaAngle = Math.abs(deltaHeading);
             turnspeed = deltaAngle/360;
-            if (turnspeed < .1 || deltaAngle < 30){
+            if (turnspeed < turnFloor || deltaAngle < 30){
                 turnspeed = turnFloor;
             }
             if (31 < deltaAngle && deltaAngle < 75){
-                turnspeed = .50;
+                turnspeed = .1;
             }
             if (76 < deltaAngle && deltaAngle < 120){
-                turnspeed = .75;
+                turnspeed = .3;
             }
             if (121 < deltaAngle && deltaAngle < 180){
-                turnspeed = .9;
+                turnspeed = .5;
             }
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
@@ -317,7 +317,7 @@ public class Base {
         if ( ! (lbEncoderSet && rbEncoderSet) ) {
             caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
             caller.telemetry.update();
-            caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
+            //caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
             return;
         }
 

@@ -8,7 +8,11 @@ public class RedDepot extends AutoBase {
 
     public void runOpMode() throws InterruptedException {
         initialHeading = 220;
+        deployHeading = 270;
         finalHeading = 180;
+        halfHeading = 0;
+        lastHeading = 325;
+        lastFinalHeading = 335;
         robot.robot_init(hardwareMap,true);
         telemetry.addData("Status", "Initialized");
         telemetry.update();

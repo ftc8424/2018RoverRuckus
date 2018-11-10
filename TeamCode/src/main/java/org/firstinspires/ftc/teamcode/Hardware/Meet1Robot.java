@@ -8,6 +8,7 @@ import static java.lang.Thread.sleep;
 public class Meet1Robot extends MecanumDrive {
 
     public Servo ColorServo = null;
+    public Servo MarkerServo = null;
     public double ColorStart = 0.0;
     public double ColorDeploy = 1.0;
     public double ColorSample = 0.5;
@@ -18,9 +19,12 @@ public class Meet1Robot extends MecanumDrive {
     public void initServo(){
         super.initServo();
         ColorServo = hwMap.servo.get(Constants.ColorServo);
+        MarkerServo = hwMap.servo.get(Constants.MarkerServo);
         try {
-            deploy(ColorServo, ColorSample);
-            deploy(ColorServo, ColorStart);
+            //deploy(ColorServo, ColorSample);
+            //deploy(ColorServo, ColorStart);
+            deploy(MarkerServo, ColorSample);
+            deploy(MarkerServo, ColorStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -52,13 +56,13 @@ public class Meet1Robot extends MecanumDrive {
         if (currentPos > targetPos){
             for (double d = currentPos; d >= targetPos; d -= 0.1) {
                 servo.setPosition(d);
-                sleep(100);
+                sleep(50);
             }
         }
         else {
             for (double d = currentPos; d <= targetPos; d += 0.1) {
                 servo.setPosition(d);
-                sleep(100);
+                sleep(50);
             }
         }
 

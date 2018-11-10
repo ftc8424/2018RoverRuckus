@@ -58,9 +58,9 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name="Mec TeleOp", group="Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Mec TeleOp", group="Opmode")
 
-public class MecanumTeleop extends OpMode {
+public class MecanumTeleOp extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -102,8 +102,12 @@ public class MecanumTeleop extends OpMode {
     @Override
     public void loop() {
         double LiftVal = gamepad2.left_stick_y;
-        robot.LiftMotor.setPower(LiftVal);
-        telemetry.addData("Lift Value", LiftVal);
+        if (Math.abs(LiftVal) > 0.5) {
+            robot.LiftMotor.setPower(LiftVal);
+            telemetry.addData("Lift Value", LiftVal);
+        } else {
+            robot.LiftMotor.setPower(0);
+        }
         double[] wheelPower = { 0, 0, 0, 0 };
 
         telemetry.addData("Status", "Running: " + runtime.toString());

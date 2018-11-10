@@ -64,16 +64,20 @@ public abstract class AutoBase extends LinearOpMode {
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
+    protected double deployHeading = 0;
+    protected double halfHeading = 0;
+    protected double lastHeading = 0;
+    protected double lastFinalHeading = 0;
 
 
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
-        boolean turnSuccessful = false;
+        boolean turnSuccessful = true;
         int times = 0;
-        do {
-            robot.encoderStrafe(this, .37, 0, 10, 5);
-            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+
+        /*do {
+            /turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
                         .addData("Servo Position", robot.ColorServo.getPosition());
@@ -97,18 +101,38 @@ public abstract class AutoBase extends LinearOpMode {
             }
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
-        
-        if (turnSuccessful) {
+*/
+
+        robot.encoderDrive(this, 1, 45, 45, 5);
+        //robot.encoderStrafe(this, .37, 47, 0, 5);
+        robot.gyroTurn(this, deployHeading, 5);
+        robot.encoderDrive(this, 1, 36, 36, 5);
+        robot.deploy(robot.MarkerServo, robot.ColorDeploy);
+        sleep(2000);
+        robot.encoderDrive(this, 1, -24, -24, 5);
+        robot.gyroTurn(this, halfHeading, 3);
+        robot.encoderDrive(this, .75, 24, 25, 5);
+        robot.gyroTurn(this, lastHeading, 3);
+        robot.encoderDrive(this, 1, 65, 60, 2);
+        robot.gyroTurn(this, lastFinalHeading, 3);
+        robot.encoderDrive(this, .5, 15, 10, 4);
+        //robot.gyroTurn(this, halfHeading, 3);
+        //robot.encoderDrive(this, .75, 10, 10, 3);
+        //robot.gyroTurn(this, 45, 3);
+        //robot.encoderDrive(this, .3, 6, 6, 2);
+        //robot.encoderStrafe(this, .37, 0 , 24, 5);
+
+       /* if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
             robot.LiftMotor.setTargetPosition(0);
 
             telemetry.addData("TURN STATUS", "SUCCESSFUL!  Scanning with Color Sensor")
                     .addData("Servo Position", robot.ColorServo.getPosition());
             telemetry.update();
-            sleep(2000);
-            robot.encoderDrive(this, .75, 8, 8, 5);
-            robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 4, 4, 2);
+            sleep(1000);
+           // robot.encoderDrive(this, .75, 8, 8, 5);
+            //robot.encoderStrafe(this, 0.75, 0, 15, 4);
+            //robot.encoderDrive(this, 0.75, 4, 4, 2);
 
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -120,9 +144,11 @@ public abstract class AutoBase extends LinearOpMode {
 
             if (robot.isGold() == false) {
 
+                robot.encoderDrive(this, .75, -4, -4, 2);
                 robot.encoderStrafe(this, 0.75, 0, 17, 10);
+                robot.encoderDrive(this, .75, 4, 4, 2);
 
-                robot.encoderStrafe(this, .75,0, 17, 10);  // TODO Strafe right 15 inches
+
 
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -135,8 +161,9 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.update();
                 sleep(1000);
                 if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, .75, 0, 17, 10);  // TODO Strafe right 15 inches
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                    robot.encoderDrive(this, .75, -4, -4, 2);
+                    robot.encoderStrafe(this, 0.75, 0, 17, 10);
+                    robot.encoderDrive(this, .75, 4, 4, 2);                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
@@ -200,23 +227,23 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, .75, -20,-20, 10);
             }
         }
-        else {
+        //else {
             // TODO: Put rest of movement, for crater park and/or deploy marker
-            telemetry.addData("Can't turn towards target", initialHeading);
-            telemetry.update();
+           // telemetry.addData("Can't turn towards target", initialHeading);
+            //telemetry.update();
 
-        }
+        }*/
     }
 
 
     public void runCrater() throws InterruptedException {
-
+/*
         runtime.reset();
         boolean turnSuccessful = false;
         int times = 0;
+        robot.encoderStrafe(this, .75, 0, 10, 5);
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
-            robot.encoderStrafe(this, .75, 0, 10, 5);
             if (turnSuccessful == false) {
                 double heading = robot.getHeading();
                 switch (times) {
@@ -239,6 +266,14 @@ public abstract class AutoBase extends LinearOpMode {
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
+        robot.encoderStrafe(this, .37, 35, 0, 5);
+        robot.gyroTurn(this, 90, 5);
+        robot.encoderDrive(this, .37, 43, 0, 5);
+        robot.gyroTurn(this, 0, 5);
+        robot.encoderDrive(this, .37, 52, 52, 5);
+        //Deploy linear actuator for team marker
+        robot.encoderDrive(this, .37, -52, -52, 5);
+        robot.encoderStrafe(this, .37, 0, 34, 5);
 
         if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
@@ -259,7 +294,7 @@ public abstract class AutoBase extends LinearOpMode {
 
 
             if (robot.isGold() == false) {
-                robot.encoderStrafe(this, .75, 0, 17, 10);  // TODO Strafe right 15 inches
+                robot.encoderStrafe(this, .75, 0, 17, 10);
                 telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -270,7 +305,7 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
                 if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, .75, 0, 17, 10);  // TODO Strafe right 15 inches
+                    robot.encoderStrafe(this, .75, 0, 17, 10);
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -328,7 +363,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             }
 
-
+*/
 
     }
 }
