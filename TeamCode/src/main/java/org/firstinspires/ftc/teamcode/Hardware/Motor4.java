@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -70,7 +69,7 @@ public class Motor4 extends Base {
         RFront.setMode(mode);
     }
 
-    public void normalDrive (OpMode caller, double leftPower, double rightPower) {
+    public void normalDrive (LinearOpMode caller, double leftPower, double rightPower) {
         super.normalDrive(caller, leftPower, rightPower);
         LFront.setPower(leftPower);
         RFront.setPower(rightPower);

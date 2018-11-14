@@ -113,7 +113,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.gyroTurn(this, halfHeading, 3);
         robot.encoderDrive(this, .75, 24, 25, 5);
         robot.gyroTurn(this, lastHeading, 3);
-        robot.encoderDrive(this, 1, 65, 60, 2);
+        robot.encoderDrive(this, .75, 65, 60, 2);
         robot.gyroTurn(this, lastFinalHeading, 3);
         robot.encoderDrive(this, .5, 15, 10, 4);
         //robot.gyroTurn(this, halfHeading, 3);

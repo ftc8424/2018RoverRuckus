@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -275,7 +274,10 @@ public class Base {
             return false;
     }
 
-    public void normalDrive (OpMode caller, double leftBackPower, double rightBackPower) {
+    public void normalDrive (LinearOpMode caller, double leftBackPower, double rightBackPower) {
+        if ( !caller.opModeIsActive() )
+            return;
+
         LBack.setPower(leftBackPower);
         RBack.setPower(rightBackPower);
         caller.telemetry.addData("Base-normalDrive:", "Back Power set to L:%.2f, R:%.2f", leftBackPower, rightBackPower);

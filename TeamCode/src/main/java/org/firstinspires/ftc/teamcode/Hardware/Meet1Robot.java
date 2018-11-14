@@ -56,13 +56,13 @@ public class Meet1Robot extends MecanumDrive {
         if (currentPos > targetPos){
             for (double d = currentPos; d >= targetPos; d -= 0.1) {
                 servo.setPosition(d);
-                sleep(50);
+                sleep(100);
             }
         }
         else {
             for (double d = currentPos; d <= targetPos; d += 0.1) {
                 servo.setPosition(d);
-                sleep(50);
+                sleep(100);
             }
         }
 
