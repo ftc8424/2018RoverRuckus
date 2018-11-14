@@ -69,7 +69,6 @@ public abstract class AutoBase extends LinearOpMode {
     protected double lastHeading = 0;
     protected double lastFinalHeading = 0;
 
-
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
