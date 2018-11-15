@@ -10,6 +10,7 @@ public class RedCrater extends AutoBase {
         initialHeading = 310;
         deployHeading = 270;
         robot.robot_init(hardwareMap,true);
+        initRobot();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

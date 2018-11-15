@@ -32,7 +32,7 @@ public class Meet1Robot extends MecanumDrive {
 
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
-        LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -40,7 +40,8 @@ public class Meet1Robot extends MecanumDrive {
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LiftMotor.setPower(0);
-
+            */
+        LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
     }
 
     /**

@@ -53,7 +53,7 @@ public class Motor4 extends Base {
         }
 
         super.initMotor(revLeft);
-        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
+        //setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
     }
 
     /**

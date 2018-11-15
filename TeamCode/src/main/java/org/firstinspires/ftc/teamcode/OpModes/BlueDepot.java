@@ -14,6 +14,7 @@ public class BlueDepot extends AutoBase {
         lastHeading = 145;
         lastFinalHeading = 155;
         robot.robot_init(hardwareMap,true);
+        initRobot();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

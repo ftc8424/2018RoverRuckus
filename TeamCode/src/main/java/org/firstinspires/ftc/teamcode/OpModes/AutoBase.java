@@ -29,14 +29,18 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.Constants;
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
 
@@ -69,14 +73,34 @@ public abstract class AutoBase extends LinearOpMode {
     protected double lastHeading = 0;
     protected double lastFinalHeading = 0;
 
+    public void initRobot() {
+
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LiftMotor.setPower(0);
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //imu2 = hwMap.get(BNO055IMU.class, Constants.IMU2);
+        robot.imu.initialize(parameters);
+        //imu2.initialize(parameters);    // Use the same params, note will need different if orientation
+    }
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
         boolean turnSuccessful = true;
         int times = 0;
 
-        /*do {
-            /turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+        do {
+            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
                         .addData("Servo Position", robot.ColorServo.getPosition());
@@ -100,9 +124,9 @@ public abstract class AutoBase extends LinearOpMode {
             }
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
-*/
 
-        robot.encoderDrive(this, 1, 45, 45, 5);
+
+        /*robot.encoderDrive(this, 1, 45, 45, 5);
         //robot.encoderStrafe(this, .37, 47, 0, 5);
         robot.gyroTurn(this, deployHeading, 5);
         robot.encoderDrive(this, 1, 36, 36, 5);
@@ -115,23 +139,23 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 65, 60, 2);
         robot.gyroTurn(this, lastFinalHeading, 3);
         robot.encoderDrive(this, .5, 15, 10, 4);
-        //robot.gyroTurn(this, halfHeading, 3);
-        //robot.encoderDrive(this, .75, 10, 10, 3);
-        //robot.gyroTurn(this, 45, 3);
-        //robot.encoderDrive(this, .3, 6, 6, 2);
-        //robot.encoderStrafe(this, .37, 0 , 24, 5);
+        robot.gyroTurn(this, halfHeading, 3);
+        robot.encoderDrive(this, .75, 10, 10, 3);
+        robot.gyroTurn(this, 45, 3);
+        robot.encoderDrive(this, .3, 6, 6, 2);
+        robot.encoderStrafe(this, .37, 0 , 24, 5); */
 
-       /* if (turnSuccessful) {
+        if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
-            robot.LiftMotor.setTargetPosition(0);
+            // robot.LiftMotor.setTargetPosition(0);
 
             telemetry.addData("TURN STATUS", "SUCCESSFUL!  Scanning with Color Sensor")
                     .addData("Servo Position", robot.ColorServo.getPosition());
             telemetry.update();
             sleep(1000);
-           // robot.encoderDrive(this, .75, 8, 8, 5);
-            //robot.encoderStrafe(this, 0.75, 0, 15, 4);
-            //robot.encoderDrive(this, 0.75, 4, 4, 2);
+            robot.encoderDrive(this, .75, 8, 8, 5);
+            robot.encoderStrafe(this, 0.75, 0, 15, 4);
+            robot.encoderDrive(this, 0.75, 4, 4, 2);
 
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -231,12 +255,12 @@ public abstract class AutoBase extends LinearOpMode {
            // telemetry.addData("Can't turn towards target", initialHeading);
             //telemetry.update();
 
-        }*/
-    }
+        }
+
 
 
     public void runCrater() throws InterruptedException {
-/*
+
         runtime.reset();
         boolean turnSuccessful = false;
         int times = 0;
@@ -362,7 +386,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             }
 
-*/
+
 
     }
 }

@@ -14,6 +14,7 @@ public class RedDepot extends AutoBase {
         lastHeading = 325;
         lastFinalHeading = 335;
         robot.robot_init(hardwareMap,true);
+        initRobot();
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

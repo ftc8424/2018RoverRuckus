@@ -89,16 +89,16 @@ public class Base {
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        /*BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();*/
         imu = hwMap.get(BNO055IMU.class, Constants.IMU);
         //imu2 = hwMap.get(BNO055IMU.class, Constants.IMU2);
-        imu.initialize(parameters);
+        //imu.initialize(parameters);
         //imu2.initialize(parameters);    // Use the same params, note will need different if orientation
 
     }
@@ -136,7 +136,7 @@ public class Base {
         if (revLeft)
             LBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
+        //this.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
         LBack.setPower(0);
         RBack.setPower(0);
     }
