@@ -73,6 +73,10 @@ public abstract class AutoBase extends LinearOpMode {
     protected double lastHeading = 0;
     protected double lastFinalHeading = 0;
 
+    /**
+     * Initialize the robot for autonomous-specific things (e.g., set encoder mode, initialize IMU)
+     */
+
     public void initRobot() {
 
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -93,6 +97,18 @@ public abstract class AutoBase extends LinearOpMode {
         robot.imu.initialize(parameters);
         //imu2.initialize(parameters);    // Use the same params, note will need different if orientation
     }
+
+    /**
+     * The autonomous code to run when the robot is on the Depot side of the field.
+     *
+     * This is the same code regardless of our color, because the lander and the depot are the
+     * same, with the only difference being the gyro heading values, as they are 90 degrees off
+     * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
+     * exactly the same.
+     *
+     * @throws InterruptedException
+     */
+
     public void runDepot() throws InterruptedException {
 
         runtime.reset();
@@ -126,12 +142,16 @@ public abstract class AutoBase extends LinearOpMode {
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
 
-        /*robot.encoderDrive(this, 1, 45, 45, 5);
-        //robot.encoderStrafe(this, .37, 47, 0, 5);
+        robot.encoderDrive(this, 1, 45, 45, 5);
+        robot.encoderStrafe(this, .37, 47, 0, 5);
         robot.gyroTurn(this, deployHeading, 5);
         robot.encoderDrive(this, 1, 36, 36, 5);
         robot.deploy(robot.MarkerServo, robot.ColorDeploy);
         sleep(2000);
+
+        // TODO: Rework all of the sampling below to do the sample from the depot rather than coming all the way back out again
+
+/*
         robot.encoderDrive(this, 1, -24, -24, 5);
         robot.gyroTurn(this, halfHeading, 3);
         robot.encoderDrive(this, .75, 24, 25, 5);
@@ -143,16 +163,17 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 10, 10, 3);
         robot.gyroTurn(this, 45, 3);
         robot.encoderDrive(this, .3, 6, 6, 2);
-        robot.encoderStrafe(this, .37, 0 , 24, 5); */
+        robot.encoderStrafe(this, .37, 0 , 24, 5);
+*/
+
+        // TODO: Need to put a check to make sure the OpMode is still active in EVERY if condition
 
         if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
             // robot.LiftMotor.setTargetPosition(0);
 
-            telemetry.addData("TURN STATUS", "SUCCESSFUL!  Scanning with Color Sensor")
-                    .addData("Servo Position", robot.ColorServo.getPosition());
-            telemetry.update();
-            sleep(1000);
+            // TODO: Put some comments in here before the different clauses so we know what the robot is supposed to be doing.  Helps with troubleshooting.
+
             robot.encoderDrive(this, .75, 8, 8, 5);
             robot.encoderStrafe(this, 0.75, 0, 15, 4);
             robot.encoderDrive(this, 0.75, 4, 4, 2);
@@ -250,14 +271,19 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, .75, -20,-20, 10);
             }
         }
-        //else {
-            // TODO: Put rest of movement, for crater park and/or deploy marker
-           // telemetry.addData("Can't turn towards target", initialHeading);
-            //telemetry.update();
-
-        }
+    }
 
 
+    /**
+     * The autonomous code to run when the robot is on the Crater side of the field.
+     *
+     * This is the same code regardless of our color, because the lander and the crater are the
+     * same, with the only difference being the gyro heading values, as they are 90 degrees off
+     * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
+     * exactly the same.
+     *
+     * @throws InterruptedException
+     */
 
     public void runCrater() throws InterruptedException {
 
@@ -297,6 +323,8 @@ public abstract class AutoBase extends LinearOpMode {
         //Deploy linear actuator for team marker
         robot.encoderDrive(this, .37, -52, -52, 5);
         robot.encoderStrafe(this, .37, 0, 34, 5);
+
+        // TODO: Need to put a check to make sure the OpMode is still active in EVERY if condition
 
         if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);

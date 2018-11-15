@@ -155,9 +155,6 @@ public class MecanumDrive extends Motor4 {
 
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // TODO:  If Strafing still doesn't work with power changes, then uncomment this next line AND remove all checking of RBack's position
-        // RBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         if (leftInches > 0 && rightInches == 0 ) {
             newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
             newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
