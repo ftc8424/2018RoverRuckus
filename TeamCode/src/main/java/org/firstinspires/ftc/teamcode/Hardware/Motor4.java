@@ -33,13 +33,13 @@ public class Motor4 extends Base {
      * If this is a holonomic drive (e.g., Mecanum or omni-wheel in crab-drive format) then you
      * don't want to do that, so pass with false (or just call the version without parameters).
      *
-     * @param revLeft Should I reverse the left motors?
+     * @param revRight Should I reverse the left motors?
      */
 
 
 
     @Override
-    public void initMotor(boolean revLeft) {
+    public void initMotor(boolean revRight) {
 
         LFront = hwMap.dcMotor.get(Constants.LFRONT);
         RFront = hwMap.dcMotor.get(Constants.RFRONT);
@@ -48,11 +48,11 @@ public class Motor4 extends Base {
         RFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (revLeft) {
-            LFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (revRight) {
+            RFront.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
-        super.initMotor(revLeft);
+        super.initMotor(revRight);
         //setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
     }
 

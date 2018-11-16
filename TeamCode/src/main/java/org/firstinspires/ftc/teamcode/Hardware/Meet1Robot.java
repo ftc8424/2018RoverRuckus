@@ -30,8 +30,8 @@ public class Meet1Robot extends MecanumDrive {
         }
     }
 
-    public void initMotor(boolean revLeft) {
-        super.initMotor(revLeft);
+    public void initMotor(boolean revRight) {
+        super.initMotor(revRight);
         /*LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

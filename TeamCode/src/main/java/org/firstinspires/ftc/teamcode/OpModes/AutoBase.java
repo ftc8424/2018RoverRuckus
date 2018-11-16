@@ -151,6 +151,11 @@ public abstract class AutoBase extends LinearOpMode {
 
         // TODO: Rework all of the sampling below to do the sample from the depot rather than coming all the way back out again
 
+        robot.encoderDrive(this, 0.75, -3, -3, 2);
+        robot.gyroTurn(this,225,2);
+        robot.encoderStrafe(this, .75, 0, 1, 2);
+
+
 /*
         robot.encoderDrive(this, 1, -24, -24, 5);
         robot.gyroTurn(this, halfHeading, 3);
@@ -174,9 +179,9 @@ public abstract class AutoBase extends LinearOpMode {
 
             // TODO: Put some comments in here before the different clauses so we know what the robot is supposed to be doing.  Helps with troubleshooting.
 
-            robot.encoderDrive(this, .75, 8, 8, 5);
+            /*robot.encoderDrive(this, .75, 8, 8, 5);
             robot.encoderStrafe(this, 0.75, 0, 15, 4);
-            robot.encoderDrive(this, 0.75, 4, 4, 2);
+            robot.encoderDrive(this, 0.75, 4, 4, 2); */
 
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
@@ -189,7 +194,7 @@ public abstract class AutoBase extends LinearOpMode {
             if (robot.isGold() == false) {
 
                 robot.encoderDrive(this, .75, -4, -4, 2);
-                robot.encoderStrafe(this, 0.75, 0, 17, 10);
+                robot.encoderStrafe(this, 0.75, 17, 0, 10);
                 robot.encoderDrive(this, .75, 4, 4, 2);
 
 
@@ -206,7 +211,7 @@ public abstract class AutoBase extends LinearOpMode {
                 sleep(1000);
                 if (robot.isGold() == false) {
                     robot.encoderDrive(this, .75, -4, -4, 2);
-                    robot.encoderStrafe(this, 0.75, 0, 17, 10);
+                    robot.encoderStrafe(this, 0.75, 17, 0, 10);
                     robot.encoderDrive(this, .75, 4, 4, 2);                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -232,7 +237,7 @@ public abstract class AutoBase extends LinearOpMode {
                         telemetry.update();
                         sleep(1000);
                         //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 0, 33, 10);
+                        robot.encoderStrafe(this, .75, 33, 0, 10);
                         robot.gyroTurn(this, finalHeading, 4);
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     } else {
@@ -243,7 +248,7 @@ public abstract class AutoBase extends LinearOpMode {
                         telemetry.update();
                         //sleep(2000);
                         //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 0, 33, 10);
+                        robot.encoderStrafe(this, .75, 33, 0, 10);
                         robot.gyroTurn(this, finalHeading, 4);
                         robot.encoderDrive(this, .75, -20,-20, 10);
                     }
@@ -252,7 +257,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.deploy(robot.ColorServo, robot.ColorDeploy);
                     sleep(100);
                     robot.deploy(robot.ColorServo, robot.ColorStart);
-                    robot.encoderStrafe(this, .75, 0, 50, 10);
+                    robot.encoderStrafe(this, .75, 50, 0, 10);
 
 
                     robot.gyroTurn(this, finalHeading, 4);
@@ -263,7 +268,7 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.deploy(robot.ColorServo, robot.ColorDeploy);
                 sleep(100);
                 robot.deploy(robot.ColorServo, robot.ColorStart);
-                robot.encoderStrafe(this, .75, 0, 67, 10);
+                robot.encoderStrafe(this, .75, 46, 0, 10);
 
 
 
@@ -271,6 +276,9 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, .75, -20,-20, 10);
             }
         }
+        robot.gyroTurn(this,0, 2);
+        robot.encoderDrive(this, 1, -60,-60, 10);
+
     }
 
 

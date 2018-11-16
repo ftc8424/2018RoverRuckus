@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Thread.sleep;
@@ -17,8 +16,8 @@ public class MecanumDrive extends Motor4 {
 
     public ColorSensor color = null;
 
-    public void initMotor(boolean revLeft) {
-        super.initMotor(revLeft);
+    public void initMotor(boolean revRight) {
+        super.initMotor(revRight);
     }
 
     @Override
@@ -76,20 +75,20 @@ public class MecanumDrive extends Motor4 {
          * Math.atan2().
          */
 
-        double magnitude = Math.hypot(-leftX, -leftY);
-        double angle = Math.atan2(-leftY, -leftX) - Math.PI / 4;
-        double rotation = rightX;
+        double magnitude = Math.hypot(leftY, leftX);
+        double angle = Math.atan2(-leftX, leftY) - Math.PI / 4;
+        double rotation = -rightX;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
 */
-        power[0] = magnitude * Math.cos(angle) + rotation;
+        power[0] = magnitude * Math.sin(angle) + rotation;
 
-        power[1] = magnitude * Math.sin(angle) - rotation;
+        power[1] = magnitude * Math.cos(angle) - rotation;
 
-        power[2] = magnitude * Math.sin(angle) + rotation;
+        power[2] = magnitude * Math.cos(angle) + rotation;
 
-        power[3] = magnitude * Math.cos(angle) - rotation;
+        power[3] = magnitude * Math.sin(angle) - rotation;
 
         return scalePower(power[0], power[1], power[2], power[3]);
         //return power;
