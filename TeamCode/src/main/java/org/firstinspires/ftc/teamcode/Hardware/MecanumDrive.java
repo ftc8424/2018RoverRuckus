@@ -16,8 +16,8 @@ public class MecanumDrive extends Motor4 {
 
     public ColorSensor color = null;
 
-    public void initMotor(boolean revRight) {
-        super.initMotor(revRight);
+    public void initMotor(boolean revLeft) {
+        super.initMotor(revLeft);
     }
 
     @Override
