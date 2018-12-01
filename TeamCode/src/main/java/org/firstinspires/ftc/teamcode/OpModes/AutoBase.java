@@ -116,6 +116,8 @@ public abstract class AutoBase extends LinearOpMode {
         int times = 0;
 
         do {
+            robot.encoderStrafe(this, .25, 0, 5, 3);
+            sleep(1000);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
@@ -140,9 +142,17 @@ public abstract class AutoBase extends LinearOpMode {
             }
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
+        sleep(1000);
+        robot.encoderDrive(this, .25, 17, 15, 3);
+        sleep(1000);
+        robot.encoderStrafe(this, .1, 15, 0, 3);
+        sleep(1000);
+        robot.encoderStrafe(this, .1, 0, 15, 3);
+        sleep(1000);
+        robot.encoderStrafe(this, .1, 0, 15, 3);
 
 
-        robot.encoderDrive(this, 1, 45, 45, 5);
+       /* robot.encoderDrive(this, 1, 45, 45, 5);
         robot.encoderStrafe(this, .37, 47, 0, 5);
         robot.gyroTurn(this, deployHeading, 5);
         robot.encoderDrive(this, 1, 36, 36, 5);
@@ -155,7 +165,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.gyroTurn(this,225,2);
         robot.encoderStrafe(this, .75, 0, 1, 2);
 
-
+*/
 /*
         robot.encoderDrive(this, 1, -24, -24, 5);
         robot.gyroTurn(this, halfHeading, 3);
@@ -173,7 +183,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         // TODO: Need to put a check to make sure the OpMode is still active in EVERY if condition
 
-        if (turnSuccessful) {
+       /* if (turnSuccessful) {
             robot.deploy(robot.ColorServo, robot.ColorSample);
             // robot.LiftMotor.setTargetPosition(0);
 
@@ -183,7 +193,7 @@ public abstract class AutoBase extends LinearOpMode {
             robot.encoderStrafe(this, 0.75, 0, 15, 4);
             robot.encoderDrive(this, 0.75, 4, 4, 2); */
 
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+            /*telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                     .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
@@ -278,7 +288,7 @@ public abstract class AutoBase extends LinearOpMode {
         }
         robot.gyroTurn(this,0, 2);
         robot.encoderDrive(this, 1, -60,-60, 10);
-
+*/
     }
 
 

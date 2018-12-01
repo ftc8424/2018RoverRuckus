@@ -51,7 +51,7 @@ public class Motor4 extends Base {
 
         RFront.setDirection(DcMotorSimple.Direction.FORWARD);
         if (revLeft)
-            RFront.setDirection(DcMotorSimple.Direction.REVERSE);
+            LFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         else
             LFront.setDirection(DcMotorSimple.Direction.FORWARD);

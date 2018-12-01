@@ -53,9 +53,9 @@ public class Base {
 
     /* Wheel ratio values for the encoders (see end of this file for calculations). */
     protected static final int   COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
-    protected static final double COUNTS_PER_MOTOR_REV = 1120;  // AndyMark NeveRest 40:1 CPR
+    protected static final double COUNTS_PER_MOTOR_REV = 560;  // REV HD 20:1 CPR
     protected static final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
-    protected static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth
+    protected static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth and 4" Mecanum
 
     protected static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
@@ -70,7 +70,7 @@ public class Base {
      * the back motors to work.  There aren't any servo's in the base class, but there's a super
      * catcher anyway just in case.
      */
-    public void robot_init(HardwareMap hw) { robot_init(hw, false); }
+    public void robot_init(HardwareMap hw) { robot_init(hw, true); }
     public void robot_init(HardwareMap hw, boolean revLeft) {
         this.hwMap = hw;
         this.initIMU();        // Probably just the one in this base class
@@ -231,7 +231,7 @@ public class Base {
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .1;
+        double turnFloor = .05;
         double stopTime = runtime.seconds() + timeoutS;
 
 
@@ -251,13 +251,13 @@ public class Base {
                 turnspeed = turnFloor;
             }
             if (31 < deltaAngle && deltaAngle < 75){
-                turnspeed = .1;
+                turnspeed = .05;
             }
             if (76 < deltaAngle && deltaAngle < 120){
-                turnspeed = .3;
+                turnspeed = .15;
             }
             if (121 < deltaAngle && deltaAngle < 180){
-                turnspeed = .5;
+                turnspeed = .25;
             }
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;

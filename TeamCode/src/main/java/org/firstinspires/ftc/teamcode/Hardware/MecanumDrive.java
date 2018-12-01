@@ -75,9 +75,9 @@ public class MecanumDrive extends Motor4 {
          * Math.atan2().
          */
 
-        double magnitude = Math.hypot(leftY, leftX);
-        double angle = Math.atan2(-leftX, leftY) - Math.PI / 4;
-        double rotation = -rightX;
+        double magnitude = Math.hypot(leftX, leftY);
+        double angle = Math.atan2(leftY, leftX) - Math.PI / 4;
+        double rotation = rightX;
        /* magnitude = Range.clip (magnitude, -1, 1);
         angle = Range.clip (angle,0, 2 * Math.PI );
         rotation = Range.clip (rotation, -1,1);
@@ -201,30 +201,13 @@ public class MecanumDrive extends Motor4 {
         int lbCurPos;
         int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
-        double leftFrontPower;
-        double rightFrontPower;
-        double leftBackPower;
-        double rightBackPower;
+
+        double[] power = {0, 0, 0, 0};
         double lastSetTime = runtime.milliseconds();
         int HeadingLoop;
 
         do {
-            leftFrontPower = speed;
-            rightFrontPower = speed;
-            leftBackPower = speed;
-            rightBackPower = speed;
-            if (leftFrontPower <= 0.01) {
-                lastSetTime = runtime.milliseconds();
-                leftFrontPower = speed;
-                rightFrontPower = speed;
-                leftBackPower = speed;
-                rightBackPower = speed;
-            }
-            leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
-            rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
-            leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
-            rightBackPower = Range.clip(rightBackPower, -1.0, 1.0);
-            double[] power = scalePower(leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
+            power = motorPower(0, speed, 0);
             LFront.setPower(power[0]);
             RFront.setPower(power[1]);
             LBack.setPower(power[2]);
@@ -235,7 +218,7 @@ public class MecanumDrive extends Motor4 {
             lbCurPos = LBack.getCurrentPosition();
             rbCurPos = RBack.getCurrentPosition();
             caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
-                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower)
+                    power[0], power[1], power[2], power[3])
                     .addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
                             lfCurPos, rfCurPos, lbCurPos, rbCurPos);
             caller.telemetry.update();
