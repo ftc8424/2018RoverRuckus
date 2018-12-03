@@ -98,11 +98,11 @@ public class Motor4 extends Base {
             return;
 
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
-        newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
-        newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
-        newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
+//TODO: Working around LB Motor encoder problems
+        newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * lfencoderInch);
+        newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * rfencoderInch);
+        newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * lbencoderInch);
+        newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * rbencoderInch);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;

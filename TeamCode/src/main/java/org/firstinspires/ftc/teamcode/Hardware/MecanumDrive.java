@@ -155,16 +155,16 @@ public class MecanumDrive extends Motor4 {
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (leftInches > 0 && rightInches == 0 ) {
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-leftInches * encoderInch);
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * lfencoderInch);
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * lbencoderInch);
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(leftInches * rbencoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-leftInches * rfencoderInch);
         }
         else if (rightInches > 0 && leftInches ==0) {
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-rightInches * encoderInch);
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * encoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * rfencoderInch);
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-rightInches * rbencoderInch);
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-rightInches * lfencoderInch);
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * lbencoderInch);
         }
         else {
             return;
@@ -202,12 +202,12 @@ public class MecanumDrive extends Motor4 {
         int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
 
-        double[] power = {0, 0, 0, 0};
+        double[] power = {speed, speed, speed, speed};
         double lastSetTime = runtime.milliseconds();
         int HeadingLoop;
 
         do {
-            power = motorPower(0, speed, 0);
+            //power = motorPower(0, speed, 0);
             LFront.setPower(power[0]);
             RFront.setPower(power[1]);
             LBack.setPower(power[2]);

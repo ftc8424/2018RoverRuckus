@@ -75,6 +75,7 @@ public class MecanumTeleOp extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap, true);
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
