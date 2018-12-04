@@ -77,35 +77,35 @@ public class EncoderStrafeTest extends LinearOpMode {
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(5000);
-        robot.encoderDrive(this, 0.25, 24, 24 ,10);
+        /*robot.encoderDrive(this, 0.20, 24, 24 ,10);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(5000);*/
+        robot.encoderStrafe(this, 0.20, 0, 24, 10);
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+        telemetry.update();
+        sleep(5000);/*
+        robot.encoderDrive(this, 0.20, -24, -24 ,10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(5000);
-        robot.encoderStrafe(this, 0.25, 0, 24, 10);
+        robot.encoderStrafe(this, 0.20, 24, 0, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(5000);
-        robot.encoderDrive(this, 0.25, -24, -24 ,10);
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.update();
-        sleep(5000);
-        robot.encoderStrafe(this, 0.25, 24, 0, 10);
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-        telemetry.update();
-        sleep(5000);
-
+*/
 
     }
 }

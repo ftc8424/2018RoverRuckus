@@ -59,13 +59,13 @@ public class Base {
 
     protected static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
-    protected static final double lbencoderInch = (153 * DRIVE_GEAR_REDUCTION) /
+    protected static final double lbencoderInch = (152.5 * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
-    protected static final double lfencoderInch = (532 * DRIVE_GEAR_REDUCTION) /
+    protected static final double lfencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
-    protected static final double rfencoderInch = (530 * DRIVE_GEAR_REDUCTION) /
+    protected static final double rfencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
-    protected static final double rbencoderInch = (546.75 * DRIVE_GEAR_REDUCTION) /
+    protected static final double rbencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
