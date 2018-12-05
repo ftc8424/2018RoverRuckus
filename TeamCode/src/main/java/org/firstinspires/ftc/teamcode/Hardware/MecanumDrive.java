@@ -152,18 +152,22 @@ public class MecanumDrive extends Motor4 {
         if (!caller.opModeIsActive())
             return;
 
-        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        double[] power = {speed, speed, speed, speed};
         if (leftInches > 0 && rightInches == 0 ) {
             newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * lfencoderInch);
             newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * lbencoderInch);
+            power[2] = -speed;
             newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(leftInches * rbencoderInch);
             newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-leftInches * rfencoderInch);
+            power[1] = -speed;
         }
         else if (rightInches > 0 && leftInches ==0) {
             newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * rfencoderInch);
             newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-rightInches * rbencoderInch);
+            power[3] = -speed;
             newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-rightInches * lfencoderInch);
+            power[0] = -speed;
             newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * lbencoderInch);
         }
         else {
@@ -202,7 +206,7 @@ public class MecanumDrive extends Motor4 {
         int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
 
-        double[] power = {speed, speed, speed, speed};
+
         double lastSetTime = runtime.milliseconds();
         int HeadingLoop;
 
@@ -233,7 +237,7 @@ public class MecanumDrive extends Motor4 {
         LBack.setPower(0);
         RBack.setPower(0);
 
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         /*double currentPos = getHeading();
         double newPos = currentPos - 90;

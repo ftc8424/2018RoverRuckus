@@ -97,7 +97,7 @@ public class Motor4 extends Base {
         if ( !caller.opModeIsActive() )
             return;
 
-        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //TODO: Working around LB Motor encoder problems
         newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * lfencoderInch);
         newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * rfencoderInch);
@@ -145,12 +145,13 @@ public class Motor4 extends Base {
             rightFrontPower = speed;
             leftBackPower = speed;
             rightBackPower = speed;
-            if (leftFrontPower <= 0.01) {
-                lastSetTime = runtime.milliseconds();
-                leftFrontPower = speed;
-                rightFrontPower = speed;
-                leftBackPower = speed;
-                rightBackPower = speed;
+            if (rightInches < 0 ){
+                rightFrontPower = -speed;
+                rightBackPower = -speed;
+            }
+            if(leftInches < 0) {
+                leftFrontPower = -speed;
+                leftBackPower = -speed;
             }
 
             leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
@@ -161,6 +162,7 @@ public class Motor4 extends Base {
             RFront.setPower(rightFrontPower);
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
+
 
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
@@ -184,7 +186,7 @@ public class Motor4 extends Base {
 
         // Turn off RUN_TO_POSITION
 
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 }
