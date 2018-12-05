@@ -170,6 +170,7 @@ public class MecanumDrive extends Motor4 {
             power[0] = -speed;
             newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * lbencoderInch);
         }
+        
         else {
             return;
         }
