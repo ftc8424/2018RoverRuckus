@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
 
 
@@ -51,8 +50,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="EncoderStrafeTest", group="Linear Opmode")
-public class EncoderStrafeTest extends LinearOpMode {
+@Autonomous(name="EncoderStrafeTest24", group="Linear Opmode")
+public class EncoderStrafeTest2 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -85,7 +84,7 @@ public class EncoderStrafeTest extends LinearOpMode {
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(5000);
-        robot.encoderStrafe(this, .75, 0, 30, 10);
+        robot.encoderStrafe(this, .75, 0, 24, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
@@ -99,7 +98,7 @@ public class EncoderStrafeTest extends LinearOpMode {
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
         sleep(5000);
-        robot.encoderStrafe(this, .75, 30, 0, 10);
+        robot.encoderStrafe(this, .75, 24, 0, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())

@@ -76,7 +76,7 @@ public class MecanumTeleOp extends OpMode {
     public void init() {
         robot.robot_init(hardwareMap, true);
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Status", "Initialized");
     }
 
@@ -102,8 +102,8 @@ public class MecanumTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        double LiftVal = gamepad2.left_stick_y * .5;
-        if (Math.abs(LiftVal) > 0.5) {
+        double LiftVal = gamepad2.left_stick_y;
+        if (Math.abs(LiftVal) > 0.1) {
             robot.LiftMotor.setPower(LiftVal);
             telemetry.addData("Lift Value", LiftVal);
         } else {
@@ -114,14 +114,14 @@ public class MecanumTeleOp extends OpMode {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
 
-        wheelPower = robot.motorPower(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        wheelPower = robot.motorPower(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         robot.LFront.setPower(wheelPower[0]*.5);
         robot.RFront.setPower(wheelPower[1]*.5);
         robot.LBack.setPower(wheelPower[2]*.5);
         robot.RBack.setPower(wheelPower[3]*.5);
 
-        if ( gamepad1.a && lasta + 500 < runtime.milliseconds() ) {
+        /*if ( gamepad1.a && lasta + 500 < runtime.milliseconds() ) {
             robot.ColorServo.setPosition(robot.ColorSample);
             lasta = runtime.milliseconds();
         } else if ( gamepad1.b && lasta + 500 < runtime.milliseconds() ) {
@@ -130,18 +130,18 @@ public class MecanumTeleOp extends OpMode {
         } else if ( gamepad1.x && lasta + 500 < runtime.milliseconds() ) {
             robot.ColorServo.setPosition(robot.ColorStart);
             lasta = runtime.milliseconds();
-        }
+        }*/
 
         telemetry.addData("Heading", robot.getHeading())
                 .addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
-                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition())
-                .addData("color blue", robot.color.blue())
-                .addData("color red", robot.color.red())
-                .addData("color green", robot.color.green())
-                .addData("isGold", robot.isGold())
-                .addData("ColorServo Position", robot.ColorServo.getPosition());
+                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
+                //.addData("color blue", robot.color.blue())
+                //.addData("color red", robot.color.red())
+                //.addData("color green", robot.color.green())
+                ///.addData("isGold", robot.isGold())
+                //.addData("ColorServo Position", robot.ColorServo.getPosition());
     } // loop
 
     /*

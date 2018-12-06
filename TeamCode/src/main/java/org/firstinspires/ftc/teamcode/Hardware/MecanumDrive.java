@@ -13,7 +13,6 @@ import static java.lang.Thread.sleep;
 
 
 public class MecanumDrive extends Motor4 {
-
     public ColorSensor color = null;
 
     public void initMotor(boolean revLeft) {
@@ -23,7 +22,7 @@ public class MecanumDrive extends Motor4 {
     @Override
     public void initSensor(){
         super.initSensor();
-        color = hwMap.colorSensor.get(Constants.ColorSensor);
+        //color = hwMap.colorSensor.get(Constants.ColorSensor);
     }
 
 
@@ -147,30 +146,51 @@ public class MecanumDrive extends Motor4 {
         int newRightFrontTarget;
         int newLeftBackTarget;
         int newRightBackTarget;
+        double inches = 0;
         long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
 
         if (!caller.opModeIsActive())
             return;
+        if (leftInches > 0 && rightInches == 0) {
+            inches = leftInches;
+        } else {
+            inches = rightInches;
+        }
+        if(inches > 4){
+            if (inches <= 24){
+                inches = 4.5;
+            }
+            else if (inches <= 30){
+                inches = 11.5;
+            }
+            else if(inches <= 36){
+                inches = 13;
+            }
+            else {
+                inches = 15;
+            }
+
+        }
 
         setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         double[] power = {speed, speed, speed, speed};
         if (leftInches > 0 && rightInches == 0 ) {
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(leftInches * lfencoderInch);
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(-leftInches * lbencoderInch);
-            power[2] = -speed;
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(leftInches * rbencoderInch);
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(-leftInches * rfencoderInch);
-            power[1] = -speed;
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round((-leftInches - inches) * lfencoderInch);
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round((leftInches + inches) * lbencoderInch);
+            power[0] = -speed;
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round((-leftInches - inches) * rbencoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round((leftInches + inches) * rfencoderInch);
+            power[3] = -speed;
         }
         else if (rightInches > 0 && leftInches ==0) {
-            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round(rightInches * rfencoderInch);
-            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round(-rightInches * rbencoderInch);
-            power[3] = -speed;
-            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round(-rightInches * lfencoderInch);
-            power[0] = -speed;
-            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round(rightInches * lbencoderInch);
+            newRightFrontTarget = RFront.getCurrentPosition() + (int) Math.round((-rightInches - inches) * rfencoderInch);
+            newRightBackTarget = RBack.getCurrentPosition() + (int) Math.round((rightInches + inches) * rbencoderInch);
+            power[1] = -speed;
+            newLeftFrontTarget = LFront.getCurrentPosition() + (int) Math.round((rightInches + inches) * lfencoderInch);
+            power[2] = -speed;
+            newLeftBackTarget = LBack.getCurrentPosition() + (int) Math.round((-rightInches - inches) * lbencoderInch);
         }
-        
+
         else {
             return;
         }

@@ -120,8 +120,8 @@ public abstract class AutoBase extends LinearOpMode {
             sleep(1000);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
-                telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
-                        .addData("Servo Position", robot.ColorServo.getPosition());
+                telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY");
+                        //.addData("Servo Position", robot.ColorServo.getPosition());
                 telemetry.update();
                 sleep(1000);
                 double heading = robot.getHeading();
