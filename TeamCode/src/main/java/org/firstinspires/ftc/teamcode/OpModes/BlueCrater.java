@@ -11,10 +11,10 @@ public class BlueCrater extends AutoBase {
         deployHeading = 90;
         robot.robot_init(hardwareMap,true);
         initRobot();
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        waitForStart();
+        while (!isStopRequested() && !isStarted()) {
+            telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+        }
         super.runCrater();
 
 

@@ -215,8 +215,6 @@ public class Base {
         return retVal;
     }
     /**
-     * TODO THIS ROUTINE NEEDS TO BE REPLACED - REVERTED due to other errors
-     *
      * The code shuld come from the PushbotAutoDriveByGyro.java file as well as the helper
      * methods such as onHeading, gyroHold, etc., but it needs to take into account the robotType
      * so that it only sends power to the appropriate motors.

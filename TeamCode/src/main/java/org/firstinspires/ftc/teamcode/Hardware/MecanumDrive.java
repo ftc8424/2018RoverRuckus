@@ -13,7 +13,6 @@ import static java.lang.Thread.sleep;
 
 
 public class MecanumDrive extends Motor4 {
-    public ColorSensor color = null;
 
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
@@ -25,20 +24,6 @@ public class MecanumDrive extends Motor4 {
         //color = hwMap.colorSensor.get(Constants.ColorSensor);
     }
 
-
-    public boolean isGold(){
-        int redValue = color.red();
-        int blueValue = color.blue();
-        int greenValue = color.green();
-        if (blueValue > 20 && greenValue > 25 && redValue > 35){
-            return false;
-        }
-        else if (blueValue < 10 && greenValue > 10 && redValue > 10) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * This method takes the values from the x and y of game pad and turns them into proper power

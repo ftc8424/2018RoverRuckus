@@ -34,15 +34,10 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.Constants;
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -64,7 +59,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    protected Meet1Robot robot = new Meet1Robot();
+    protected Meet2Robot robot = new Meet2Robot();
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
@@ -93,9 +88,7 @@ public abstract class AutoBase extends LinearOpMode {
         parameters.loggingEnabled      = true;
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        //imu2 = hwMap.get(BNO055IMU.class, Constants.IMU2);
         robot.imu.initialize(parameters);
-        //imu2.initialize(parameters);    // Use the same params, note will need different if orientation
     }
 
     /**
@@ -115,13 +108,13 @@ public abstract class AutoBase extends LinearOpMode {
         boolean turnSuccessful = true;
         int times = 0;
 
+        // TODO: DEPOT-STEP-1:  Add the code for unlocking the lift and then dropping the robot to the floor and unlatching from lander
         do {
             robot.encoderStrafe(this, .25, 0, 5, 3);
             sleep(1000);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY");
-                        //.addData("Servo Position", robot.ColorServo.getPosition());
                 telemetry.update();
                 sleep(1000);
                 double heading = robot.getHeading();
@@ -142,31 +135,49 @@ public abstract class AutoBase extends LinearOpMode {
             }
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
-        sleep(1000);
-        robot.encoderDrive(this, .25, 17, 15, 3);
-        sleep(1000);
-        robot.encoderStrafe(this, .1, 15, 0, 3);
-        sleep(1000);
-        robot.encoderStrafe(this, .1, 0, 15, 3);
-        sleep(1000);
-        robot.encoderStrafe(this, .1, 0, 15, 3);
 
+        // TODO: DEPOT-STEP-2: Bring lift back down, position for sampling the minerals
 
-       /* robot.encoderDrive(this, 1, 45, 45, 5);
+        switch (sampleMinerals()) {
+            case goldNotFound:
+                // TODO: DEPOT-STEP-2.5:  No gold, so positioned still under lander, move to depot
+                break;
+
+            case goldLeft:
+                // TODO:  DEPOT-STEP-2.5:  Gold on left, so positioned on left, move to depot
+                break;
+
+            case goldCenter:
+                // TODO:  DEPOT-STEP-2.5:  Gold at center, so positioned on center, move to depot
+                break;
+
+            case goldRight:
+                // TODO:  DEPOT-STEP-2.5:  Gold on right, so positioned on right, move to depot
+                break;
+        }
+
+        // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
+        if (!opModeIsActive())
+            return;
+
+        robot.encoderDrive(this, 1, 45, 45, 5);
         robot.encoderStrafe(this, .37, 47, 0, 5);
         robot.gyroTurn(this, deployHeading, 5);
         robot.encoderDrive(this, 1, 36, 36, 5);
-        robot.deploy(robot.MarkerServo, robot.ColorDeploy);
+        robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
         sleep(2000);
 
-        // TODO: Rework all of the sampling below to do the sample from the depot rather than coming all the way back out again
-
+        // TODO:  DEPOT-STEP-4:  Drive to our Alliance's crater and park
+        if (!opModeIsActive())
+            return;
+        robot.gyroTurn(this,0, 2);
+        robot.encoderDrive(this, 1, -60,-60, 10);
+/*
+        // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
         robot.encoderDrive(this, 0.75, -3, -3, 2);
         robot.gyroTurn(this,225,2);
         robot.encoderStrafe(this, .75, 0, 1, 2);
 
-*/
-/*
         robot.encoderDrive(this, 1, -24, -24, 5);
         robot.gyroTurn(this, halfHeading, 3);
         robot.encoderDrive(this, .75, 24, 25, 5);
@@ -181,115 +192,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderStrafe(this, .37, 0 , 24, 5);
 */
 
-        // TODO: Need to put a check to make sure the OpMode is still active in EVERY if condition
-
-       /* if (turnSuccessful) {
-            robot.deploy(robot.ColorServo, robot.ColorSample);
-            // robot.LiftMotor.setTargetPosition(0);
-
-            // TODO: Put some comments in here before the different clauses so we know what the robot is supposed to be doing.  Helps with troubleshooting.
-
-            /*robot.encoderDrive(this, .75, 8, 8, 5);
-            robot.encoderStrafe(this, 0.75, 0, 15, 4);
-            robot.encoderDrive(this, 0.75, 4, 4, 2); */
-
-            /*telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
-                    .addData("is it gold", robot.isGold());
-            telemetry.update();
-            sleep(1000);
-
-            if (robot.isGold() == false) {
-
-                robot.encoderDrive(this, .75, -4, -4, 2);
-                robot.encoderStrafe(this, 0.75, 17, 0, 10);
-                robot.encoderDrive(this, .75, 4, 4, 2);
-
-
-
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.addData("is it gold", robot.isGold());
-                telemetry.addData("blueValue", robot.color.blue());
-                telemetry.addData("redValue", robot.color.red());
-                telemetry.addData("greenValue", robot.color.green());
-                telemetry.update();
-                sleep(1000);
-                if (robot.isGold() == false) {
-                    robot.encoderDrive(this, .75, -4, -4, 2);
-                    robot.encoderStrafe(this, 0.75, 17, 0, 10);
-                    robot.encoderDrive(this, .75, 4, 4, 2);                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.addData("is it gold", robot.isGold());
-                    telemetry.addData("blueValue", robot.color.blue());
-                    telemetry.addData("redValue", robot.color.red());
-                    telemetry.addData("greenValue", robot.color.green());
-                    telemetry.update();
-                    sleep(1000);
-                    if (robot.isGold() == true) {
-                        robot.ColorServo.setPosition(robot.ColorDeploy);
-                        sleep(1500);
-                        robot.ColorServo.setPosition(robot.ColorStart);
-                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                        telemetry.addData("is it gold", robot.isGold());
-                        telemetry.addData("blueValue", robot.color.blue());
-                        telemetry.addData("redValue", robot.color.red());
-                        telemetry.addData("greenValue", robot.color.green());
-                        telemetry.update();
-                        sleep(1000);
-                        //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 33, 0, 10);
-                        robot.gyroTurn(this, finalHeading, 4);
-                        robot.encoderDrive(this, .75, -20,-20, 10);
-                    } else {
-                        robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                        sleep(100);
-                        robot.deploy(robot.ColorServo, robot.ColorStart);
-                        telemetry.addData("IS NOT GOLD", "EXITING");
-                        telemetry.update();
-                        //sleep(2000);
-                        //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 33, 0, 10);
-                        robot.gyroTurn(this, finalHeading, 4);
-                        robot.encoderDrive(this, .75, -20,-20, 10);
-                    }
-                } else {
-
-                    robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                    sleep(100);
-                    robot.deploy(robot.ColorServo, robot.ColorStart);
-                    robot.encoderStrafe(this, .75, 50, 0, 10);
-
-
-                    robot.gyroTurn(this, finalHeading, 4);
-                    robot.encoderDrive(this, .75, -20,-20, 10);
-                }
-            } else {
-
-                robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                sleep(100);
-                robot.deploy(robot.ColorServo, robot.ColorStart);
-                robot.encoderStrafe(this, .75, 46, 0, 10);
-
-
-
-                robot.gyroTurn(this, finalHeading, 4);
-                robot.encoderDrive(this, .75, -20,-20, 10);
-            }
-        }
-        robot.gyroTurn(this,0, 2);
-        robot.encoderDrive(this, 1, -60,-60, 10);
-*/
-    }
+    } /* runDepot() */
 
 
     /**
@@ -308,7 +211,8 @@ public abstract class AutoBase extends LinearOpMode {
         runtime.reset();
         boolean turnSuccessful = false;
         int times = 0;
-        robot.encoderStrafe(this, .75, 0, 10, 5);
+
+        // TODO: CRATER-STEP-1:  Add the code for unlocking the lift and then dropping the robot to the floor and unlatching from lander
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
@@ -328,11 +232,47 @@ public abstract class AutoBase extends LinearOpMode {
                         break;
                 }
             }
-
-
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
+        // TODO: CRATER-STEP-2: Bring lift back down, position for sampling the minerals
+
+        switch (sampleMinerals()) {
+            case goldNotFound:
+                // TODO: CRATER-STEP-2.5:  No gold, so positioned still under lander, move to depot
+                break;
+
+            case goldLeft:
+                // TODO:  CRATER-STEP-2.5:  Gold on left, so positioned on left, move to depot
+                break;
+
+            case goldCenter:
+                // TODO:  CRATER-STEP-2.5:  Gold at center, so positioned on center, move to depot
+                break;
+
+            case goldRight:
+                // TODO:  CRATER-STEP-2.5:  Gold on right, so positioned on right, move to depot
+                break;
+        }
+
+        // TODO:  CRATER-STEP-3:  NOW Drive to the Depot to deploy the Marker
+        if (!opModeIsActive())
+            return;
+        robot.encoderDrive(this, 1, 45, 45, 5);
+        robot.encoderStrafe(this, .37, 47, 0, 5);
+        robot.gyroTurn(this, deployHeading, 5);
+        robot.encoderDrive(this, 1, 36, 36, 5);
+        robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+        sleep(2000);
+
+        // TODO:  CRATER-STEP-4:  Drive to the other Alliance crater and park
+        if (!opModeIsActive())
+            return;
+        robot.gyroTurn(this,0, 2);
+        robot.encoderDrive(this, 1, -60,-60, 10);
+
+/*
+        // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
         robot.encoderStrafe(this, .37, 35, 0, 5);
         robot.gyroTurn(this, 90, 5);
         robot.encoderDrive(this, .37, 43, 0, 5);
@@ -342,97 +282,95 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .37, -52, -52, 5);
         robot.encoderStrafe(this, .37, 0, 34, 5);
 
-        // TODO: Need to put a check to make sure the OpMode is still active in EVERY if condition
+*/
 
-        if (turnSuccessful) {
-            robot.deploy(robot.ColorServo, robot.ColorSample);
-            robot.encoderDrive(this, .75, 8, 8, 2);
-            robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 6, 6, 2);
+    } /* runCrater() */
 
+    /*
+     * Variables below are for the sampleMinerals() return status codes
+     */
+    private static final int goldLeft = 1;        // Return from sampleMineral() if gold on left
+    private static final int goldCenter = 2;      // Return from sampleMineral() if gold centered
+    private static final int goldRight = 3;       // Return from sampleMineral() if gold right
+    private static final int goldNotFound = -1;   // Return from sampleMineral() if no gold found
 
+    /**
+     * Sample the minerals and push off Gold one, not touching the Silver ones
+     *
+     * @return   1 if Gold was on Left, 2 if Gold was Center
+     *
+     * @throws InterruptedException
+     */
+    private int sampleMinerals() throws InterruptedException {
+        if ( !opModeIsActive() )
+            return goldNotFound;
+
+        robot.encoderDrive(this, .75, 8, 8, 5);
+        robot.encoderStrafe(this, 0.75, 0, 15, 4);
+        robot.encoderDrive(this, 0.75, 4, 4, 2);
+
+        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
+                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
+                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
+                .addData("is it gold", robot.isGold());
+        telemetry.update();
+        sleep(1000);
+
+        // TODO: Fix this so that you just turn the robot to the left/right (e.g., encoderDrive with -left, +right to turn left and +left, -right to turn right
+        // TODO- instead of doing strafing, to determine which of the three places the gold is, and then adjust movements to just push forward to push it off
+        if (opModeIsActive() && robot.isGold() == false) {  // GOLD isn't in left place, position to center
+            robot.encoderDrive(this, .75, -4, -4, 2);
+            robot.encoderStrafe(this, 0.75, 17, 0, 10);
+            robot.encoderDrive(this, .75, 4, 4, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                     .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                     .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                     .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
             telemetry.addData("is it gold", robot.isGold());
-            telemetry.addData("blueValue", robot.color.blue());
-            telemetry.addData("redValue", robot.color.red());
-            telemetry.addData("greenValue", robot.color.green());
             telemetry.update();
-
-
-            if (robot.isGold() == false) {
-                robot.encoderStrafe(this, .75, 0, 17, 10);
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
+            sleep(1000);
+            if (opModeIsActive() && robot.isGold() == false) { // GOLD isn't in center place, position to right
+                robot.encoderDrive(this, .75, -4, -4, 2);
+                robot.encoderStrafe(this, 0.75, 17, 0, 10);
+                robot.encoderDrive(this, .75, 4, 4, 2);                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                         .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                         .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                         .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
                 telemetry.addData("is it gold", robot.isGold());
-                telemetry.addData("blueValue", robot.color.blue());
-                telemetry.addData("redValue", robot.color.red());
-                telemetry.addData("greenValue", robot.color.green());
                 telemetry.update();
-                if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, .75, 0, 17, 10);
+                sleep(1000);
+                if (opModeIsActive() && robot.isGold() == true) { // GOLD is here in right place
                     telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                             .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                             .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                             .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
+                    telemetry.addData("is it gold", robot.isGold());
                     telemetry.update();
-                    if (robot.isGold() == true) {
-                        robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                        sleep(100);
-                        robot.deploy(robot.ColorServo, robot.ColorStart);
-                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                        telemetry.update();
-                        robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 10, 10, 3);
-                    } else {
-
-                        robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                        sleep(100);
-                        robot.deploy(robot.ColorServo, robot.ColorStart);
-                        robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 10, 10, 3);
-
-                        telemetry.addData("IS NOT GOLD", "EXITING");
-                        telemetry.update();
-
-                    }
-                } else {
-
-                    robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                    sleep(100);
-                    robot.deploy(robot.ColorServo, robot.ColorStart);
-                    robot.encoderDrive(this, 0.75, -5, -5, 10);
-                    robot.encoderStrafe(this, .75, 0, 27, 3);
-                    robot.encoderDrive(this, .75, 10, 10, 3);
+                    sleep(1000);
+                    //robot.encoderDrive(this, .75, -5, -5, 1);
+                    robot.encoderStrafe(this, .75, 33, 0, 10);
+                    robot.gyroTurn(this, finalHeading, 4);
+                    robot.encoderDrive(this, .75, -20,-20, 10);
+                    return goldRight;
+                } else { // GOLD isn't in right place either, give up!
+                    telemetry.addData("IS NOT GOLD", "EXITING");
+                    telemetry.update();
+                    sleep(2000);
+                    return goldNotFound;
                 }
-            } else {
-                robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                sleep(100);
-                robot.deploy(robot.ColorServo, robot.ColorStart);
-                robot.encoderDrive(this, 0.75, -5, -5, 10);
-                robot.encoderStrafe(this, .75, 0, 44, 3);
-                robot.encoderDrive(this, .75, 10, 10, 3);
-
-
-                }
-            } else {
-                robot.deploy(robot.ColorServo, robot.ColorDeploy);
-                sleep(100);
-                robot.deploy(robot.ColorServo, robot.ColorStart);
-                robot.encoderDrive(this, .75, -5, -5, 10);
-                robot.encoderStrafe(this, .75, 0, 44, 3);
-                robot.encoderDrive(this, .75 , 10, 10, 3);
-
+            } else {   // GOLD is in the center place!
+                robot.encoderStrafe(this, .75, 50, 0, 10);
+                robot.gyroTurn(this, finalHeading, 4);
+                robot.encoderDrive(this, .75, -20,-20, 10);
+                return goldCenter;
             }
-
-
-
+        } else { // GOLD is in the left place!
+            robot.encoderStrafe(this, .75, 46, 0, 10);
+            robot.gyroTurn(this, finalHeading, 4);
+            robot.encoderDrive(this, .75, -20,-20, 10);
+            return goldLeft;
+        }
     }
+
 }

@@ -34,8 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -56,7 +55,7 @@ public class EncoderStrafeTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private Meet1Robot robot = new Meet1Robot();
+    private Meet2Robot robot = new Meet2Robot();
 
 
     @Override

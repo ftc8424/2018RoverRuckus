@@ -5,42 +5,52 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import static java.lang.Thread.sleep;
 
-public class Meet1Robot extends MecanumDrive {
+public class Meet2Robot extends MecanumDrive {
 
-    public Servo ColorServo = null;
     public Servo MarkerServo = null;
-    public double ColorStart = 0.0;
-    public double ColorDeploy = 1.0;
-    public double ColorSample = 0.5;
+    public double MarkerStart = 0.0;
+    public double MarkerDeploy = 1.0;
+    public double MarkerInit = 0.5;
     public DcMotor LiftMotor = null;
 
 
     @Override
     public void initServo(){
         super.initServo();
-        ColorServo = hwMap.servo.get(Constants.ColorServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);
         try {
             //deploy(ColorServo, ColorSample);
-            //deploy(ColorServo, ColorStart);
-            deploy(MarkerServo, ColorSample);
-            deploy(MarkerServo, ColorStart);
+            //deploy(ColorServo, MarkerStart);
+            deploy(MarkerServo, MarkerInit);
+            deploy(MarkerServo, MarkerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
-        //LFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //RFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //this.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         LiftMotor.setPower(0);
 
+    }
+
+    // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
+    public boolean isGold(){
+       /* int redValue = color.red();
+        int blueValue = color.blue();
+        int greenValue = color.green();
+        if (blueValue > 20 && greenValue > 25 && redValue > 35){
+            return false;
+        }
+        else if (blueValue < 10 && greenValue > 10 && redValue > 10) {
+            return true;
+        } else {
+            return false;
+        }*/
+       return false;
     }
 
     /**
@@ -54,13 +64,13 @@ public class Meet1Robot extends MecanumDrive {
     public void deploy(Servo servo, double targetPos) throws InterruptedException {
         double currentPos = servo.getPosition();
         if (currentPos > targetPos){
-            for (double d = currentPos; d >= targetPos; d -= 0.1) {
+            for (double d = currentPos; d > targetPos; d -= 0.1) {
                 servo.setPosition(d);
                 sleep(100);
             }
         }
         else {
-            for (double d = currentPos; d <= targetPos; d += 0.1) {
+            for (double d = currentPos; d < targetPos; d += 0.1) {
                 servo.setPosition(d);
                 sleep(100);
             }

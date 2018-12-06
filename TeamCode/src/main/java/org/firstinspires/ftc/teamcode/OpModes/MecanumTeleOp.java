@@ -33,12 +33,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -64,7 +62,7 @@ public class MecanumTeleOp extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Meet1Robot robot = new Meet1Robot();
+    private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
     private double lasta = 0.0;    // Last time we pressed the "gamepad1.a" button
 
@@ -124,10 +122,10 @@ public class MecanumTeleOp extends OpMode {
             robot.ColorServo.setPosition(robot.ColorSample);
             lasta = runtime.milliseconds();
         } else if ( gamepad1.b && lasta + 500 < runtime.milliseconds() ) {
-            robot.ColorServo.setPosition(robot.ColorDeploy);
+            robot.ColorServo.setPosition(robot.MarkerDeploy);
             lasta = runtime.milliseconds();
         } else if ( gamepad1.x && lasta + 500 < runtime.milliseconds() ) {
-            robot.ColorServo.setPosition(robot.ColorStart);
+            robot.ColorServo.setPosition(robot.MarkerStart);
             lasta = runtime.milliseconds();
         }*/
 

@@ -37,8 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -56,7 +55,7 @@ public class MecanumTestMotors extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Meet1Robot robot = new Meet1Robot();
+    private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
     private double motorStop = 0;
     private boolean motorRunning = false;
@@ -69,7 +68,7 @@ public class MecanumTestMotors extends OpMode {
     public void init() {
         robot.robot_init(hardwareMap);
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 /*
         robot.LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
