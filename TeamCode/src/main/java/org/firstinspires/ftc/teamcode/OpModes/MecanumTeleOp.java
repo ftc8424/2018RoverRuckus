@@ -113,7 +113,6 @@ public class MecanumTeleOp extends OpMode {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-
         wheelPower = robot.motorPower(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         robot.LFront.setPower(wheelPower[0]*.5);
