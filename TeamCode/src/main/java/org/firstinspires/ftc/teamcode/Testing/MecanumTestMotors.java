@@ -144,7 +144,7 @@ public class MecanumTestMotors extends OpMode {
                  .addData("Right Front", "Power: %.2f - Encoder: %d", robot.RFront.getPower(), robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", robot.LBack.getPower(), robot.LBack.getCurrentPosition())
                  .addData("Right Back", "Power: %.2f - Encoder: %d", robot.RBack.getPower(), robot.RBack.getCurrentPosition());
-        int redValue = robot.color.red();
+        /*int redValue = robot.color.red();
         int blueValue = robot.color.blue();
         int greenValue = robot.color.green();
         telemetry.addData("color blue", blueValue);
@@ -152,7 +152,7 @@ public class MecanumTestMotors extends OpMode {
         telemetry.addData("color green", greenValue);
         telemetry.addData("isGold", robot.isGold());
         telemetry.addData ("heading", robot.getHeading());
-
+*/
     } // loop
 
     /*

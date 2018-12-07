@@ -8,15 +8,20 @@ import static java.lang.Thread.sleep;
 public class Meet2Robot extends MecanumDrive {
 
     public Servo MarkerServo = null;
+    public  Servo LockServo = null;
     public double MarkerStart = 0.0;
     public double MarkerDeploy = 1.0;
     public double MarkerInit = 0.5;
+    public double LiftLock = 1.0;
+    public double LiftUnlock = 0.0;
     public DcMotor LiftMotor = null;
-
+    public int LiftUp =  -2046;
+    public int LiftDown = 0;
 
     @Override
     public void initServo(){
         super.initServo();
+        LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);
         try {
             //deploy(ColorServo, ColorSample);
@@ -39,6 +44,7 @@ public class Meet2Robot extends MecanumDrive {
 
     // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
     public boolean isGold(){
+
        /* int redValue = color.red();
         int blueValue = color.blue();
         int greenValue = color.green();

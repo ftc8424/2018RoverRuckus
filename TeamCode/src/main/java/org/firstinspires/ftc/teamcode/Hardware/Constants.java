@@ -29,6 +29,8 @@ public final class Constants {
     public static final double TURN_SPEED = 0.3;
     public static final String LiftMotor = "Lift Motor";
 
+    public static final String LockServo = "L Ser";
+
     /**
      * The Vuforia license key, used by all opModes
      *

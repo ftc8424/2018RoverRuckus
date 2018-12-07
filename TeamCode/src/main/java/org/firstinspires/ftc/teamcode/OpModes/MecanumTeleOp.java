@@ -101,9 +101,12 @@ public class MecanumTeleOp extends OpMode {
     @Override
     public void loop() {
         double LiftVal = gamepad2.left_stick_y;
+        telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
+        telemetry.update();
         if (Math.abs(LiftVal) > 0.1) {
             robot.LiftMotor.setPower(LiftVal);
-            telemetry.addData("Lift Value", LiftVal);
+            //telemetry.addData("Lift Value", LiftVal);
+            telemetry.update();
         } else {
             robot.LiftMotor.setPower(0);
         }

@@ -78,6 +78,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.LiftMotor.setPower(0);
+        robot.LockServo.setPosition(robot.LiftLock);
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -108,8 +109,12 @@ public abstract class AutoBase extends LinearOpMode {
         boolean turnSuccessful = true;
         int times = 0;
 
-        // TODO: DEPOT-STEP-1:  Add the code for unlocking the lift and then dropping the robot to the floor and unlatching from lander
         do {
+            robot.deploy(robot.LockServo, robot.LiftUnlock);
+            robot.LiftMotor.setTargetPosition(robot.LiftUp);
+            robot.encoderDrive(this, .5, -4, -4, 3);
+            robot.LiftMotor.setTargetPosition(robot.LiftDown);
+
             robot.encoderStrafe(this, .25, 0, 5, 3);
             sleep(1000);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
@@ -136,23 +141,46 @@ public abstract class AutoBase extends LinearOpMode {
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
-        // TODO: DEPOT-STEP-2: Bring lift back down, position for sampling the minerals
+       // pull latch down
+
+        robot.encoderDrive(this, .75, 15,15, 3);
+        robot.encoderStrafe(this, .5, 10, 0, 3);
 
         switch (sampleMinerals()) {
             case goldNotFound:
-                // TODO: DEPOT-STEP-2.5:  No gold, so positioned still under lander, move to depot
+
+               robot.encoderDrive(this, .75, 35,35, 5);
+
                 break;
 
             case goldLeft:
-                // TODO:  DEPOT-STEP-2.5:  Gold on left, so positioned on left, move to depot
+                robot.encoderStrafe(this, .5, 15, 15, 3);
+                robot.encoderDrive(this, .75, 15,15, 5);
+                robot.gyroTurn(this, 90, timeoutS);
+                robot.encoderDrive(this, .75, 12, 12, 3);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.encoderDrive(this, 1, -72, -72, 5);
+
                 break;
 
             case goldCenter:
-                // TODO:  DEPOT-STEP-2.5:  Gold at center, so positioned on center, move to depot
+
+                robot.encoderDrive(this, 1, 18,18, 2);
+                robot.deploy( robot.MarkerServo, robot.MarkerDeploy);
+                robot.gyroTurn(this, 270, timeoutS);
+                robot.encoderDrive(this,1, 72, 72, 5 );
+
                 break;
 
             case goldRight:
-                // TODO:  DEPOT-STEP-2.5:  Gold on right, so positioned on right, move to depot
+
+                robot.encoderStrafe(this, .5, 0,15, 3);
+                robot.encoderDrive(this, .75, 20,20, 3);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.gyroTurn(this, 0, timeoutS);
+                robot.encoderDrive(this, .75, 15, 15, 3);
+                robot.encoderStrafe(this, 1, 72, 0, 5);
+
                 break;
         }
 

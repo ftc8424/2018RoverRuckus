@@ -111,7 +111,7 @@ public class MecanumTrollbot extends OpMode {
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
                  .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
-        int redValue = robot.color.red();
+     /*   int redValue = robot.color.red();
         int blueValue = robot.color.blue();
         int greenValue = robot.color.green();
         telemetry.addData("color blue", blueValue);
@@ -119,7 +119,7 @@ public class MecanumTrollbot extends OpMode {
         telemetry.addData("color green", greenValue);
         telemetry.addData("isGold", robot.isGold());
         telemetry.addData ("heading", robot.getHeading());
-
+*/
     } // loop
 
     /*
