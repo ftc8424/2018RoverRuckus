@@ -13,13 +13,16 @@ public class RedDepot extends AutoBase {
         halfHeading = 0;
         lastHeading = 325;
         lastFinalHeading = 335;
+        leftSampleAngle = 180;
         robot.robot_init(hardwareMap,true);
         initRobot();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+            telemetry.update();
+
         }
-        super.runDepot();
+        super.runDepot(true);
 
 
     }

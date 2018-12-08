@@ -2,26 +2,22 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Blue Depot", group="Blue OpMode")
-public class BlueDepot extends AutoBase {
+@Autonomous(name="Blue Crater Unlatched", group="Blue OpMode")
+public class BlueCraterUnlatched extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 45;
+        initialHeading = 130;
         deployHeading = 90;
-        halfHeading = 180;
-        leftSampleAngle = 0;
-        lastHeading = 145;
-        lastFinalHeading = 155;
-
         robot.robot_init(hardwareMap,true);
         initRobot();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
             telemetry.update();
+
         }
-        super.runDepot(true);
+        super.runCrater(false);
 
 
     }

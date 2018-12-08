@@ -97,8 +97,8 @@ public class Motor4 extends Base {
         if ( !caller.opModeIsActive() )
             return;
 
-        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//TODO: Working around LB Motor encoder problems
+        setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * lfencoderInch);
         newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * rfencoderInch);
         newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * lbencoderInch);
@@ -145,14 +145,14 @@ public class Motor4 extends Base {
             rightFrontPower = speed;
             leftBackPower = speed;
             rightBackPower = speed;
-            if (rightInches < 0 ){
-                rightFrontPower = -speed;
-                rightBackPower = -speed;
-            }
-            if(leftInches < 0) {
-                leftFrontPower = -speed;
-                leftBackPower = -speed;
-            }
+//            if (rightInches < 0 ){
+//                rightFrontPower = -speed;
+//                rightBackPower = -speed;
+//            }
+//            if(leftInches < 0) {
+//                leftFrontPower = -speed;
+//                leftBackPower = -speed;
+//            }
 
             leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);

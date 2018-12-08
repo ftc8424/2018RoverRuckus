@@ -253,7 +253,7 @@ public class Base {
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .05;
+        double turnFloor = .25;
         double stopTime = runtime.seconds() + timeoutS;
 
 
@@ -273,10 +273,10 @@ public class Base {
                 turnspeed = turnFloor;
             }
             if (31 < deltaAngle && deltaAngle < 75){
-                turnspeed = .05;
+                turnspeed = .25;
             }
             if (76 < deltaAngle && deltaAngle < 120){
-                turnspeed = .15;
+                turnspeed = .25;
             }
             if (121 < deltaAngle && deltaAngle < 180){
                 turnspeed = .25;

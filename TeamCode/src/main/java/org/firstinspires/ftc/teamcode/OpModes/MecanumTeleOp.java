@@ -122,10 +122,10 @@ public class MecanumTeleOp extends OpMode {
 
         wheelPower = robot.motorPower(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        robot.LFront.setPower(wheelPower[0]*.5);
-        robot.RFront.setPower(wheelPower[1]*.5);
-        robot.LBack.setPower(wheelPower[2]*.5);
-        robot.RBack.setPower(wheelPower[3]*.5);
+        robot.LFront.setPower(wheelPower[0]);
+        robot.RFront.setPower(wheelPower[1]);
+        robot.LBack.setPower(wheelPower[2]);
+        robot.RBack.setPower(wheelPower[3]);
 
         /*if ( gamepad1.a && lasta + 500 < runtime.milliseconds() ) {
             robot.ColorServo.setPosition(robot.ColorSample);

@@ -72,6 +72,8 @@ public abstract class AutoBase extends LinearOpMode {
     protected double halfHeading = 0;
     protected double lastHeading = 0;
     protected double lastFinalHeading = 0;
+    protected double zeroHeading = 0;
+    protected double leftSampleAngle = 0;
 
     /**
      * Initialize the robot for autonomous-specific things (e.g., set encoder mode, initialize IMU)
@@ -118,7 +120,7 @@ public abstract class AutoBase extends LinearOpMode {
      * @throws InterruptedException
      */
 
-    public void runDepot() throws InterruptedException {
+    public void runDepot(boolean latched) throws InterruptedException {
 
         runtime.reset();
         boolean turnSuccessful = true;
@@ -127,28 +129,33 @@ public abstract class AutoBase extends LinearOpMode {
         if (robot.tfod != null) {
             robot.tfod.activate();
         }
-
-        do {
+        if (latched) {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
+            sleep(500);
             do {
                 robot.LiftMotor.setPower(-.25);
-                sleep(50);
-                break;
-            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
 
-            sleep(1000);
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
+
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
                 robot.LiftMotor.setPower(.5);
-                break;
-            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
 
-            robot.encoderStrafe(this, .25, 0, 5, 3);
-            robot.encoderDrive(this, .5, 4, 4, 3);
-            sleep(1000);
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5 );
+
+            robot.LiftMotor.setPower(0);
+            robot.encoderStrafe(this, .5, 0, 5, 3);
+
+        }else {
+            robot.encoderStrafe(this, .5, 0, 3, 2);
+            robot.encoderDrive(this, .5, -4, -4, 2);
+        }
+        robot.encoderDrive(this, .5, 4, 4, 3);
+
+        do {
+
+
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
-            robot.encoderDrive(this, .75, 6,6, 3);
-            sleep(100);
 
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY");
@@ -157,61 +164,115 @@ public abstract class AutoBase extends LinearOpMode {
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
-                        robot.encoderStrafe(this,.75, 2, 0, 2);
+                        robot.encoderStrafe(this, .25, 2, 0, 2);
                         break;
                     case 1:
-                        robot.encoderStrafe(this, .75, 0, 4, 2);
+                        robot.encoderStrafe(this, .25, 0, 4, 2);
                         break;
                     case 2:
-                        if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 91 && heading <= 180) robot.encoderDrive(this, .75, -4, -4, 2);
-                        if (heading >= 181 && heading <= 269) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 270 && heading <= 359) robot.encoderDrive(this, .75, -4, -4, 2);
+                        if (heading >= 0 && heading <= 90)
+                            robot.encoderDrive(this, .25, 4, 4, 2);
+                        if (heading >= 91 && heading <= 180)
+                            robot.encoderDrive(this, .25, -4, -4, 2);
+                        if (heading >= 181 && heading <= 269)
+                            robot.encoderDrive(this, .25, 4, 4, 2);
+                        if (heading >= 270 && heading <= 359)
+                            robot.encoderDrive(this, .25, -4, -4, 2);
                         break;
                 }
             }
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
+        robot.encoderDrive(this, .75, 6, 6, 3);
+        sleep(100);
 
         switch (sampleMinerals()) {
+        //switch (goldCenter){
             case goldNotFound:
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .75, 40,40, 4);
+                telemetry.addData("Deploying Marker", "");
+                telemetry.update();
+                sleep(1000);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(100);
+                telemetry.addData("Marker Deployed", "");
+                telemetry.update();
+                sleep(1000);
+                if (robot.gyroTurn(this, deployHeading, 5)) {
+                    telemetry.addData("Turn Successful", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderStrafe(this, .5, 7, 0, 10);
+                    telemetry.addData("Strafe Completed", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderDrive(this, .75, -58, -58, 4);
+                }
+                    break;
 
-               robot.encoderDrive(this, .75, 35,35, 5);
-
-
-                break;
 
             case goldLeft:
-                robot.encoderStrafe(this, .5, 15, 15, 3);
-                robot.encoderDrive(this, .75, 15,15, 5);
-                robot.gyroTurn(this, 90, 3);
-                robot.encoderDrive(this, .75, 12, 12, 3);
-
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .5, 5, 5, 3);
+                robot.encoderStrafe(this, .5, 15, 0, 3);
+                robot.encoderDrive(this, .75, 36,36, 5);
+                robot.gyroTurn(this, deployHeading, 3);
+                robot.encoderDrive(this, .5, 6,6, 2);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.encoderStrafe(this, .5, 4, 0, 3);
+                robot.encoderDrive(this, 1, -60, -60, 10);
 
                 break;
 
             case goldCenter:
-
-                robot.encoderDrive(this, .75, 36,36, 4);
-
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .5, 40,40, 4);
+                telemetry.addData("Deploying Marker", "");
+                telemetry.update();
+                sleep(1000);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(100);
+                telemetry.addData("Marker Deployed", "");
+                telemetry.update();
+                sleep(1000);
+                if (robot.gyroTurn(this, deployHeading, 5)){
+                    telemetry.addData("Turn Successful", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderStrafe(this, .5, 8, 0, 10);
+                    telemetry.addData("Strafe Completed", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderDrive(this, .75, -60, -60, 10);
+                }else {
+                    telemetry.addData("Turn Unsuccessful", "");
+                    telemetry.update();
+                    sleep(1000);
+                }
 
                 break;
 
             case goldRight:
-
-                robot.encoderStrafe(this, .5, 0,15, 3);
-                robot.encoderDrive(this, .5, 20,20, 3);
-
+                robot.gyroTurn(this, initialHeading, 5);
+                robot.encoderDrive(this, .5, 10, 10, 3);
+                robot.encoderStrafe(this, .5, 0, 17, 3);
+                robot.encoderDrive(this, .5, 34, 34, 3);
+                robot.gyroTurn(this, deployHeading, 5);
+                robot.encoderStrafe(this, .5, 26, 0, 3);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(500);
+                robot.encoderDrive(this, 1, -77, -77, 10);
 
                 break;
         }
 
         // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
-        if (!opModeIsActive())
-            robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-            sleep(100);
+        if (!opModeIsActive()) {
             return;
+        }
+
 
        /* robot.encoderDrive(this, 1, 45, 45, 5);
         robot.encoderStrafe(this, .37, 47, 0, 5);
@@ -263,7 +324,7 @@ public abstract class AutoBase extends LinearOpMode {
      * @throws InterruptedException
      */
 
-    public void runCrater() throws InterruptedException {
+    public void runCrater(boolean latched) throws InterruptedException {
 
         runtime.reset();
         boolean turnSuccessful = false;
@@ -272,7 +333,29 @@ public abstract class AutoBase extends LinearOpMode {
         if (robot.tfod != null) {
             robot.tfod.activate();
         }
-        // TODO: CRATER-STEP-1:  Add the code for unlocking the lift and then dropping the robot to the floor and unlatching from lander
+        if (latched) {
+            robot.deploy(robot.LockServo, robot.LiftUnlock);
+            do {
+                robot.LiftMotor.setPower(-.25);
+                sleep(50);
+                break;
+            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+
+            robot.encoderDrive(this, .5, -4, -4, 3);
+            do {
+                robot.LiftMotor.setPower(.5);
+                sleep(100);
+                break;
+            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+            robot.LiftMotor.setPower(0);
+            robot.encoderStrafe(this, .25, 0, 5, 3);
+
+        }else {
+            robot.encoderStrafe(this, .5, 0, 3, 2);
+            robot.encoderDrive(this, .5, -2, -2, 2);
+        }
+        robot.encoderDrive(this, .5, 4, 4, 3);
+
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
             if (turnSuccessful == false) {
@@ -295,41 +378,55 @@ public abstract class AutoBase extends LinearOpMode {
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
-        // TODO: CRATER-STEP-2: Bring lift back down, position for sampling the minerals
 
-        switch (sampleMinerals()) {
+        robot.encoderDrive(this, .75, 6, 6, 3);
+        sleep(100);
+
+        //switch (sampleMinerals()) {
+        switch (goldCenter){
             case goldNotFound:
-                // TODO: CRATER-STEP-2.5:  No gold, so positioned still under lander, move to depot
+
+                robot.encoderDrive(this, .75, 35,35, 5);
+
+
                 break;
 
             case goldLeft:
-                // TODO:  CRATER-STEP-2.5:  Gold on left, so positioned on left, move to depot
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderStrafe(this, .5, 15, 0, 3);
+                robot.encoderDrive(this, .75, 15, 15, 3);
+                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderStrafe(this, .5, 25, 0, 4);
+                robot.gyroTurn(this, 180, 3);
+                robot.encoderDrive(this, 1, 72, 72, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.encoderDrive(this, 1, -96, -96, 5);
                 break;
 
             case goldCenter:
-                // TODO:  CRATER-STEP-2.5:  Gold at center, so positioned on center, move to depot
+                robot.encoderDrive(this, .75, 15, 15, 3);
+                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderStrafe(this, .5, 40, 0, 5);
+                robot.gyroTurn(this, 180, 3);
+                robot.encoderDrive(this, 1, 72, 72, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.encoderDrive(this, 1, -96, -96, 5);
+
                 break;
 
             case goldRight:
-                // TODO:  CRATER-STEP-2.5:  Gold on right, so positioned on right, move to depot
+                robot.gyroTurn(this, 40, 3);
+                robot.encoderStrafe(this, .5, 0,15, 3);
+                robot.encoderDrive(this, .5, 20,20, 3);
+
+
                 break;
         }
 
-        // TODO:  CRATER-STEP-3:  NOW Drive to the Depot to deploy the Marker
-        if (!opModeIsActive())
+        // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
+        if (!opModeIsActive()) {
             return;
-        robot.encoderDrive(this, 1, 45, 45, 5);
-        robot.encoderStrafe(this, .37, 47, 0, 5);
-        robot.gyroTurn(this, deployHeading, 5);
-        robot.encoderDrive(this, 1, 36, 36, 5);
-        robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-        sleep(2000);
-
-        // TODO:  CRATER-STEP-4:  Drive to the other Alliance crater and park
-        if (!opModeIsActive())
-            return;
-        robot.gyroTurn(this,0, 2);
-        robot.encoderDrive(this, 1, -60,-60, 10);
+        }
 
 /*
         // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
@@ -379,17 +476,21 @@ public abstract class AutoBase extends LinearOpMode {
                         int goldMineralX = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
-                                goldMineralX = (int) recognition.getLeft();
+                                goldMineralX = Math.abs((int) recognition.getLeft());
                             }
                         }
-                        if (goldMineralX >= 200 && goldMineralX <= 400) {
+                        telemetry.addData("Gold mineral x", goldMineralX);
+                        telemetry.update();
+                        sleep(1000);
+                        if (goldMineralX >= 5 && goldMineralX <= 500) {
                             goldFound = true;
                         } else if (goldState == goldCenter) {
-                            robot.encoderDrive(this, .75, -2, 2, 5);
+                            robot.gyroTurn(this, leftSampleAngle, 3);
                             goldState = goldLeft;
                         } else if (goldState == goldLeft){
-                            robot.encoderDrive(this,.75,4,-4,5);
+                            //robot.encoderDrive(this,.75,4,-4,5);
                             goldState = goldRight;
+                            goldFound = true;
 
                         } else {
                             goldState = goldNotFound;
