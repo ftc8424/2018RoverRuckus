@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 public final class Constants {
+    public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    public static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    public static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
 
     /**
      * All REV electronics will have at least one IMU defined (port 0 on sensors), and if there's

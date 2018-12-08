@@ -3,9 +3,13 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
 import static java.lang.Thread.sleep;
 
 public class Meet2Robot extends MecanumDrive {
+
 
     public Servo MarkerServo = null;
     public  Servo LockServo = null;

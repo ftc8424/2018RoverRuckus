@@ -37,7 +37,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.Hardware.Constants;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
+
+import java.util.List;
 
 
 /**
@@ -90,6 +95,16 @@ public abstract class AutoBase extends LinearOpMode {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         robot.imu.initialize(parameters);
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
+        robot.initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            robot.initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
     }
 
     /**
@@ -108,6 +123,10 @@ public abstract class AutoBase extends LinearOpMode {
         runtime.reset();
         boolean turnSuccessful = true;
         int times = 0;
+        /** Activate Tensor Flow Object Detection. */
+        if (robot.tfod != null) {
+            robot.tfod.activate();
+        }
 
         do {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
@@ -249,7 +268,10 @@ public abstract class AutoBase extends LinearOpMode {
         runtime.reset();
         boolean turnSuccessful = false;
         int times = 0;
-
+        /** Activate Tensor Flow Object Detection. */
+        if (robot.tfod != null) {
+            robot.tfod.activate();
+        }
         // TODO: CRATER-STEP-1:  Add the code for unlocking the lift and then dropping the robot to the floor and unlatching from lander
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
@@ -340,76 +362,51 @@ public abstract class AutoBase extends LinearOpMode {
      * @throws InterruptedException
      */
     private int sampleMinerals() throws InterruptedException {
-        /*if ( !opModeIsActive() )
+        if ( !opModeIsActive() )
             return goldNotFound;
+        int goldState = goldCenter;
+        boolean goldFound = false;
+        int times = 0;
 
-        /*robot.encoderDrive(this, .75, 8, 8, 5);
-        robot.encoderStrafe(this, 0.75, 0, 15, 4);
-        robot.encoderDrive(this, 0.75, 4, 4, 2);
+        do {
+            if (robot.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() >= 1) {
+                        int goldMineralX = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getLeft();
+                            }
+                        }
+                        if (goldMineralX >= 200 && goldMineralX <= 400) {
+                            goldFound = true;
+                        } else if (goldState == goldCenter) {
+                            robot.encoderDrive(this, .75, -2, 2, 5);
+                            goldState = goldLeft;
+                        } else if (goldState == goldLeft){
+                            robot.encoderDrive(this,.75,4,-4,5);
+                            goldState = goldRight;
 
-        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
-                .addData("is it gold", robot.isGold());
-        telemetry.update();
-        sleep(1000);*/
-
-        // TODO: Fix this so that you just turn the robot to the left/right (e.g., encoderDrive with -left, +right to turn left and +left, -right to turn right
-        // TODO- instead of doing strafing, to determine which of the three places the gold is, and then adjust movements to just push forward to push it off
-        /* if (opModeIsActive() && robot.isGold() == false) {  // GOLD isn't in center place, position to left
-            robot.gyroTurn(this, 0, timeoutS);
-            /*robot.encoderDrive(this, .75, -4, -4, 2);
-            robot.encoderStrafe(this, 0.75, 17, 0, 10);
-            robot.encoderDrive(this, .75, 4, 4, 2);
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-            telemetry.addData("is it gold", robot.isGold());
-            telemetry.update();
-            sleep(1000);
-            if (opModeIsActive() && robot.isGold() == false) { // GOLD isn't in center place, position to right
-                robot.encoderDrive(this, .75, -4, -4, 2);
-                robot.encoderStrafe(this, 0.75, 17, 0, 10);
-                robot.encoderDrive(this, .75, 4, 4, 2);                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.addData("is it gold", robot.isGold());
-                telemetry.update();
-                sleep(1000);
-                if (opModeIsActive() && robot.isGold() == true) { // GOLD is here in right place
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.addData("is it gold", robot.isGold());
-                    telemetry.update();
-                    sleep(1000);
-                    //robot.encoderDrive(this, .75, -5, -5, 1);
-                    robot.encoderStrafe(this, .75, 33, 0, 10);
-                    robot.gyroTurn(this, finalHeading, 4);
-                    robot.encoderDrive(this, .75, -20,-20, 10);
-                    return goldRight;
-                } else { // GOLD isn't in right place either, give up!
-                    telemetry.addData("IS NOT GOLD", "EXITING");
-                    telemetry.update();
-                    sleep(2000);
-                    return goldNotFound;
+                        } else {
+                            goldState = goldNotFound;
+                        }
+                    } else {
+                        robot.encoderDrive(this,.75,1,1,3);
+                        times++;
+                    }
+                }  else {
+                    robot.encoderDrive(this,.75,1,1,3);
+                    times++;
                 }
-            } else {   // GOLD is in the center place!
-                robot.encoderStrafe(this, .75, 50, 0, 10);
-                robot.gyroTurn(this, finalHeading, 4);
-                robot.encoderDrive(this, .75, -20,-20, 10);
-                return goldCenter;
+            } else {
+                goldState = goldNotFound;
             }
-        } else { // GOLD is in the left place!
-            robot.encoderStrafe(this, .75, 46, 0, 10);
-            robot.gyroTurn(this, finalHeading, 4);
-            robot.encoderDrive(this, .75, -20,-20, 10);
-            return goldLeft; */
-        return goldCenter;
+        } while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 4);
+        return goldState;
     }
 
 }
