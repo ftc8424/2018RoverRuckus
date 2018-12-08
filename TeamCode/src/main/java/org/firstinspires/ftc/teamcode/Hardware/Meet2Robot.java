@@ -27,6 +27,7 @@ public class Meet2Robot extends MecanumDrive {
             //deploy(ColorServo, ColorSample);
             //deploy(ColorServo, MarkerStart);
             deploy(MarkerServo, MarkerInit);
+            sleep(100);
             deploy(MarkerServo, MarkerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -44,6 +45,8 @@ public class Meet2Robot extends MecanumDrive {
 
     // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
     public boolean isGold(){
+
+
 
        /* int redValue = color.red();
         int blueValue = color.blue();

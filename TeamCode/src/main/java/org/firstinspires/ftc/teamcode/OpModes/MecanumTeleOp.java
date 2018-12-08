@@ -110,6 +110,12 @@ public class MecanumTeleOp extends OpMode {
         } else {
             robot.LiftMotor.setPower(0);
         }
+        if (gamepad2.a) {
+            robot.LockServo.setPosition(robot.LiftLock);
+        }
+        if (gamepad2.b){
+            robot.LockServo.setPosition(robot.LiftUnlock);
+        }
         double[] wheelPower = { 0, 0, 0, 0 };
 
         telemetry.addData("Status", "Running: " + runtime.toString());

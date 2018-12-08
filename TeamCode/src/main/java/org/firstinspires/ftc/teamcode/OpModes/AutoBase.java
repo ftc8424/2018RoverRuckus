@@ -111,13 +111,26 @@ public abstract class AutoBase extends LinearOpMode {
 
         do {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
-            robot.LiftMotor.setTargetPosition(robot.LiftUp);
+            do {
+                robot.LiftMotor.setPower(-.25);
+                sleep(50);
+                break;
+            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+
+            sleep(1000);
             robot.encoderDrive(this, .5, -4, -4, 3);
-            robot.LiftMotor.setTargetPosition(robot.LiftDown);
+            do {
+                robot.LiftMotor.setPower(.5);
+                break;
+            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
 
             robot.encoderStrafe(this, .25, 0, 5, 3);
+            robot.encoderDrive(this, .5, 4, 4, 3);
             sleep(1000);
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+            robot.encoderDrive(this, .75, 6,6, 3);
+            sleep(100);
+
             if (turnSuccessful == false) {
                 telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY");
                 telemetry.update();
@@ -141,65 +154,62 @@ public abstract class AutoBase extends LinearOpMode {
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
-       // pull latch down
-
-        robot.encoderDrive(this, .75, 15,15, 3);
-        robot.encoderStrafe(this, .5, 10, 0, 3);
 
         switch (sampleMinerals()) {
             case goldNotFound:
 
                robot.encoderDrive(this, .75, 35,35, 5);
 
+
                 break;
 
             case goldLeft:
                 robot.encoderStrafe(this, .5, 15, 15, 3);
                 robot.encoderDrive(this, .75, 15,15, 5);
-                robot.gyroTurn(this, 90, timeoutS);
+                robot.gyroTurn(this, 90, 3);
                 robot.encoderDrive(this, .75, 12, 12, 3);
-                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                robot.encoderDrive(this, 1, -72, -72, 5);
+
 
                 break;
 
             case goldCenter:
 
-                robot.encoderDrive(this, 1, 18,18, 2);
-                robot.deploy( robot.MarkerServo, robot.MarkerDeploy);
-                robot.gyroTurn(this, 270, timeoutS);
-                robot.encoderDrive(this,1, 72, 72, 5 );
+                robot.encoderDrive(this, .75, 36,36, 4);
+
 
                 break;
 
             case goldRight:
 
                 robot.encoderStrafe(this, .5, 0,15, 3);
-                robot.encoderDrive(this, .75, 20,20, 3);
-                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                robot.gyroTurn(this, 0, timeoutS);
-                robot.encoderDrive(this, .75, 15, 15, 3);
-                robot.encoderStrafe(this, 1, 72, 0, 5);
+                robot.encoderDrive(this, .5, 20,20, 3);
+
 
                 break;
         }
 
         // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
         if (!opModeIsActive())
+            robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+            sleep(100);
             return;
 
-        robot.encoderDrive(this, 1, 45, 45, 5);
+       /* robot.encoderDrive(this, 1, 45, 45, 5);
         robot.encoderStrafe(this, .37, 47, 0, 5);
         robot.gyroTurn(this, deployHeading, 5);
         robot.encoderDrive(this, 1, 36, 36, 5);
         robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
         sleep(2000);
 
+       */
+
         // TODO:  DEPOT-STEP-4:  Drive to our Alliance's crater and park
-        if (!opModeIsActive())
-            return;
-        robot.gyroTurn(this,0, 2);
-        robot.encoderDrive(this, 1, -60,-60, 10);
+        //if (!opModeIsActive())
+
+          //  return;
+
+        //robot.gyroTurn(this,0, 2);
+       //robot.encoderDrive(this, 1, -60,-60, 10);
 /*
         // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
         robot.encoderDrive(this, 0.75, -3, -3, 2);
@@ -330,10 +340,10 @@ public abstract class AutoBase extends LinearOpMode {
      * @throws InterruptedException
      */
     private int sampleMinerals() throws InterruptedException {
-        if ( !opModeIsActive() )
+        /*if ( !opModeIsActive() )
             return goldNotFound;
 
-        robot.encoderDrive(this, .75, 8, 8, 5);
+        /*robot.encoderDrive(this, .75, 8, 8, 5);
         robot.encoderStrafe(this, 0.75, 0, 15, 4);
         robot.encoderDrive(this, 0.75, 4, 4, 2);
 
@@ -343,12 +353,13 @@ public abstract class AutoBase extends LinearOpMode {
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
                 .addData("is it gold", robot.isGold());
         telemetry.update();
-        sleep(1000);
+        sleep(1000);*/
 
         // TODO: Fix this so that you just turn the robot to the left/right (e.g., encoderDrive with -left, +right to turn left and +left, -right to turn right
         // TODO- instead of doing strafing, to determine which of the three places the gold is, and then adjust movements to just push forward to push it off
-        if (opModeIsActive() && robot.isGold() == false) {  // GOLD isn't in left place, position to center
-            robot.encoderDrive(this, .75, -4, -4, 2);
+        /* if (opModeIsActive() && robot.isGold() == false) {  // GOLD isn't in center place, position to left
+            robot.gyroTurn(this, 0, timeoutS);
+            /*robot.encoderDrive(this, .75, -4, -4, 2);
             robot.encoderStrafe(this, 0.75, 17, 0, 10);
             robot.encoderDrive(this, .75, 4, 4, 2);
             telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
@@ -397,8 +408,8 @@ public abstract class AutoBase extends LinearOpMode {
             robot.encoderStrafe(this, .75, 46, 0, 10);
             robot.gyroTurn(this, finalHeading, 4);
             robot.encoderDrive(this, .75, -20,-20, 10);
-            return goldLeft;
-        }
+            return goldLeft; */
+        return goldCenter;
     }
 
 }
