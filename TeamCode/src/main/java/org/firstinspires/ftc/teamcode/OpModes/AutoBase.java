@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -136,6 +137,7 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.LiftMotor.setPower(-.25);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
+            robot.LiftMotor.setPower(0);
 
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
@@ -335,18 +337,19 @@ public abstract class AutoBase extends LinearOpMode {
         }
         if (latched) {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
+            sleep(500);
             do {
                 robot.LiftMotor.setPower(-.25);
-                sleep(50);
-                break;
-            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
+            robot.LiftMotor.setPower(0);
 
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
                 robot.LiftMotor.setPower(.5);
-                sleep(100);
-                break;
-            } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5 );
+
             robot.LiftMotor.setPower(0);
             robot.encoderStrafe(this, .25, 0, 5, 3);
 
@@ -382,8 +385,8 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 6, 6, 3);
         sleep(100);
 
-        //switch (sampleMinerals()) {
-        switch (goldCenter){
+        switch (sampleMinerals()) {
+
             case goldNotFound:
 
                 robot.encoderDrive(this, .75, 35,35, 5);
@@ -398,29 +401,37 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 25, 0, 4);
                 robot.gyroTurn(this, 180, 3);
-                robot.encoderDrive(this, 1, 72, 72, 5);
+                robot.encoderDrive(this, 1, 60, 65, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 robot.encoderDrive(this, 1, -96, -96, 5);
                 break;
 
             case goldCenter:
-                robot.encoderDrive(this, .75, 15, 15, 3);
+                robot.encoderDrive(this, .75, 17, 17, 3);
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
                 robot.gyroTurn(this, 180, 3);
-                robot.encoderDrive(this, 1, 72, 72, 5);
+                robot.encoderDrive(this, 1, 57, 57, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 robot.encoderDrive(this, 1, -96, -96, 5);
 
                 break;
 
             case goldRight:
-                robot.gyroTurn(this, 40, 3);
+                robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 0,15, 3);
                 robot.encoderDrive(this, .5, 20,20, 3);
-
-
+                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderStrafe(this, .5, 60, 0, 5);
+                robot.gyroTurn(this,180, 3);
+                robot.encoderDrive(this, 1, 65, 65, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                robot.encoderDrive(this, 1, -96, -96, 5);
                 break;
+
+
+
+
         }
 
         // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
@@ -464,7 +475,8 @@ public abstract class AutoBase extends LinearOpMode {
         int goldState = goldCenter;
         boolean goldFound = false;
         int times = 0;
-
+        CameraDevice camera = CameraDevice.getInstance();
+        camera.setFlashTorchMode(true);
         do {
             if (robot.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -476,12 +488,12 @@ public abstract class AutoBase extends LinearOpMode {
                         int goldMineralX = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
-                                goldMineralX = Math.abs((int) recognition.getLeft());
+                                goldMineralX = Math.abs((int) recognition.getTop());
                             }
                         }
                         telemetry.addData("Gold mineral x", goldMineralX);
                         telemetry.update();
-                        sleep(1000);
+                        sleep(5000);
                         if (goldMineralX >= 5 && goldMineralX <= 500) {
                             goldFound = true;
                         } else if (goldState == goldCenter) {
@@ -507,6 +519,7 @@ public abstract class AutoBase extends LinearOpMode {
                 goldState = goldNotFound;
             }
         } while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 4);
+        camera.setFlashTorchMode(false);
         return goldState;
     }
 
