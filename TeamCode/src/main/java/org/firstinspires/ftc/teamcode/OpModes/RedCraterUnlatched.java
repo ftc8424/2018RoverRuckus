@@ -18,7 +18,7 @@ public class RedCraterUnlatched extends AutoBase {
             telemetry.update();
 
         }
-        
+
         super.runCrater(false);
 
 

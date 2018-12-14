@@ -40,6 +40,7 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware.Constants;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
@@ -411,7 +412,8 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
                 robot.gyroTurn(this, 180, 3);
-                robot.encoderDrive(this, 1, 57, 57, 5);
+                robot.encoderStrafe(this, .5, 0, 3, 3);
+                robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 robot.encoderDrive(this, 1, -96, -96, 5);
 
@@ -419,9 +421,10 @@ public abstract class AutoBase extends LinearOpMode {
 
             case goldRight:
                 robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .5, 6, 6, 3);
                 robot.encoderStrafe(this, .5, 0,15, 3);
                 robot.encoderDrive(this, .5, 20,20, 3);
-                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderDrive(this, .5, -10, -10, 3);
                 robot.encoderStrafe(this, .5, 60, 0, 5);
                 robot.gyroTurn(this,180, 3);
                 robot.encoderDrive(this, 1, 65, 65, 5);
@@ -477,6 +480,9 @@ public abstract class AutoBase extends LinearOpMode {
         int times = 0;
         CameraDevice camera = CameraDevice.getInstance();
         camera.setFlashTorchMode(true);
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
+        double minimumConfidence = tfodParameters.minimumConfidence;
+
         do {
             if (robot.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -486,17 +492,24 @@ public abstract class AutoBase extends LinearOpMode {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                     if (updatedRecognitions.size() >= 1) {
                         int goldMineralX = -1;
+                        int goldMineralY = -1;
                         for (Recognition recognition : updatedRecognitions) {
+
+                            minimumConfidence = tfodParameters.minimumConfidence;
                             if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
                                 goldMineralX = Math.abs((int) recognition.getTop());
+                                goldMineralY = Math.abs((int) recognition.getLeft());
+
                             }
                         }
                         telemetry.addData("Gold mineral x", goldMineralX);
+                        telemetry.addData("Gold Mineral Y", goldMineralY);
+                        telemetry.addData("Minimum Confidence", minimumConfidence);
                         telemetry.update();
                         sleep(5000);
-                        if (goldMineralX >= 5 && goldMineralX <= 500) {
+                        if (goldMineralX >= 5 && goldMineralX <= 750 && minimumConfidence == .90) {
                             goldFound = true;
-                        } else if (goldState == goldCenter) {
+                     } else if (goldState == goldCenter) {
                             robot.gyroTurn(this, leftSampleAngle, 3);
                             goldState = goldLeft;
                         } else if (goldState == goldLeft){
