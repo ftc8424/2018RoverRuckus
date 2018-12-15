@@ -104,6 +104,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+
             robot.initTfod();
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
@@ -315,6 +316,9 @@ public abstract class AutoBase extends LinearOpMode {
 
     } /* runDepot() */
 
+    public void runCrater (boolean latched) throws InterruptedException{
+        runCrater(latched, false);
+    }
 
     /**
      * The autonomous code to run when the robot is on the Crater side of the field.
@@ -327,7 +331,7 @@ public abstract class AutoBase extends LinearOpMode {
      * @throws InterruptedException
      */
 
-    public void runCrater(boolean latched) throws InterruptedException {
+    public void runCrater(boolean latched, boolean doubleSample) throws InterruptedException {
 
         runtime.reset();
         boolean turnSuccessful = false;
@@ -398,38 +402,66 @@ public abstract class AutoBase extends LinearOpMode {
             case goldLeft:
                 robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 15, 0, 3);
-                robot.encoderDrive(this, .75, 15, 15, 3);
+                robot.encoderDrive(this, .75, 11, 11, 3);
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 25, 0, 4);
-                robot.gyroTurn(this, 180, 3);
+                robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderDrive(this, 1, 60, 65, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                robot.encoderDrive(this, 1, -96, -96, 5);
+                if (doubleSample){
+                    robot.gyroTurn(this, lastHeading, 3 );
+                    robot.encoderStrafe(this, .5, 15, 0, 3);
+                    robot.encoderDrive(this, .75, 28, 28, 4);
+                    robot.encoderStrafe(this, .75, 0, 57, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                }
+                else {
+                    robot.encoderDrive(this, 1, -96, -96, 5);
+                }
                 break;
 
             case goldCenter:
-                robot.encoderDrive(this, .75, 17, 17, 3);
+                robot.encoderDrive(this, .75, 11, 11, 3);
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
-                robot.gyroTurn(this, 180, 3);
+                robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderStrafe(this, .5, 0, 3, 3);
                 robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                robot.encoderDrive(this, 1, -96, -96, 5);
+                if (doubleSample){
+                    robot.gyroTurn(this, lastHeading, 3);
+                    robot.encoderDrive(this, .5, 6, 6, 3);
+                    robot.encoderDrive(this, .75, 31, 31, 5);
+                    robot.encoderStrafe(this, .5, 0, 42, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                } else {
+                    robot.encoderDrive(this, 1, -96, -96, 5);
+                }
 
                 break;
 
             case goldRight:
-                robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderDrive(this, .5, 6, 6, 3);
+                robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 0,15, 3);
-                robot.encoderDrive(this, .5, 20,20, 3);
+                robot.encoderDrive(this, .5, 11,11, 3);
                 robot.encoderDrive(this, .5, -10, -10, 3);
                 robot.encoderStrafe(this, .5, 60, 0, 5);
-                robot.gyroTurn(this,180, 3);
+                robot.gyroTurn(this,finalHeading, 3);
                 robot.encoderDrive(this, 1, 65, 65, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                robot.encoderDrive(this, 1, -96, -96, 5);
+                if(doubleSample){
+                    robot.gyroTurn(this, lastHeading, 3 );
+                    robot.encoderStrafe(this, .5, 0, 15, 3);
+                    robot.encoderDrive(this, .75, 28, 28, 4);
+                    robot.encoderStrafe(this, .75, 0, 27, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                } else {
+                    robot.encoderDrive(this, 1, -96, -96, 5);
+                }
                 break;
 
 
@@ -480,56 +512,60 @@ public abstract class AutoBase extends LinearOpMode {
         int times = 0;
         CameraDevice camera = CameraDevice.getInstance();
         camera.setFlashTorchMode(true);
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
-        double minimumConfidence = tfodParameters.minimumConfidence;
+
 
         do {
+            int goldMineralX = -1;
+            int goldMineralY = -1;
+            double confidence = -1;
             if (robot.tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
                 List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    if (updatedRecognitions.size() >= 1) {
-                        int goldMineralX = -1;
-                        int goldMineralY = -1;
-                        for (Recognition recognition : updatedRecognitions) {
-
-                            minimumConfidence = tfodParameters.minimumConfidence;
-                            if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
-                                goldMineralX = Math.abs((int) recognition.getTop());
-                                goldMineralY = Math.abs((int) recognition.getLeft());
-
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = Math.abs((int) recognition.getLeft());
+                            goldMineralY = Math.abs((int) recognition.getTop());
+                            confidence = recognition.getConfidence();
+                            telemetry.addData("Confidence:", confidence);
+                            telemetry.update();
+                            sleep(500);
+                            if (confidence >= .8){
+                                if (goldState == goldCenter){
+                                    if (goldMineralX > 190 && goldMineralX < 350 && goldMineralY > 720){
+                                        goldFound = true;
+                                        break;
+                                    }
+                                }else if (goldState == goldLeft){
+                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 660){
+                                        goldFound = true;                                    }
+                                        break;
+                                }
                             }
-                        }
-                        telemetry.addData("Gold mineral x", goldMineralX);
-                        telemetry.addData("Gold Mineral Y", goldMineralY);
-                        telemetry.addData("Minimum Confidence", minimumConfidence);
-                        telemetry.update();
-                        sleep(5000);
-                        if (goldMineralX >= 5 && goldMineralX <= 750 && minimumConfidence == .90) {
-                            goldFound = true;
-                     } else if (goldState == goldCenter) {
-                            robot.gyroTurn(this, leftSampleAngle, 3);
-                            goldState = goldLeft;
-                        } else if (goldState == goldLeft){
-                            //robot.encoderDrive(this,.75,4,-4,5);
-                            goldState = goldRight;
-                            goldFound = true;
 
-                        } else {
-                            goldState = goldNotFound;
                         }
-                    } else {
-                        robot.encoderDrive(this,.75,1,1,3);
-                        times++;
                     }
-                }  else {
+
+                     if (!goldFound && goldState == goldCenter) {
+                        robot.gyroTurn(this, leftSampleAngle, 3);
+                        goldState = goldLeft;
+                    } else if (!goldFound && goldState == goldLeft){
+                        //robot.encoderDrive(this,.75,4,-4,5);
+                        goldState = goldRight;
+                        goldFound = true;
+
+                    } else {
+                        goldState = goldNotFound;
+                    }
+                } else {
                     robot.encoderDrive(this,.75,1,1,3);
                     times++;
                 }
-            } else {
-                goldState = goldNotFound;
+            }  else {
+                robot.encoderDrive(this,.75,1,1,3);
+                times++;
             }
         } while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 4);
         camera.setFlashTorchMode(false);

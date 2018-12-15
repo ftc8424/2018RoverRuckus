@@ -415,6 +415,7 @@ public class Base {
         int tfodMonitorViewId = hwMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hwMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        //tfodParameters.minimumConfidence = 0.75;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(Constants.TFOD_MODEL_ASSET, Constants.LABEL_GOLD_MINERAL, Constants.LABEL_SILVER_MINERAL);
     }

@@ -10,6 +10,9 @@ public class RedCrater extends AutoBase {
         initialHeading = 310;
         deployHeading = 270;
         zeroHeading = 180;
+        lastHeading = 45;
+        lastFinalHeading = 90;
+
         robot.robot_init(hardwareMap,true);
         initRobot();
 

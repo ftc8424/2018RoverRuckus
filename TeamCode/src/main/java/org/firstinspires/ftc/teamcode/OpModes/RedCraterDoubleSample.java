@@ -2,17 +2,16 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Red Crater Unlatched", group="Red OpMode")
-public class RedCraterUnlatched extends AutoBase {
+@Autonomous(name="Red Crater Double Sample", group="Red OpMode")
+public class RedCraterDoubleSample extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
         initialHeading = 310;
         deployHeading = 270;
-        leftSampleAngle = 275;
+        zeroHeading = 180;
         lastHeading = 45;
         lastFinalHeading = 90;
-        finalHeading = 180;
 
         robot.robot_init(hardwareMap,true);
         initRobot();
@@ -23,7 +22,7 @@ public class RedCraterUnlatched extends AutoBase {
 
         }
 
-        super.runCrater(false);
+        super.runCrater(true, true);
 
 
     }

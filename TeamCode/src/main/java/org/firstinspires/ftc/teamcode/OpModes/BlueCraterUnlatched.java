@@ -9,6 +9,10 @@ public class BlueCraterUnlatched extends AutoBase {
     public void runOpMode() throws InterruptedException {
         initialHeading = 130;
         deployHeading = 90;
+        halfHeading = 180;
+        lastHeading = 225;
+        lastFinalHeading = 270;
+
         robot.robot_init(hardwareMap,true);
         initRobot();
 

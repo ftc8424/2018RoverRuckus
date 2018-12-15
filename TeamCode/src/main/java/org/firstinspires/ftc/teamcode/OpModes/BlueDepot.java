@@ -11,8 +11,8 @@ public class BlueDepot extends AutoBase {
         deployHeading = 90;
         halfHeading = 180;
         leftSampleAngle = 0;
-        lastHeading = 145;
-        lastFinalHeading = 155;
+        lastHeading = 225;
+        lastFinalHeading = 270;
 
         robot.robot_init(hardwareMap,true);
         initRobot();

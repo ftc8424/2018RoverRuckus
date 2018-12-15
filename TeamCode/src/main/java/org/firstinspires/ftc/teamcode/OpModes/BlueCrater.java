@@ -10,6 +10,9 @@ public class BlueCrater extends AutoBase {
         initialHeading = 130;
         deployHeading = 90;
         zeroHeading = 0;
+        lastHeading = 225;
+        lastFinalHeading = 270;
+
         robot.robot_init(hardwareMap,true);
         initRobot();
 
