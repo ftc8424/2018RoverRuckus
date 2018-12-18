@@ -16,8 +16,8 @@ public class Meet2Robot extends MecanumDrive {
     public double MarkerStart = 0.0;
     public double MarkerDeploy = 1.0;
     public double MarkerInit = 0.5;
-    public double LiftLock = .9;
-    public double LiftUnlock = .7;
+    public double LiftLock = .6;
+    public double LiftUnlock = .2;
     public DcMotor LiftMotor = null;
     public int LiftUp =  -2046;
     public int LiftDown = 0;

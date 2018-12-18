@@ -23,7 +23,7 @@ public class RedCraterUnlatched extends AutoBase {
 
         }
 
-        super.runCrater(false);
+        super.runCrater(false, false);
 
 
     }

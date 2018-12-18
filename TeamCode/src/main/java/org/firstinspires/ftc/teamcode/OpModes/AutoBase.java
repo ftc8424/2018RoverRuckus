@@ -422,8 +422,8 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
 
             case goldCenter:
-                robot.encoderDrive(this, .75, 11, 11, 3);
-                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderDrive(this, .25, 6, 6, 3);
+                robot.encoderDrive(this, .5, -11, -11, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderStrafe(this, .5, 0, 3, 3);
@@ -445,12 +445,12 @@ public abstract class AutoBase extends LinearOpMode {
             case goldRight:
                 robot.encoderDrive(this, .5, 6, 6, 3);
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderStrafe(this, .5, 0,15, 3);
+                robot.encoderStrafe(this, .5, 0,20, 3);
                 robot.encoderDrive(this, .5, 11,11, 3);
-                robot.encoderDrive(this, .5, -10, -10, 3);
-                robot.encoderStrafe(this, .5, 60, 0, 5);
-                robot.gyroTurn(this,finalHeading, 3);
-                robot.encoderDrive(this, 1, 65, 65, 5);
+                robot.encoderDrive(this, .5, -8, -8, 3);
+                robot.encoderStrafe(this, .75, 65, 0, 6);
+                robot.gyroTurn(this, finalHeading, 3);
+                robot.encoderDrive(this, 1, 50, 50, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 if(doubleSample){
                     robot.gyroTurn(this, lastHeading, 3 );
@@ -530,16 +530,18 @@ public abstract class AutoBase extends LinearOpMode {
                             goldMineralY = Math.abs((int) recognition.getTop());
                             confidence = recognition.getConfidence();
                             telemetry.addData("Confidence:", confidence);
+                            telemetry.addData("Gold Mineral X", goldMineralX)
+                                    .addData("Gold Mineral Y", goldMineralY);
                             telemetry.update();
-                            sleep(500);
+                            sleep(3000);
                             if (confidence >= .8){
                                 if (goldState == goldCenter){
-                                    if (goldMineralX > 190 && goldMineralX < 350 && goldMineralY > 720){
+                                    if (goldMineralX > 100 && goldMineralX < 380 && goldMineralY > 660){
                                         goldFound = true;
                                         break;
                                     }
                                 }else if (goldState == goldLeft){
-                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 660){
+                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 600){
                                         goldFound = true;                                    }
                                         break;
                                 }
@@ -556,8 +558,6 @@ public abstract class AutoBase extends LinearOpMode {
                         goldState = goldRight;
                         goldFound = true;
 
-                    } else {
-                        goldState = goldNotFound;
                     }
                 } else {
                     robot.encoderDrive(this,.75,1,1,3);
