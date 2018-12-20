@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -16,8 +17,8 @@ public class Meet2Robot extends MecanumDrive {
     public double MarkerStart = 0.0;
     public double MarkerDeploy = 1.0;
     public double MarkerInit = 0.5;
-    public double LiftLock = .6;
-    public double LiftUnlock = .2;
+    public double LiftLock = .98;
+    public double LiftUnlock = .5;
     public DcMotor LiftMotor = null;
     public int LiftUp =  -2046;
     public int LiftDown = 0;
@@ -43,6 +44,7 @@ public class Meet2Robot extends MecanumDrive {
         super.initMotor(revLeft);
         LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         LiftMotor.setPower(0);
 
     }

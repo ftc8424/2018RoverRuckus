@@ -76,6 +76,7 @@ public abstract class AutoBase extends LinearOpMode {
     protected double lastFinalHeading = 0;
     protected double zeroHeading = 0;
     protected double leftSampleAngle = 0;
+    protected double LiftLockPower = 0.5;
 
     /**
      * Initialize the robot for autonomous-specific things (e.g., set encoder mode, initialize IMU)
@@ -85,6 +86,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.LiftMotor.setPower(0);
         robot.LockServo.setPosition(robot.LiftLock);
@@ -92,11 +94,11 @@ public abstract class AutoBase extends LinearOpMode {
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         robot.imu.initialize(parameters);
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -114,7 +116,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     /**
      * The autonomous code to run when the robot is on the Depot side of the field.
-     *
+     * <p>
      * This is the same code regardless of our color, because the lander and the depot are the
      * same, with the only difference being the gyro heading values, as they are 90 degrees off
      * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
@@ -136,21 +138,21 @@ public abstract class AutoBase extends LinearOpMode {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
-                robot.LiftMotor.setPower(-.25);
+                robot.LiftMotor.setPower(-LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
             robot.LiftMotor.setPower(0);
 
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
-                robot.LiftMotor.setPower(.5);
+                robot.LiftMotor.setPower(LiftLockPower);
 
-            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5 );
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
 
             robot.LiftMotor.setPower(0);
             robot.encoderStrafe(this, .5, 0, 5, 3);
 
-        }else {
+        } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
             robot.encoderDrive(this, .5, -4, -4, 2);
         }
@@ -192,10 +194,10 @@ public abstract class AutoBase extends LinearOpMode {
         sleep(100);
 
         switch (sampleMinerals()) {
-        //switch (goldCenter){
+            //switch (goldCenter){
             case goldNotFound:
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .75, 40,40, 4);
+                robot.encoderDrive(this, .75, 40, 40, 4);
                 telemetry.addData("Deploying Marker", "");
                 telemetry.update();
                 sleep(1000);
@@ -214,16 +216,16 @@ public abstract class AutoBase extends LinearOpMode {
                     sleep(1000);
                     robot.encoderDrive(this, .75, -58, -58, 4);
                 }
-                    break;
+                break;
 
 
             case goldLeft:
                 robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderDrive(this, .5, 5, 5, 3);
                 robot.encoderStrafe(this, .5, 15, 0, 3);
-                robot.encoderDrive(this, .75, 36,36, 5);
+                robot.encoderDrive(this, .75, 36, 36, 5);
                 robot.gyroTurn(this, deployHeading, 3);
-                robot.encoderDrive(this, .5, 6,6, 2);
+                robot.encoderDrive(this, .5, 6, 6, 2);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 robot.encoderStrafe(this, .5, 4, 0, 3);
                 robot.encoderDrive(this, 1, -60, -60, 10);
@@ -232,7 +234,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             case goldCenter:
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .5, 40,40, 4);
+                robot.encoderDrive(this, .5, 40, 40, 4);
                 telemetry.addData("Deploying Marker", "");
                 telemetry.update();
                 sleep(1000);
@@ -241,7 +243,7 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.addData("Marker Deployed", "");
                 telemetry.update();
                 sleep(1000);
-                if (robot.gyroTurn(this, deployHeading, 5)){
+                if (robot.gyroTurn(this, deployHeading, 5)) {
                     telemetry.addData("Turn Successful", "");
                     telemetry.update();
                     sleep(1000);
@@ -250,7 +252,7 @@ public abstract class AutoBase extends LinearOpMode {
                     telemetry.update();
                     sleep(1000);
                     robot.encoderDrive(this, .75, -60, -60, 10);
-                }else {
+                } else {
                     telemetry.addData("Turn Unsuccessful", "");
                     telemetry.update();
                     sleep(1000);
@@ -290,10 +292,10 @@ public abstract class AutoBase extends LinearOpMode {
         // TODO:  DEPOT-STEP-4:  Drive to our Alliance's crater and park
         //if (!opModeIsActive())
 
-          //  return;
+        //  return;
 
         //robot.gyroTurn(this,0, 2);
-       //robot.encoderDrive(this, 1, -60,-60, 10);
+        //robot.encoderDrive(this, 1, -60,-60, 10);
 /*
         // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
         robot.encoderDrive(this, 0.75, -3, -3, 2);
@@ -316,13 +318,13 @@ public abstract class AutoBase extends LinearOpMode {
 
     } /* runDepot() */
 
-    public void runCrater (boolean latched) throws InterruptedException{
+    public void runCrater(boolean latched) throws InterruptedException {
         runCrater(latched, false);
     }
 
     /**
      * The autonomous code to run when the robot is on the Crater side of the field.
-     *
+     * <p>
      * This is the same code regardless of our color, because the lander and the crater are the
      * same, with the only difference being the gyro heading values, as they are 90 degrees off
      * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
@@ -344,7 +346,7 @@ public abstract class AutoBase extends LinearOpMode {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
-                robot.LiftMotor.setPower(-.25);
+                robot.LiftMotor.setPower(-LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
             robot.LiftMotor.setPower(0);
@@ -353,12 +355,12 @@ public abstract class AutoBase extends LinearOpMode {
             do {
                 robot.LiftMotor.setPower(.5);
 
-            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5 );
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
 
             robot.LiftMotor.setPower(0);
             robot.encoderStrafe(this, .25, 0, 5, 3);
 
-        }else {
+        } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
             robot.encoderDrive(this, .5, -2, -2, 2);
         }
@@ -370,16 +372,19 @@ public abstract class AutoBase extends LinearOpMode {
                 double heading = robot.getHeading();
                 switch (times) {
                     case 0:
-                        robot.encoderStrafe(this,.75, 2, 0, 2);
+                        robot.encoderStrafe(this, .75, 2, 0, 2);
                         break;
                     case 1:
                         robot.encoderStrafe(this, .75, 0, 4, 2);
                         break;
                     case 2:
                         if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 91 && heading <= 180) robot.encoderDrive(this, .75, -4, -4, 2);
-                        if (heading >= 181 && heading <= 269) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 270 && heading <= 359) robot.encoderDrive(this, .75, -4, -4, 2);
+                        if (heading >= 91 && heading <= 180)
+                            robot.encoderDrive(this, .75, -4, -4, 2);
+                        if (heading >= 181 && heading <= 269)
+                            robot.encoderDrive(this, .75, 4, 4, 2);
+                        if (heading >= 270 && heading <= 359)
+                            robot.encoderDrive(this, .75, -4, -4, 2);
                         break;
                 }
             }
@@ -394,7 +399,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             case goldNotFound:
 
-                robot.encoderDrive(this, .75, 35,35, 5);
+                robot.encoderDrive(this, .75, 35, 35, 5);
 
 
                 break;
@@ -408,15 +413,14 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderDrive(this, 1, 60, 65, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                if (doubleSample){
-                    robot.gyroTurn(this, lastHeading, 3 );
+                if (doubleSample) {
+                    robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 15, 0, 3);
                     robot.encoderDrive(this, .75, 28, 28, 4);
                     robot.encoderStrafe(this, .75, 0, 57, 5);
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
-                }
-                else {
+                } else {
                     robot.encoderDrive(this, 1, -96, -96, 5);
                 }
                 break;
@@ -429,7 +433,7 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderStrafe(this, .5, 0, 3, 3);
                 robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                if (doubleSample){
+                if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderDrive(this, .5, 6, 6, 3);
                     robot.encoderDrive(this, .75, 31, 31, 5);
@@ -445,15 +449,15 @@ public abstract class AutoBase extends LinearOpMode {
             case goldRight:
                 robot.encoderDrive(this, .5, 6, 6, 3);
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderStrafe(this, .5, 0,20, 3);
-                robot.encoderDrive(this, .5, 11,11, 3);
+                robot.encoderStrafe(this, .5, 0, 20, 3);
+                robot.encoderDrive(this, .5, 11, 11, 3);
                 robot.encoderDrive(this, .5, -8, -8, 3);
                 robot.encoderStrafe(this, .75, 65, 0, 6);
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderDrive(this, 1, 50, 50, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                if(doubleSample){
-                    robot.gyroTurn(this, lastHeading, 3 );
+                if (doubleSample) {
+                    robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 0, 15, 3);
                     robot.encoderDrive(this, .75, 28, 28, 4);
                     robot.encoderStrafe(this, .75, 0, 27, 5);
@@ -463,8 +467,6 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.encoderDrive(this, 1, -96, -96, 5);
                 }
                 break;
-
-
 
 
         }
@@ -500,12 +502,11 @@ public abstract class AutoBase extends LinearOpMode {
     /**
      * Sample the minerals and push off Gold one, not touching the Silver ones
      *
-     * @return   1 if Gold was on Left, 2 if Gold was Center
-     *
+     * @return 1 if Gold was on Left, 2 if Gold was Center
      * @throws InterruptedException
      */
     private int sampleMinerals() throws InterruptedException {
-        if ( !opModeIsActive() )
+        if (!opModeIsActive())
             return goldNotFound;
         int goldState = goldCenter;
         boolean goldFound = false;
@@ -534,42 +535,37 @@ public abstract class AutoBase extends LinearOpMode {
                                     .addData("Gold Mineral Y", goldMineralY);
                             telemetry.update();
                             sleep(3000);
-                            if (confidence >= .8){
-                                if (goldState == goldCenter){
-                                    if (goldMineralX > 100 && goldMineralX < 380 && goldMineralY > 660){
+                            if (confidence >= .8) {
+                                if (goldState == goldCenter) {
+                                    if (goldMineralX > 100 && goldMineralX < 380 && goldMineralY > 660) {
                                         goldFound = true;
                                         break;
                                     }
-                                }else if (goldState == goldLeft){
-                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 600){
-                                        goldFound = true;                                    }
+                                } else if (goldState == goldLeft) {
+                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 600) {
+                                        goldFound = true;
                                         break;
+                                    }
+
                                 }
                             }
 
                         }
                     }
-
-                     if (!goldFound && goldState == goldCenter) {
-                        robot.gyroTurn(this, leftSampleAngle, 3);
-                        goldState = goldLeft;
-                    } else if (!goldFound && goldState == goldLeft){
-                        //robot.encoderDrive(this,.75,4,-4,5);
-                        goldState = goldRight;
-                        goldFound = true;
-
-                    }
-                } else {
-                    robot.encoderDrive(this,.75,1,1,3);
-                    times++;
                 }
-            }  else {
-                robot.encoderDrive(this,.75,1,1,3);
-                times++;
             }
-        } while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 4);
+            times++;
+            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
+                goldState = goldLeft;
+                robot.gyroTurn(this, leftSampleAngle, 3);
+            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
+                goldState = goldRight;
+                goldFound = true;
+            }
+            sleep(250);
+        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
         camera.setFlashTorchMode(false);
         return goldState;
-    }
 
+    }
 }
