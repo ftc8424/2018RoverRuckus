@@ -87,6 +87,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.LiftMotor.setPower(0);
         robot.LockServo.setPosition(robot.LiftLock);
@@ -426,7 +427,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
 
             case goldCenter:
-                robot.encoderDrive(this, .25, 6, 6, 3);
+                robot.encoderDrive(this, .25, 20, 20, 3);
                 robot.encoderDrive(this, .5, -11, -11, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
                 robot.gyroTurn(this, finalHeading, 3);
@@ -533,8 +534,6 @@ public abstract class AutoBase extends LinearOpMode {
                             telemetry.addData("Confidence:", confidence);
                             telemetry.addData("Gold Mineral X", goldMineralX)
                                     .addData("Gold Mineral Y", goldMineralY);
-                            telemetry.update();
-                            sleep(3000);
                             if (confidence >= .8) {
                                 if (goldState == goldCenter) {
                                     if (goldMineralX > 100 && goldMineralX < 380 && goldMineralY > 660) {
@@ -551,6 +550,11 @@ public abstract class AutoBase extends LinearOpMode {
                             }
 
                         }
+                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
+                        telemetry.update();
+                        sleep(3000);
+
+
                     }
                 }
             }

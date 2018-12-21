@@ -276,10 +276,10 @@ public class Base {
                 turnspeed = .25;
             }
             if (76 < deltaAngle && deltaAngle < 120){
-                turnspeed = .25;
+                turnspeed = .5;
             }
             if (121 < deltaAngle && deltaAngle < 180){
-                turnspeed = .25;
+                turnspeed = .75;
             }
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
@@ -294,7 +294,7 @@ public class Base {
         while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 0.4 && runtime.seconds() < stopTime );
 
         normalDrive(caller, 0.0, 0.0);
-        if ( Math.abs(gHeading - heading) <= 1 )
+        if ( Math.abs(gHeading - heading) <= .4 )
             return true;
         else
             return false;
