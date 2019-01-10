@@ -363,7 +363,7 @@ public abstract class AutoBase extends LinearOpMode {
 
         } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
-            robot.encoderDrive(this, .5, -2, -2, 2);
+            robot.encoderDrive(this, .5, -3, -3, 2);
         }
         robot.encoderDrive(this, .5, 4, 4, 3);
 
@@ -396,7 +396,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 6, 6, 3);
         sleep(100);
 
-        switch (sampleMinerals()) {
+        switch (goldLeft) {
 
             case goldNotFound:
 
@@ -406,14 +406,17 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
 
             case goldLeft:
+                robot.encoderDrive(this,.75,8, 8, 3);
                 robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 15, 0, 3);
-                robot.encoderDrive(this, .75, 11, 11, 3);
+                robot.encoderDrive(this, .75, 13, 13, 3);
                 robot.encoderDrive(this, .5, -6, -6, 3);
                 robot.encoderStrafe(this, .5, 25, 0, 4);
                 robot.gyroTurn(this, finalHeading, 3);
-                robot.encoderDrive(this, 1, 60, 65, 5);
+                robot.encoderStrafe(this, .5,0,5,3);
+                robot.encoderDrive(this, 1, 56, 56, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 15, 0, 3);
@@ -422,18 +425,19 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -96, -96, 5);
+                    robot.encoderDrive(this, 1, -91, -91, 5);
                 }
                 break;
 
             case goldCenter:
-                robot.encoderDrive(this, .25, 20, 20, 3);
-                robot.encoderDrive(this, .5, -11, -11, 3);
+                robot.encoderDrive(this, .25, 21, 21, 3);
+                robot.encoderDrive(this, .5, -9, -9, 3);
                 robot.encoderStrafe(this, .5, 40, 0, 5);
                 robot.gyroTurn(this, finalHeading, 3);
-                robot.encoderStrafe(this, .5, 0, 3, 3);
+                robot.encoderStrafe(this, .5, 0, 5, 3);
                 robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderDrive(this, .5, 6, 6, 3);
@@ -442,7 +446,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -96, -96, 5);
+                    robot.encoderDrive(this, 1, -80, -80, 5);
                 }
 
                 break;
@@ -457,6 +461,7 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderDrive(this, 1, 50, 50, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 0, 15, 3);
@@ -572,6 +577,13 @@ public abstract class AutoBase extends LinearOpMode {
         return goldState;
 
     }
+    public void stopRobot() {
+        if (robot.tfod != null) {
+            robot.tfod.shutdown();
+        }
+    }
 }
+
+
 
 

@@ -22,6 +22,7 @@ public class BlueDepotUnlatched extends AutoBase {
             telemetry.update();
         }
         super.runDepot(false);
+        stopRobot();
 
 
     }

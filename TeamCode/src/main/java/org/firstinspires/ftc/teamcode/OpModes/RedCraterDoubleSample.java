@@ -22,7 +22,10 @@ public class RedCraterDoubleSample extends AutoBase {
 
         }
 
+
         super.runCrater(true, true);
+        stopRobot();
+
 
 
     }

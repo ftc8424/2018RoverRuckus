@@ -23,6 +23,7 @@ public class RedDepot extends AutoBase {
 
         }
         super.runDepot(true);
+        stopRobot();
 
 
     }

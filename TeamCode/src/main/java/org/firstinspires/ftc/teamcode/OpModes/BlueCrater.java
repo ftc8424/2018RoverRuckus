@@ -21,8 +21,10 @@ public class BlueCrater extends AutoBase {
             telemetry.update();
 
         }
+
         super.runCrater(true);
 
+        stopRobot();
 
     }
 }

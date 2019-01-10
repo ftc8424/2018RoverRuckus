@@ -23,6 +23,7 @@ public class RedCrater extends AutoBase {
         }
 
         super.runCrater(true);
+        stopRobot();
 
 
     }

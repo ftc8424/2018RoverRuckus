@@ -23,6 +23,7 @@ public class RedDepotUnlatched extends AutoBase {
 
         }
         super.runDepot(false);
+        stopRobot();
 
 
     }

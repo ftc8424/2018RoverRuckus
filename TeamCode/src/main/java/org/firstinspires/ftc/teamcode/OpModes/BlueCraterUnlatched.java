@@ -22,6 +22,7 @@ public class BlueCraterUnlatched extends AutoBase {
 
         }
         super.runCrater(false);
+        stopRobot();
 
 
     }

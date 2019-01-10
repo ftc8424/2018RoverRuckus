@@ -291,7 +291,7 @@ public class Base {
             normalDrive(caller, leftPower, rightPower);
             caller.telemetry.update();
         }
-        while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 0.4 && runtime.seconds() < stopTime );
+        while (caller.opModeIsActive() && Math.abs(gHeading - heading) > 0.2 && runtime.seconds() < stopTime );
 
         normalDrive(caller, 0.0, 0.0);
         if ( Math.abs(gHeading - heading) <= .4 )
