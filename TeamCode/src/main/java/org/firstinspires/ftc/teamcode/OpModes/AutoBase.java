@@ -228,6 +228,10 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.gyroTurn(this, deployHeading, 3);
                 robot.encoderDrive(this, .5, 6, 6, 2);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                double msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 robot.encoderStrafe(this, .5, 4, 0, 3);
                 robot.encoderDrive(this, 1, -60, -60, 10);
 
@@ -240,7 +244,10 @@ public abstract class AutoBase extends LinearOpMode {
                 telemetry.update();
                 sleep(1000);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(100);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 telemetry.addData("Marker Deployed", "");
                 telemetry.update();
                 sleep(1000);
@@ -269,8 +276,10 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.gyroTurn(this, deployHeading, 5);
                 robot.encoderStrafe(this, .5, 26, 0, 3);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(500);
-                robot.encoderDrive(this, 1, -77, -77, 10);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);                robot.encoderDrive(this, 1, -77, -77, 10);
 
                 break;
         }
@@ -396,7 +405,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 6, 6, 3);
         sleep(100);
 
-        switch (goldLeft) {
+        switch (goldRight) {
 
             case goldNotFound:
 
@@ -406,7 +415,7 @@ public abstract class AutoBase extends LinearOpMode {
                 break;
 
             case goldLeft:
-                robot.encoderDrive(this,.75,8, 8, 3);
+                robot.encoderDrive(this,.75,9, 9, 3);
                 robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 15, 0, 3);
                 robot.encoderDrive(this, .75, 13, 13, 3);
@@ -416,7 +425,10 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderStrafe(this, .5,0,5,3);
                 robot.encoderDrive(this, 1, 56, 56, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(1000);
+                double msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 15, 0, 3);
@@ -425,7 +437,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -91, -91, 5);
+                    robot.encoderDrive(this, 1, -82, -82, 5);
                 }
                 break;
 
@@ -437,7 +449,10 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderStrafe(this, .5, 0, 5, 3);
                 robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(1000);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderDrive(this, .5, 6, 6, 3);
@@ -456,12 +471,16 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.gyroTurn(this, initialHeading, 3);
                 robot.encoderStrafe(this, .5, 0, 20, 3);
                 robot.encoderDrive(this, .5, 11, 11, 3);
-                robot.encoderDrive(this, .5, -8, -8, 3);
-                robot.encoderStrafe(this, .75, 65, 0, 6);
+                robot.encoderDrive(this, .5, -7, -7, 3);
+                robot.encoderStrafe(this, .75, 55, 0, 6);
                 robot.gyroTurn(this, finalHeading, 3);
+                robot.encoderStrafe(this, .5, 0, 15, 3);
                 robot.encoderDrive(this, 1, 50, 50, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(1000);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 0, 15, 3);
@@ -470,7 +489,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -96, -96, 5);
+                    robot.encoderDrive(this, 1, -80, -80, 5);
                 }
                 break;
 
