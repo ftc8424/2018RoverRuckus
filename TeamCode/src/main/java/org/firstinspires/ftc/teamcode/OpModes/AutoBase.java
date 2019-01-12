@@ -191,10 +191,10 @@ public abstract class AutoBase extends LinearOpMode {
         }
         while (opModeIsActive() && turnSuccessful == false && times++ < 3);
 
-        robot.encoderDrive(this, .75, 6, 6, 3);
+        robot.encoderDrive(this, .5, 6, 6, 3);
         sleep(100);
 
-        switch (sampleMinerals()) {
+        switch (sampleMineralsDepot()) {
             //switch (goldCenter){
             case goldNotFound:
                 robot.gyroTurn(this, initialHeading, 3);
@@ -222,31 +222,30 @@ public abstract class AutoBase extends LinearOpMode {
 
             case goldLeft:
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .5, 5, 5, 3);
-                robot.encoderStrafe(this, .5, 15, 0, 3);
-                robot.encoderDrive(this, .75, 36, 36, 5);
+                robot.encoderDrive(this, .5, 8, 8, 3);
+                robot.encoderStrafe(this, .5, 18, 0, 3);
+                robot.encoderDrive(this, .5, 36, 36, 5);
                 robot.gyroTurn(this, deployHeading, 3);
                 robot.encoderDrive(this, .5, 6, 6, 2);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 double msecs = runtime.milliseconds();
                 do {
-                    robot.gyroTurn(this, finalHeading, timeoutS);
+                    robot.gyroTurn(this, deployHeading, timeoutS);
                 } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
-                robot.encoderStrafe(this, .5, 4, 0, 3);
-                robot.encoderDrive(this, 1, -60, -60, 10);
+                robot.encoderDrive(this, 1, -75, -75, 10);
 
                 break;
 
             case goldCenter:
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .5, 40, 40, 4);
+                robot.encoderDrive(this, .5, 50, 50, 4);
                 telemetry.addData("Deploying Marker", "");
                 telemetry.update();
                 sleep(1000);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 msecs = runtime.milliseconds();
                 do {
-                    robot.gyroTurn(this, finalHeading, timeoutS);
+                    robot.gyroTurn(this, initialHeading, timeoutS);
                 } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 telemetry.addData("Marker Deployed", "");
                 telemetry.update();
@@ -254,12 +253,12 @@ public abstract class AutoBase extends LinearOpMode {
                 if (robot.gyroTurn(this, deployHeading, 5)) {
                     telemetry.addData("Turn Successful", "");
                     telemetry.update();
-                    sleep(1000);
-                    robot.encoderStrafe(this, .5, 8, 0, 10);
+                    sleep(200);
+                    robot.encoderStrafe(this, .5, 20, 0, 10);
                     telemetry.addData("Strafe Completed", "");
                     telemetry.update();
                     sleep(1000);
-                    robot.encoderDrive(this, .75, -60, -60, 10);
+                    robot.encoderDrive(this, .75, -71, -71, 10);
                 } else {
                     telemetry.addData("Turn Unsuccessful", "");
                     telemetry.update();
@@ -368,13 +367,13 @@ public abstract class AutoBase extends LinearOpMode {
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
 
             robot.LiftMotor.setPower(0);
-            robot.encoderStrafe(this, .25, 0, 5, 3);
+            robot.encoderStrafe(this, .5, 0, 8, 3);
 
         } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
             robot.encoderDrive(this, .5, -3, -3, 2);
         }
-        robot.encoderDrive(this, .5, 4, 4, 3);
+        robot.encoderDrive(this, .5, 6, 6, 3);
 
         do {
             turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
@@ -405,7 +404,7 @@ public abstract class AutoBase extends LinearOpMode {
         robot.encoderDrive(this, .75, 6, 6, 3);
         sleep(100);
 
-        switch (goldRight) {
+        switch (sampleMineralsCrater()) {
 
             case goldNotFound:
 
@@ -423,21 +422,21 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderStrafe(this, .5, 25, 0, 4);
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderStrafe(this, .5,0,5,3);
-                robot.encoderDrive(this, 1, 56, 56, 5);
+                robot.encoderDrive(this, 1, 54, 54, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 double msecs = runtime.milliseconds();
-                do {
+                /*do {
                     robot.gyroTurn(this, finalHeading, timeoutS);
-                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
-                    robot.encoderStrafe(this, .5, 15, 0, 3);
+                    robot.encoderStrafe(this, .5, 17, 0, 3);
                     robot.encoderDrive(this, .75, 28, 28, 4);
                     robot.encoderStrafe(this, .75, 0, 57, 5);
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -82, -82, 5);
+                    robot.encoderDrive(this, 1, -76, -76, 5);
                 }
                 break;
 
@@ -450,9 +449,9 @@ public abstract class AutoBase extends LinearOpMode {
                 robot.encoderDrive(this, 1, 52, 52, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 msecs = runtime.milliseconds();
-                do {
+                /*do {
                     robot.gyroTurn(this, finalHeading, timeoutS);
-                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderDrive(this, .5, 6, 6, 3);
@@ -461,7 +460,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -80, -80, 5);
+                    robot.encoderDrive(this, 1, -76, -76, 5);
                 }
 
                 break;
@@ -469,18 +468,18 @@ public abstract class AutoBase extends LinearOpMode {
             case goldRight:
                 robot.encoderDrive(this, .5, 6, 6, 3);
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderStrafe(this, .5, 0, 20, 3);
-                robot.encoderDrive(this, .5, 11, 11, 3);
+                robot.encoderStrafe(this, .5, 0, 22, 3);
+                robot.encoderDrive(this, .5, 12, 12, 3);
                 robot.encoderDrive(this, .5, -7, -7, 3);
                 robot.encoderStrafe(this, .75, 55, 0, 6);
                 robot.gyroTurn(this, finalHeading, 3);
-                robot.encoderStrafe(this, .5, 0, 15, 3);
+                robot.encoderStrafe(this, .5, 0, 8, 3);
                 robot.encoderDrive(this, 1, 50, 50, 5);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 msecs = runtime.milliseconds();
-                do {
+                /*do {
                     robot.gyroTurn(this, finalHeading, timeoutS);
-                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
                 if (doubleSample) {
                     robot.gyroTurn(this, lastHeading, 3);
                     robot.encoderStrafe(this, .5, 0, 15, 3);
@@ -489,7 +488,7 @@ public abstract class AutoBase extends LinearOpMode {
                     robot.gyroTurn(this, lastFinalHeading, 3);
                     robot.encoderDrive(this, .5, 16, 16, 3);
                 } else {
-                    robot.encoderDrive(this, 1, -80, -80, 5);
+                    robot.encoderDrive(this, 1, -76, -76, 5);
                 }
                 break;
 
@@ -530,7 +529,7 @@ public abstract class AutoBase extends LinearOpMode {
      * @return 1 if Gold was on Left, 2 if Gold was Center
      * @throws InterruptedException
      */
-    private int sampleMinerals() throws InterruptedException {
+    private int sampleMineralsCrater() throws InterruptedException {
         if (!opModeIsActive())
             return goldNotFound;
         int goldState = goldCenter;
@@ -558,17 +557,20 @@ public abstract class AutoBase extends LinearOpMode {
                             telemetry.addData("Confidence:", confidence);
                             telemetry.addData("Gold Mineral X", goldMineralX)
                                     .addData("Gold Mineral Y", goldMineralY);
-                            if (confidence >= .8) {
+                            if (confidence >= .9) {
                                 if (goldState == goldCenter) {
-                                    if (goldMineralX > 100 && goldMineralX < 380 && goldMineralY > 660) {
+                                    if (goldMineralY > 500) {
                                         goldFound = true;
                                         break;
                                     }
+                                    //goldFound = true;
                                 } else if (goldState == goldLeft) {
-                                    if (goldMineralX > 200 && goldMineralX < 370 && goldMineralY > 600) {
+                                    if (goldMineralY > 500) {
                                         goldFound = true;
                                         break;
                                     }
+                                    //goldFound = true;
+
 
                                 }
                             }
@@ -576,7 +578,7 @@ public abstract class AutoBase extends LinearOpMode {
                         }
                         telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
                         telemetry.update();
-                        sleep(3000);
+                        sleep(250);
 
 
                     }
@@ -590,7 +592,77 @@ public abstract class AutoBase extends LinearOpMode {
                 goldState = goldRight;
                 goldFound = true;
             }
-            sleep(250);
+            sleep(200);
+        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
+        camera.setFlashTorchMode(false);
+        return goldState;
+
+    }
+
+    private int sampleMineralsDepot() throws InterruptedException {
+        if (!opModeIsActive())
+            return goldNotFound;
+        int goldState = goldCenter;
+        boolean goldFound = false;
+        int times = 0;
+        CameraDevice camera = CameraDevice.getInstance();
+        camera.setFlashTorchMode(true);
+
+
+        do {
+            int goldMineralX = -1;
+            int goldMineralY = -1;
+            double confidence = -1;
+            if (robot.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = Math.abs((int) recognition.getLeft());
+                            goldMineralY = Math.abs((int) recognition.getTop());
+                            confidence = recognition.getConfidence();
+                            telemetry.addData("Confidence:", confidence);
+                            telemetry.addData("Gold Mineral X", goldMineralX)
+                                    .addData("Gold Mineral Y", goldMineralY);
+                            if (confidence >= .9) {
+                                if (goldState == goldCenter) {
+                                    if (goldMineralY > 50) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+                                } else if (goldState == goldLeft) {
+                                    if (goldMineralY > 50) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+
+
+                                }
+                            }
+
+                        }
+                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
+                        telemetry.update();
+                        sleep(250);
+
+
+                    }
+                }
+            }
+            times++;
+            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
+                goldState = goldLeft;
+                robot.gyroTurn(this, leftSampleAngle, 1.5);
+            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
+                goldState = goldRight;
+                goldFound = true;
+            }
+            sleep(200);
         }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
         camera.setFlashTorchMode(false);
         return goldState;

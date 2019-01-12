@@ -253,7 +253,7 @@ public class Base {
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .25;
+        double turnFloor = .20;
         double stopTime = runtime.seconds() + timeoutS;
 
 

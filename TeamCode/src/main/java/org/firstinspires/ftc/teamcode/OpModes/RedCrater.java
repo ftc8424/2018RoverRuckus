@@ -7,11 +7,14 @@ public class RedCrater extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
+
         initialHeading = 310;
         deployHeading = 270;
-        zeroHeading = 180;
+        leftSampleAngle = 275;
         lastHeading = 45;
         lastFinalHeading = 90;
+        finalHeading = 180;
+
 
         robot.robot_init(hardwareMap,true);
         initRobot();

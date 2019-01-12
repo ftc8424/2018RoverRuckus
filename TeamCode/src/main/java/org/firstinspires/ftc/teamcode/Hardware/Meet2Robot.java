@@ -21,7 +21,7 @@ public class Meet2Robot extends MecanumDrive {
     public double LiftUnlock = .2;
     public DcMotor LiftMotor = null;
     public int LiftUp =  -2046;
-    public int LiftDown = 0;
+    public int LiftDown = -700;
 
     @Override
     public void initServo(){

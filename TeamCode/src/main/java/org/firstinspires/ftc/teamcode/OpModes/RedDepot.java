@@ -7,13 +7,12 @@ public class RedDepot extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 220;
+        initialHeading = 225;
         deployHeading = 270;
-        finalHeading = 180;
         halfHeading = 0;
-        lastHeading = 325;
-        lastFinalHeading = 335;
         leftSampleAngle = 180;
+        lastHeading = 45;
+        lastFinalHeading = 90;
         robot.robot_init(hardwareMap,true);
         initRobot();
 

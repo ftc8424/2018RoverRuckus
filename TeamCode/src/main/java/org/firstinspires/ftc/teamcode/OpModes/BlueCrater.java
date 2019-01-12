@@ -7,11 +7,13 @@ public class BlueCrater extends AutoBase {
 
 
     public void runOpMode() throws InterruptedException {
+
         initialHeading = 130;
         deployHeading = 90;
-        zeroHeading = 0;
+        leftSampleAngle = 95;
         lastHeading = 225;
         lastFinalHeading = 270;
+        finalHeading = 0;
 
         robot.robot_init(hardwareMap,true);
         initRobot();
