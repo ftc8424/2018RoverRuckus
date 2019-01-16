@@ -64,7 +64,10 @@ public class MecanumTeleOp extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
-    private double lasta = 0.0;    // Last time we pressed the "gamepad1.a" button
+    private double lasta = 0.0;
+    double powerAdjuster = .75;
+    // Last time we pressed the "gamepad1.a" button
+    double lockSet = 0.0;
 
 
     /*
@@ -103,28 +106,30 @@ public class MecanumTeleOp extends OpMode {
 
         double LiftVal = gamepad2.left_stick_y;
         telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
-        telemetry.update();
-
-        if (robot.LockServo.getPosition() == robot.LiftLock && Math.abs(LiftVal) > .1) {
+        telemetry.addData("Lock Position", robot.LockServo.getPosition());
+        if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
             robot.LockServo.setPosition(robot.LiftUnlock);
-        }else if (Math.abs(LiftVal) > 0.1) {
+            lockSet = runtime.milliseconds();
+
+        }else if (Math.abs(LiftVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
             robot.LiftMotor.setPower(LiftVal);
             //telemetry.addData("Lift Value", LiftVal);
-            telemetry.update();
         } else {
             robot.LiftMotor.setPower(0);
         }
-        if (gamepad2.a) {
+        if (gamepad2.a && runtime.milliseconds() > lasta +500) {
             robot.LockServo.setPosition(robot.LiftLock);
+            lasta = runtime.milliseconds();
         }
-        if (gamepad2.b){
+        if (gamepad2.b && runtime.milliseconds() > lasta + 500){
             robot.LockServo.setPosition(robot.LiftUnlock);
+            lasta = runtime.milliseconds();
         }
         double[] wheelPower = { 0, 0, 0, 0 };
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        wheelPower = robot.motorPower(-gamepad1.left_stick_y * .75, -gamepad1.left_stick_x * .75, gamepad1.right_stick_x * .75);
+        wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
         robot.LFront.setPower(wheelPower[0]);
         robot.RFront.setPower(wheelPower[1]);
@@ -133,7 +138,8 @@ public class MecanumTeleOp extends OpMode {
 
 
         if (gamepad1.a) {
-            wheelPower = robot.motorPower(-gamepad1.left_stick_y * .75, -gamepad1.left_stick_x * .75, gamepad1.right_stick_x * .75);
+            powerAdjuster = .75;
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
             robot.LFront.setPower(wheelPower[0]);
             robot.RFront.setPower(wheelPower[1]);
@@ -142,7 +148,8 @@ public class MecanumTeleOp extends OpMode {
         }
 
         if (gamepad1.b){
-            wheelPower = robot.motorPower(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
+            powerAdjuster = 1;
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
             robot.LFront.setPower(wheelPower[0]);
             robot.RFront.setPower(wheelPower[1]);
