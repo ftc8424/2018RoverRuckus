@@ -23,22 +23,8 @@ public class RedDepot extends AutoBase {
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
-            robot.targetsRoverRuckus.activate();
-            for (VuforiaTrackable trackable : robot.allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
 
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        robot.lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }
-            if (targetVisible == true){
+            if (robot.VuforiaTorch()){
                 robot.camera.setFlashTorchMode(false);
             }
             telemetry.update();

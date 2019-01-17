@@ -18,6 +18,9 @@ public class RedCraterDoubleSample extends AutoBase {
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+            if (robot.VuforiaTorch()){
+                robot.camera.setFlashTorchMode(false);
+            }
             telemetry.update();
 
         }
