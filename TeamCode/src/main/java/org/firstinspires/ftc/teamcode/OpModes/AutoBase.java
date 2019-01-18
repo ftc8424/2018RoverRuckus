@@ -29,17 +29,22 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.vuforia.CameraDevice;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Hardware.Constants;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
+
+import java.util.List;
 
 
 /**
@@ -57,347 +62,623 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
 
 @Autonomous(name="Auto Depot", group="Linear Opmode")
 @Disabled
-public abstract class   AutoBase extends LinearOpMode {
+public abstract class AutoBase extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    protected Meet1Robot robot = new Meet1Robot();
+    protected Meet2Robot robot = new Meet2Robot();
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
-     
-    public void runDepot() throws InterruptedException {
+    protected double deployHeading = 0;
+    protected double halfHeading = 0;
+    protected double lastHeading = 0;
+    protected double lastFinalHeading = 0;
+    protected double zeroHeading = 0;
+    protected double leftSampleAngle = 0;
+    protected double LiftLockPower = 0.5;
 
-        runtime.reset();
-        boolean turnSuccessful = false;
-        int times = 0;
-        do {
-            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (turnSuccessful == false) {
-                telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY")
-                        .addData("Servo Position", robot.ColorServo.getPosition());
-                telemetry.update();
-                sleep(1000);
-                double heading = robot.getHeading();
-                switch (times) {
-                    case 0:
-                        robot.encoderStrafe(this,.75, 2, 0, 2);
-                        break;
-                    case 1:
-                        robot.encoderStrafe(this, .75, 0, 4, 2);
-                        break;
-                    case 2:
-                        if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 91 && heading <= 180) robot.encoderDrive(this, .75, -4, -4, 2);
-                        if (heading >= 181 && heading <= 269) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 270 && heading <= 359) robot.encoderDrive(this, .75, -4, -4, 2);
-                        break;
-                }
-            }
-        }
-        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
-        
-        if (turnSuccessful) {
-            robot.ColorServo.setPosition(robot.ColorSample);
-            robot.LiftMotor.setTargetPosition(0);
-            telemetry.addData("TURN STATUS", "SUCCESSFUL!  Scanning with Color Sensor")
-                    .addData("Servo Position", robot.ColorServo.getPosition());
-            telemetry.update();
-            sleep(2000);
-            robot.encoderDrive(this, .75, 18, 18, 5);
-            robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 4, 6, 2);
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition())
-                    .addData("is it gold", robot.isGold());
-            telemetry.update();
-            sleep(1000);
+    /**
+     * Initialize the robot for autonomous-specific things (e.g., set encoder mode, initialize IMU)
+     */
 
-            if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 17, 10);
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.addData("is it gold", robot.isGold());
-                telemetry.addData("blueValue", robot.color.blue());
-                telemetry.addData("redValue", robot.color.red());
-                telemetry.addData("greenValue", robot.color.green());
-                telemetry.update();
-                sleep(1000);
-                if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.addData("is it gold", robot.isGold());
-                    telemetry.addData("blueValue", robot.color.blue());
-                    telemetry.addData("redValue", robot.color.red());
-                    telemetry.addData("greenValue", robot.color.green());
-                    telemetry.update();
-                    sleep(1000);
-                    if (robot.isGold() == true) {
-                        robot.ColorServo.setPosition(robot.ColorDeploy);
-                        sleep(1500);
-                        robot.ColorServo.setPosition(robot.ColorStart);
-                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                        telemetry.addData("is it gold", robot.isGold());
-                        telemetry.addData("blueValue", robot.color.blue());
-                        telemetry.addData("redValue", robot.color.red());
-                        telemetry.addData("greenValue", robot.color.green());
-                        telemetry.update();
-                        sleep(1000);
-                        //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 0, 33, 10);
-                        robot.gyroTurn(this, finalHeading, 4);
-                        robot.encoderDrive(this, .75, -20,-20, 10);
-                    } else {
-                        robot.ColorServo.setPosition(robot.ColorStart);
-                        telemetry.addData("IS NOT GOLD", "EXITING");
-                        telemetry.update();
-                        sleep(2000);
-                        //robot.encoderDrive(this, .75, -5, -5, 1);
-                        robot.encoderStrafe(this, .75, 0, 33, 10);
-                        robot.gyroTurn(this, finalHeading, 4);
-                        robot.encoderDrive(this, .75, -20,-20, 10);
-                    }
-                } else {
-                    robot.ColorServo.setPosition(robot.ColorDeploy);
-                    sleep(1000);
-                    robot.ColorServo.setPosition(robot.ColorStart);
-                    robot.encoderStrafe(this, .75, 0, 50, 10);
-                    robot.gyroTurn(this, finalHeading, 4);
-                    robot.encoderDrive(this, .75, -20,-20, 10);
-                }
-            } else {
-                robot.ColorServo.setPosition(robot.ColorDeploy);
-                sleep(1000);
-                robot.ColorServo.setPosition(robot.ColorStart);
-                robot.encoderStrafe(this, .75, 0, 67, 10);
-                robot.gyroTurn(this, finalHeading, 4);
-                robot.encoderDrive(this, .75, -20,-20, 10);
-            }
-        }
-        else {
-            // TODO: Put rest of movement, for crater park and/or deploy marker
-            telemetry.addData("Can't turn towards target", initialHeading);
-            telemetry.update();
+    public void initRobot() {
 
-        }
-    }
-
-
-    public void runCrater() throws InterruptedException {
-
-        runtime.reset();
-        boolean turnSuccessful = false;
-        int times = 0;
-        do {
-            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
-            if (turnSuccessful == false) {
-                double heading = robot.getHeading();
-                switch (times) {
-                    case 0:
-                        robot.encoderStrafe(this,.75, 2, 0, 2);
-                        break;
-                    case 1:
-                        robot.encoderStrafe(this, .75, 0, 4, 2);
-                        break;
-                    case 2:
-                        if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 91 && heading <= 180) robot.encoderDrive(this, .75, -4, -4, 2);
-                        if (heading >= 181 && heading <= 269) robot.encoderDrive(this, .75, 4, 4, 2);
-                        if (heading >= 270 && heading <= 359) robot.encoderDrive(this, .75, -4, -4, 2);
-                        break;
-                }
-            }
-
-
-        }
-        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
-
-        if (turnSuccessful) {
-            robot.ColorServo.setPosition(robot.ColorSample);
-            robot.encoderDrive(this, .75, 18, 18, 2);
-            robot.encoderStrafe(this, 0.75, 15, 0, 4);
-            robot.encoderDrive(this, 0.75, 5, 6, 2);
-            telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                    .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                    .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                    .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-            telemetry.addData("is it gold", robot.isGold());
-            telemetry.addData("blueValue", robot.color.blue());
-            telemetry.addData("redValue", robot.color.red());
-            telemetry.addData("greenValue", robot.color.green());
-            telemetry.update();
-
-
-            if (robot.isGold() == false) {
-                robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
-                telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                        .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                        .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                        .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                telemetry.addData("is it gold", robot.isGold());
-                telemetry.addData("blueValue", robot.color.blue());
-                telemetry.addData("redValue", robot.color.red());
-                telemetry.addData("greenValue", robot.color.green());
-                telemetry.update();
-                if (robot.isGold() == false) {
-                    robot.encoderStrafe(this, 0.75, 0, 17, 10);  // TODO Strafe right 15 inches
-                    telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                            .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                            .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                            .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                    telemetry.update();
-                    if (robot.isGold() == true) {
-                        robot.ColorServo.setPosition(robot.ColorDeploy);
-                        sleep(1000);
-                        robot.ColorServo.setPosition(robot.ColorStart);
-                        telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
-                                .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
-                                .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
-                                .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
-                        telemetry.update();
-                        robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 10, 10, 3);
-                    } else {
-                        robot.ColorServo.setPosition(robot.ColorDeploy);
-                        sleep(1000);
-                        robot.ColorServo.setPosition(robot.ColorStart);
-                        robot.encoderStrafe(this, .75, 0, 10, 2);
-                        robot.encoderDrive(this, .75, 10, 10, 3);
-                        telemetry.addData("IS NOT GOLD", "EXITING");
-                        telemetry.update();
-
-                    }
-                } else {
-                    robot.ColorServo.setPosition(robot.ColorDeploy);
-                    sleep(1000);
-                    robot.ColorServo.setPosition(robot.ColorStart);
-                    robot.encoderDrive(this, 0.75, -5, -5, 10);
-                    robot.encoderStrafe(this, .75, 0, 27, 3);
-                    robot.encoderDrive(this, .75, 10, 10, 3);
-                }
-            } else {
-                robot.ColorServo.setPosition(robot.ColorDeploy);
-                sleep(1000);
-                robot.ColorServo.setPosition(robot.ColorStart);
-                robot.encoderDrive(this, 0.75, -5, -5, 10);
-                robot.encoderStrafe(this, .75, 0, 44, 3);
-                robot.encoderDrive(this, .75, 10, 10, 3);
-            }
-        }
-        else {
-            // TODO: Put rest of movement, for crater park and/or deploy marker
-            telemetry.addData("Can't turn towards target", initialHeading);
-            telemetry.update();
-
-        }
-    }
-
-    public boolean deployLander(int timeout) throws InterruptedException {
-        // TODO: the Zero Power Behavior is already BRAKE in Hardware.Meet1Robot, so you can remove
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LiftMotor.setPower(0);
+        robot.LockServo.setPosition(robot.LiftLock);
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        robot.imu.initialize(parameters);
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
+        robot.initVuforia();
 
-        // TODO: Pull the variable declarations out of this method and put them into encoderLiftMotor
-        final int COUNTS_PER_SECOND_MAX = 600;  // REV Core Hex
-        final double COUNTS_PER_MOTOR_REV = 1680;  // AndyMark NeveRest 60:1 CPR
-        final double DRIVE_GEAR_REDUCTION = 1.0;   // No gears, just motor shafts
-        final double WHEEL_DIAMETER_INCHES = 2.5;   // Diameter of spool
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 
-        final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
-
-        // TODO: You should do the runtime calculations similar to encoderDrive() to see if you deployed or not
-        // TODO: E.g., int stopTime = runtime.seconds() + timeout;
-        // TODO: You need to call encoderLiftMotor(-7.25) to get it to drop 7.25 inches instead of doing the set power and stuff yourself
-        robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() - (int)Math.round(7.25*encoderInch));
-        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.LiftMotor.setPower(.6);
-
-        // TODO:  Before you run this, you should do:  if ( !opModeIsActive() || runtime.milliseconds() > stopTime) return false;
-        // TODO:  you
-
-        robot.encoderDrive(this, .75, -1, -1 ,1);
-
-        // TODO: You should call encoderLiftMotor(7.25) to get it to pull the lift down the same amount
-        // TODO: But before you call it, you need to again do:  if ( !opModeIsActive() || runtime.milliseconds() > stopTime ) return false;
-        robot.LiftMotor.setTargetPosition(robot.LiftMotor.getCurrentPosition() + (int)Math.round(7.25*encoderInch));
-        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.LiftMotor.setPower(.6);
-
-        // TODO: You've just created a recursion loop because you're calling yourself within yourself, all you need to do here is
-        // TODO:
-
-        if (deployLander(10)) {
-            return true;
+            robot.initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
-        else {
-            return false;
-        }
+
     }
-        public void encoderLiftMotor(LinearOpMode caller,
-        double speed,
-        double encoderInch,
-        double leftInches, double rightInches,
-        double timeoutS) throws InterruptedException {
 
-            int newLiftMotorTarget;
-            //int getHeading = gyro.getIntegratedZValue();
-            long encoderTimeout = 2000;   // Wait no more than two seconds, an eternity, to set
+    /**
+     * The autonomous code to run when the robot is on the Depot side of the field.
+     * <p>
+     * This is the same code regardless of our color, because the lander and the depot are the
+     * same, with the only difference being the gyro heading values, as they are 90 degrees off
+     * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
+     * exactly the same.
+     *
+     * @throws InterruptedException
+     */
 
-            if ( !caller.opModeIsActive() )
-                return;
+    public void runDepot(boolean latched) throws InterruptedException {
 
-            robot.setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-            boolean LiftMotorEncoderSet = false;
-
-            newLiftMotorTarget = robot.LiftMotor.getCurrentPosition() + (int) Math.round(leftInches * encoderInch);
-            LiftMotorEncoderSet = robot.setEncoderPosition(caller, robot.LiftMotor, newLiftMotorTarget, encoderTimeout);
-
-            if ( ! (LiftMotorEncoderSet) ) {
-                caller.telemetry.addLine("Encoders CANNOT be set, aborting OpMode");
-                caller.telemetry.update();
-                caller.sleep(10000);    // Can't go any further, allow telemetry to show, then return
-                return;
-            }
-
-            // keep looping while we are still active, and there is time left, and motors haven't made position.
-            boolean isBusy;
-            int LiftMotorCurPos;
-            double stopTime = runtime.seconds() + timeoutS;
-            double LiftMotorPower;
-            double lastSetTime = runtime.milliseconds();
-            int HeadingLoop;
-
+        runtime.reset();
+        boolean turnSuccessful = true;
+        int times = 0;
+        /** Activate Tensor Flow Object Detection. */
+        if (robot.tfod != null) {
+            robot.tfod.activate();
+        }
+        if (latched) {
+            robot.deploy(robot.LockServo, robot.LiftUnlock);
+            sleep(500);
             do {
-                LiftMotorPower = speed;
-                if (LiftMotorPower <= 0.01) {
-                    lastSetTime = runtime.milliseconds();
-                    LiftMotorPower = speed;
-                    LiftMotorPower = speed;
+                robot.LiftMotor.setPower(-LiftLockPower);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
+            robot.LiftMotor.setPower(0);
+
+            robot.encoderDrive(this, .5, -4, -4, 3);
+            do {
+                robot.LiftMotor.setPower(LiftLockPower);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
+
+            robot.LiftMotor.setPower(0);
+            robot.encoderStrafe(this, .5, 0, 5, 3);
+
+        } else {
+            robot.encoderStrafe(this, .5, 0, 3, 2);
+            robot.encoderDrive(this, .5, -4, -4, 2);
+        }
+        robot.encoderDrive(this, .5, 4, 4, 3);
+
+
+        do {
+
+
+            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+
+            if (turnSuccessful == false) {
+                telemetry.addData("TURN STATUS", "UNSUCCESSFUL, ATTEMPTING RECOVERY");
+                telemetry.update();
+                sleep(1000);
+                double heading = robot.getHeading();
+                switch (times) {
+                    case 0:
+                        robot.encoderStrafe(this, .25, 2, 0, 2);
+                        break;
+                    case 1:
+                        robot.encoderStrafe(this, .25, 0, 4, 2);
+                        break;
+                    case 2:
+                        if (heading >= 0 && heading <= 90)
+                            robot.encoderDrive(this, .25, 4, 4, 2);
+                        if (heading >= 91 && heading <= 180)
+                            robot.encoderDrive(this, .25, -4, -4, 2);
+                        if (heading >= 181 && heading <= 269)
+                            robot.encoderDrive(this, .25, 4, 4, 2);
+                        if (heading >= 270 && heading <= 359)
+                            robot.encoderDrive(this, .25, -4, -4, 2);
+                        break;
+                }
+            }
+        }
+        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
+
+        robot.encoderDrive(this, .5, 6, 6, 3);
+        sleep(100);
+
+        switch (sampleMineralsDepot()) {
+            //switch (goldCenter){
+            case goldNotFound:
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .75, 40, 40, 4);
+                telemetry.addData("Deploying Marker", "");
+                telemetry.update();
+                sleep(1000);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(100);
+                telemetry.addData("Marker Deployed", "");
+                telemetry.update();
+                sleep(1000);
+                if (robot.gyroTurn(this, deployHeading, 5)) {
+                    telemetry.addData("Turn Successful", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderStrafe(this, .5, 7, 0, 10);
+                    telemetry.addData("Strafe Completed", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderDrive(this, .75, -58, -58, 4);
+                }
+                break;
+
+
+            case goldLeft:
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .5, 8, 8, 3);
+                robot.encoderStrafe(this, .5, 18, 0, 3);
+                robot.encoderDrive(this, .5, 36, 36, 5);
+                robot.gyroTurn(this, deployHeading, 3);
+                robot.encoderDrive(this, .5, 6, 6, 2);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                double msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, deployHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                robot.encoderDrive(this, 1, -75, -75, 10);
+
+                break;
+
+            case goldCenter:
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderDrive(this, .5, 50, 50, 4);
+                telemetry.addData("Deploying Marker", "");
+                telemetry.update();
+                sleep(1000);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, initialHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                telemetry.addData("Marker Deployed", "");
+                telemetry.update();
+                sleep(1000);
+                if (robot.gyroTurn(this, deployHeading, 5)) {
+                    telemetry.addData("Turn Successful", "");
+                    telemetry.update();
+                    sleep(200);
+                    robot.encoderStrafe(this, .5, 20, 0, 10);
+                    telemetry.addData("Strafe Completed", "");
+                    telemetry.update();
+                    sleep(1000);
+                    robot.encoderDrive(this, .75, -71, -71, 10);
+                } else {
+                    telemetry.addData("Turn Unsuccessful", "");
+                    telemetry.update();
+                    sleep(1000);
                 }
 
-               LiftMotorPower = Range.clip(LiftMotorPower, -1.0, 1.0);
-                robot.LiftMotor.setPower(LiftMotorPower);
+                break;
 
-                caller.telemetry.addData("Power:", "LiftMotorPower %.2f", LiftMotorPower);
-                caller.telemetry.update();
-                LiftMotorCurPos = robot.LiftMotor.getCurrentPosition();
-                isBusy = (Math.abs(LiftMotorCurPos - newLiftMotorTarget) >= 5);
-            }
-            while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
+            case goldRight:
+                robot.gyroTurn(this, initialHeading, 5);
+                robot.encoderDrive(this, .5, 10, 10, 3);
+                robot.encoderStrafe(this, .5, 0, 17, 3);
+                robot.encoderDrive(this, .5, 34, 34, 3);
+                robot.gyroTurn(this, deployHeading, 5);
+                robot.encoderStrafe(this, .5, 26, 0, 3);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                msecs = runtime.milliseconds();
+                do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);                robot.encoderDrive(this, 1, -77, -77, 10);
 
-            // Stop all motion;
+                break;
+        }
+
+        // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
+        if (!opModeIsActive()) {
+            return;
+        }
+
+
+       /* robot.encoderDrive(this, 1, 45, 45, 5);
+        robot.encoderStrafe(this, .37, 47, 0, 5);
+        robot.gyroTurn(this, deployHeading, 5);
+        robot.encoderDrive(this, 1, 36, 36, 5);
+        robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+        sleep(2000);
+
+       */
+
+        // TODO:  DEPOT-STEP-4:  Drive to our Alliance's crater and park
+        //if (!opModeIsActive())
+
+        //  return;
+
+        //robot.gyroTurn(this,0, 2);
+        //robot.encoderDrive(this, 1, -60,-60, 10);
+/*
+        // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
+        robot.encoderDrive(this, 0.75, -3, -3, 2);
+        robot.gyroTurn(this,225,2);
+        robot.encoderStrafe(this, .75, 0, 1, 2);
+
+        robot.encoderDrive(this, 1, -24, -24, 5);
+        robot.gyroTurn(this, halfHeading, 3);
+        robot.encoderDrive(this, .75, 24, 25, 5);
+        robot.gyroTurn(this, lastHeading, 3);
+        robot.encoderDrive(this, .75, 65, 60, 2);
+        robot.gyroTurn(this, lastFinalHeading, 3);
+        robot.encoderDrive(this, .5, 15, 10, 4);
+        robot.gyroTurn(this, halfHeading, 3);
+        robot.encoderDrive(this, .75, 10, 10, 3);
+        robot.gyroTurn(this, 45, 3);
+        robot.encoderDrive(this, .3, 6, 6, 2);
+        robot.encoderStrafe(this, .37, 0 , 24, 5);
+*/
+
+    } /* runDepot() */
+
+    public void runCrater(boolean latched) throws InterruptedException {
+        runCrater(latched, false);
+    }
+
+    /**
+     * The autonomous code to run when the robot is on the Crater side of the field.
+     * <p>
+     * This is the same code regardless of our color, because the lander and the crater are the
+     * same, with the only difference being the gyro heading values, as they are 90 degrees off
+     * of each other.  All other movements, encoderDrive() encoderStrafe() inches and things are
+     * exactly the same.
+     *
+     * @throws InterruptedException
+     */
+
+    public void runCrater(boolean latched, boolean doubleSample) throws InterruptedException {
+
+        runtime.reset();
+        boolean turnSuccessful = false;
+        int times = 0;
+        /** Activate Tensor Flow Object Detection. */
+        if (robot.tfod != null) {
+            robot.tfod.activate();
+        }
+        if (latched) {
+            robot.deploy(robot.LockServo, robot.LiftUnlock);
+            sleep(500);
+            do {
+                robot.LiftMotor.setPower(-LiftLockPower);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
             robot.LiftMotor.setPower(0);
-            // Turn off RUN_TO_POSITION
-            robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            robot.encoderDrive(this, .5, -4, -4, 3);
+            do {
+                robot.LiftMotor.setPower(.5);
+
+            } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
+
+            robot.LiftMotor.setPower(0);
+            robot.encoderStrafe(this, .5, 0, 8, 3);
+
+        } else {
+            robot.encoderStrafe(this, .5, 0, 3, 2);
+            robot.encoderDrive(this, .5, -3, -3, 2);
+        }
+        robot.encoderDrive(this, .5, 6, 6, 3);
+
+        do {
+            turnSuccessful = robot.gyroTurn(this, initialHeading, timeoutS);
+            if (turnSuccessful == false) {
+                double heading = robot.getHeading();
+                switch (times) {
+                    case 0:
+                        robot.encoderStrafe(this, .75, 2, 0, 2);
+                        break;
+                    case 1:
+                        robot.encoderStrafe(this, .75, 0, 4, 2);
+                        break;
+                    case 2:
+                        if (heading >= 0 && heading <= 90) robot.encoderDrive(this, .75, 4, 4, 2);
+                        if (heading >= 91 && heading <= 180)
+                            robot.encoderDrive(this, .75, -4, -4, 2);
+                        if (heading >= 181 && heading <= 269)
+                            robot.encoderDrive(this, .75, 4, 4, 2);
+                        if (heading >= 270 && heading <= 359)
+                            robot.encoderDrive(this, .75, -4, -4, 2);
+                        break;
+                }
+            }
+        }
+        while (opModeIsActive() && turnSuccessful == false && times++ < 3);
+
+
+        robot.encoderDrive(this, .75, 6, 6, 3);
+        sleep(100);
+
+        switch (sampleMineralsCrater()) {
+
+            case goldNotFound:
+
+                robot.encoderDrive(this, .75, 35, 35, 5);
+
+
+                break;
+
+            case goldLeft:
+                robot.encoderDrive(this,.75,9, 9, 3);
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderStrafe(this, .5, 15, 0, 3);
+                robot.encoderDrive(this, .75, 13, 13, 3);
+                robot.encoderDrive(this, .5, -6, -6, 3);
+                robot.encoderStrafe(this, .5, 25, 0, 4);
+                robot.gyroTurn(this, finalHeading, 3);
+                robot.encoderStrafe(this, .5,0,5,3);
+                robot.encoderDrive(this, 1, 54, 54, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                double msecs = runtime.milliseconds();
+                sleep(1000);
+                /*do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
+                if (doubleSample) {
+                    robot.gyroTurn(this, lastHeading, 3);
+                    robot.encoderStrafe(this, .5, 17, 0, 3);
+                    robot.encoderDrive(this, .75, 28, 28, 4);
+                    robot.encoderStrafe(this, .75, 0, 57, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                } else {
+                    robot.encoderDrive(this, 1, -76, -76, 5);
+                }
+                break;
+
+            case goldCenter:
+                robot.encoderDrive(this, .25, 21, 21, 3);
+                robot.encoderDrive(this, .5, -9, -9, 3);
+                robot.encoderStrafe(this, .5, 40, 0, 5);
+                robot.gyroTurn(this, finalHeading, 3);
+                robot.encoderStrafe(this, .5, 0, 5, 3);
+                robot.encoderDrive(this, 1, 52, 52, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                msecs = runtime.milliseconds();
+                sleep(1000);
+                /*do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
+                if (doubleSample) {
+                    robot.gyroTurn(this, lastHeading, 3);
+                    robot.encoderDrive(this, .5, 6, 6, 3);
+                    robot.encoderDrive(this, .75, 31, 31, 5);
+                    robot.encoderStrafe(this, .5, 0, 42, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                } else {
+                    robot.encoderDrive(this, 1, -76, -76, 5);
+                }
+
+                break;
+
+            case goldRight:
+                robot.encoderDrive(this, .5, 6, 6, 3);
+                robot.gyroTurn(this, initialHeading, 3);
+                robot.encoderStrafe(this, .5, 0, 22, 3);
+                robot.encoderDrive(this, .5, 12, 12, 3);
+                robot.encoderDrive(this, .5, -7, -7, 3);
+                robot.encoderStrafe(this, .75, 55, 0, 6);
+                robot.gyroTurn(this, finalHeading, 3);
+                robot.encoderStrafe(this, .5, 0, 8, 3);
+                robot.encoderDrive(this, 1, 50, 50, 5);
+                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                msecs = runtime.milliseconds();
+                sleep(1000);
+                /*do {
+                    robot.gyroTurn(this, finalHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);*/
+                if (doubleSample) {
+                    robot.gyroTurn(this, lastHeading, 3);
+                    robot.encoderStrafe(this, .5, 0, 15, 3);
+                    robot.encoderDrive(this, .75, 28, 28, 4);
+                    robot.encoderStrafe(this, .75, 0, 27, 5);
+                    robot.gyroTurn(this, lastFinalHeading, 3);
+                    robot.encoderDrive(this, .5, 16, 16, 3);
+                } else {
+                    robot.encoderDrive(this, 1, -76, -76, 5);
+                }
+                break;
+
+
+        }
+
+        // TODO:  DEPOT-STEP-3:  NOW Drive to the Depot and deploy the marker
+        if (!opModeIsActive()) {
+            return;
+        }
+
+/*
+        // MEET 1 OVERRIDE:  Don't sample, just drive out of the Depot, grab the left-most mineral and head to crater
+        robot.encoderStrafe(this, .37, 35, 0, 5);
+        robot.gyroTurn(this, 90, 5);
+        robot.encoderDrive(this, .37, 43, 0, 5);
+        robot.gyroTurn(this, 0, 5);
+        robot.encoderDrive(this, .37, 52, 52, 5);
+        //Deploy linear actuator for team marker
+        robot.encoderDrive(this, .37, -52, -52, 5);
+        robot.encoderStrafe(this, .37, 0, 34, 5);
+
+*/
+
+    } /* runCrater() */
+
+    /*
+     * Variables below are for the sampleMinerals() return status codes
+     */
+    private static final int goldLeft = 1;        // Return from sampleMineral() if gold on left
+    private static final int goldCenter = 2;      // Return from sampleMineral() if gold centered
+    private static final int goldRight = 3;       // Return from sampleMineral() if gold right
+    private static final int goldNotFound = -1;   // Return from sampleMineral() if no gold found
+
+    /**
+     * Sample the minerals and push off Gold one, not touching the Silver ones
+     *
+     * @return 1 if Gold was on Left, 2 if Gold was Center
+     * @throws InterruptedException
+     */
+    private int sampleMineralsCrater() throws InterruptedException {
+        if (!opModeIsActive())
+            return goldNotFound;
+        int goldState = goldCenter;
+        boolean goldFound = false;
+        int times = 0;
+        CameraDevice camera = CameraDevice.getInstance();
+        camera.setFlashTorchMode(true);
+
+
+        do {
+            int goldMineralX = -1;
+            int goldMineralY = -1;
+            double confidence = -1;
+            if (robot.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = Math.abs((int) recognition.getLeft());
+                            goldMineralY = Math.abs((int) recognition.getTop());
+                            confidence = recognition.getConfidence();
+                            telemetry.addData("Confidence:", confidence);
+                            telemetry.addData("Gold Mineral X", goldMineralX)
+                                    .addData("Gold Mineral Y", goldMineralY);
+                            if (confidence >= .9) {
+                                if (goldState == goldCenter) {
+                                    if (goldMineralY > 500) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+                                } else if (goldState == goldLeft) {
+                                    if (goldMineralY > 500) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+
+
+                                }
+                            }
+
+                        }
+                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
+                        telemetry.update();
+                        sleep(250);
+
+
+                    }
+                }
+            }
+            times++;
+            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
+                goldState = goldLeft;
+                robot.gyroTurn(this, leftSampleAngle, 3);
+            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
+                goldState = goldRight;
+                goldFound = true;
+            }
+            sleep(200);
+        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
+        camera.setFlashTorchMode(false);
+        return goldState;
+
+    }
+
+    private int sampleMineralsDepot() throws InterruptedException {
+        if (!opModeIsActive())
+            return goldNotFound;
+        int goldState = goldCenter;
+        boolean goldFound = false;
+        int times = 0;
+        CameraDevice camera = CameraDevice.getInstance();
+        camera.setFlashTorchMode(true);
+
+
+        do {
+            int goldMineralX = -1;
+            int goldMineralY = -1;
+            double confidence = -1;
+            if (robot.tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                            goldMineralX = Math.abs((int) recognition.getLeft());
+                            goldMineralY = Math.abs((int) recognition.getTop());
+                            confidence = recognition.getConfidence();
+                            telemetry.addData("Confidence:", confidence);
+                            telemetry.addData("Gold Mineral X", goldMineralX)
+                                    .addData("Gold Mineral Y", goldMineralY);
+                            if (confidence >= .9) {
+                                if (goldState == goldCenter) {
+                                    if (goldMineralY > 50) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+                                } else if (goldState == goldLeft) {
+                                    if (goldMineralY > 50) {
+                                        goldFound = true;
+                                        break;
+                                    }
+                                    //goldFound = true;
+
+
+                                }
+                            }
+
+                        }
+                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
+                        telemetry.update();
+                        sleep(250);
+
+
+                    }
+                }
+            }
+            times++;
+            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
+                goldState = goldLeft;
+                robot.gyroTurn(this, leftSampleAngle, 1.5);
+            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
+                goldState = goldRight;
+                goldFound = true;
+            }
+            sleep(200);
+        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
+        camera.setFlashTorchMode(false);
+        return goldState;
+
+    }
+    public void stopRobot() {
+        if (robot.tfod != null) {
+            robot.tfod.shutdown();
         }
     }
+}
+
+
+
+

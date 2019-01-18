@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -116,6 +117,8 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
     VuforiaLocalizer vuforia;
 
     @Override public void runOpMode() {
+
+
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -237,9 +240,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 0;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 150;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 165;   // eg: Camera is 165 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 250;   // eg: Camera is 250 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 55;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -251,6 +254,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         {
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
+        CameraDevice camera = CameraDevice.getInstance();
+        camera.setFlashTorchMode(true);
+
 
         /** Wait for the game to begin */
 
@@ -263,6 +269,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         /** Start tracking the data sets we care about. */
         targetsRoverRuckus.activate();
         while (opModeIsActive()) {
+            if (targetVisible == true) {
+                camera.setFlashTorchMode(false);
+            }
 
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;

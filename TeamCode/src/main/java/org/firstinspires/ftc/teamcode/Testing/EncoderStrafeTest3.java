@@ -31,9 +31,9 @@ package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
@@ -50,17 +50,19 @@ import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Mec Encoder Test", group="Linear Opmode")
-public class MecanumEncoderTest extends LinearOpMode {
+@Autonomous(name="EncoderStrafeTest48", group="Linear Opmode")
+public class EncoderStrafeTest3 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new Meet2Robot();
+    private Meet2Robot robot = new Meet2Robot();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot.robot_init(hardwareMap, true);
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -74,36 +76,35 @@ public class MecanumEncoderTest extends LinearOpMode {
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        sleep(1000);
-        robot.encoderDrive(this, 0.75, 24, 24 ,10);
+        sleep(5000);
+        robot.encoderDrive(this, .5, 24, 24 ,10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        sleep(1000);
-        robot.encoderStrafe(this, 0.75, 0, 24, 10);
+        sleep(5000);
+        robot.encoderStrafe(this, .75, 0, 48, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        sleep(1000);
-
-        robot.encoderDrive(this, 0.75, -24, -24 ,10);
+        sleep(5000);
+        robot.encoderDrive(this, .5, -24, -24 ,10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        sleep(1000);
-        robot.encoderStrafe(this, 0.75, 24, 0, 10);
+        sleep(5000);
+        robot.encoderStrafe(this, .75, 48, 0, 10);
         telemetry.addData("Left Front", "Encoder: %d", robot.LFront.getCurrentPosition())
                 .addData("Right Front", "Encoder: %d", robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Encoder: %d", robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Encoder: %d", robot.RBack.getCurrentPosition());
         telemetry.update();
-        sleep(1000);
+        sleep(5000);
 
 
     }

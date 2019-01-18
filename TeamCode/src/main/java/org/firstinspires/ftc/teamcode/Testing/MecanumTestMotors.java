@@ -34,10 +34,10 @@ package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -55,8 +55,10 @@ public class MecanumTestMotors extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new Meet1Robot();
+    private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
+    private double motorStop = 0;
+    private boolean motorRunning = false;
 
 
     /*
@@ -65,6 +67,8 @@ public class MecanumTestMotors extends OpMode {
     @Override
     public void init() {
         robot.robot_init(hardwareMap);
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 /*
         robot.LBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.RBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -101,32 +105,32 @@ public class MecanumTestMotors extends OpMode {
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        if ( gamepad1.a && lastpress + 500 < runtime.milliseconds() ) {
+        if ( gamepad1.a && lastpress + 1000 < runtime.milliseconds() && !motorRunning ) {
             robot.LFront.setPower(1);
-            robot.RFront.setPower(0);
-            robot.LBack.setPower(0);
-            robot.RBack.setPower(0);
-            lastpress = runtime.milliseconds();
-        } else if ( gamepad1.b && lastpress + 500 < runtime.milliseconds() ) {
-            robot.LFront.setPower(0);
             robot.RFront.setPower(1);
-            robot.LBack.setPower(0);
-            robot.RBack.setPower(0);
-            lastpress = runtime.milliseconds();
-        } else if ( gamepad1.x && lastpress + 500 < runtime.milliseconds() ) {
-            robot.LFront.setPower(0);
-            robot.RFront.setPower(0);
             robot.LBack.setPower(1);
-            robot.RBack.setPower(0);
-            lastpress = runtime.milliseconds();
-        } else if ( gamepad1.y && lastpress + 500 < runtime.milliseconds() ) {
-            robot.LFront.setPower(0);
-            robot.RFront.setPower(0);
-            robot.LBack.setPower(0);
             robot.RBack.setPower(1);
             lastpress = runtime.milliseconds();
-        } else {
-/*
+            motorStop = runtime.milliseconds() + 10000;
+            motorRunning = true;
+        } else if ( gamepad1.b && lastpress + 1000 < runtime.milliseconds() && !motorRunning) {
+            robot.LFront.setPower(-1);
+            robot.RFront.setPower(-1);
+            robot.LBack.setPower(-1);
+            robot.RBack.setPower(-1);
+            lastpress = runtime.milliseconds();
+            motorStop = runtime.milliseconds() + 10000;
+            motorRunning = true;
+
+        }
+        if ( motorRunning && runtime.milliseconds() >= motorStop ) {
+            motorRunning = false;
+            robot.LFront.setPower(0);
+            robot.RFront.setPower(0);
+            robot.LBack.setPower(0);
+            robot.RBack.setPower(0);
+        }
+            /*
             wheelPower = robot.motorPower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             robot.LFront.setPower(wheelPower[0]);
@@ -134,13 +138,13 @@ public class MecanumTestMotors extends OpMode {
             robot.LBack.setPower(wheelPower[2]);
             robot.RBack.setPower(wheelPower[3]);
 */
-        }
+
 
         telemetry.addData("Left Front", "Power: %.2f - Encoder: %d", robot.LFront.getPower(), robot.LFront.getCurrentPosition())
                  .addData("Right Front", "Power: %.2f - Encoder: %d", robot.RFront.getPower(), robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", robot.LBack.getPower(), robot.LBack.getCurrentPosition())
                  .addData("Right Back", "Power: %.2f - Encoder: %d", robot.RBack.getPower(), robot.RBack.getCurrentPosition());
-        int redValue = robot.color.red();
+        /*int redValue = robot.color.red();
         int blueValue = robot.color.blue();
         int greenValue = robot.color.green();
         telemetry.addData("color blue", blueValue);
@@ -148,7 +152,7 @@ public class MecanumTestMotors extends OpMode {
         telemetry.addData("color green", greenValue);
         telemetry.addData("isGold", robot.isGold());
         telemetry.addData ("heading", robot.getHeading());
-
+*/
     } // loop
 
     /*

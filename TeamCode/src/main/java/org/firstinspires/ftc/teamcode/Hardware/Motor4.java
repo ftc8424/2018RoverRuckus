@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
@@ -49,12 +48,16 @@ public class Motor4 extends Base {
         RFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (revLeft) {
+
+        RFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        if (revLeft)
             LFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
+
+        else
+            LFront.setDirection(DcMotorSimple.Direction.FORWARD);
 
         super.initMotor(revLeft);
-        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
+        //setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);  // Default to no encoders
     }
 
     /**
@@ -70,7 +73,7 @@ public class Motor4 extends Base {
         RFront.setMode(mode);
     }
 
-    public void normalDrive (OpMode caller, double leftPower, double rightPower) {
+    public void normalDrive (LinearOpMode caller, double leftPower, double rightPower) {
         super.normalDrive(caller, leftPower, rightPower);
         LFront.setPower(leftPower);
         RFront.setPower(rightPower);
@@ -96,10 +99,10 @@ public class Motor4 extends Base {
 
         setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
-        newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
-        newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * encoderInch);
-        newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * encoderInch);
+        newLeftFrontTarget = LFront.getCurrentPosition() + (int)Math.round(leftInches * lfencoderInch);
+        newRightFrontTarget = RFront.getCurrentPosition() + (int)Math.round(rightInches * rfencoderInch);
+        newLeftBackTarget = LBack.getCurrentPosition() + (int)Math.round(leftInches * lbencoderInch);
+        newRightBackTarget = RBack.getCurrentPosition() + (int)Math.round(rightInches * rbencoderInch);
 
         boolean lfEncoderSet = false;
         boolean rfEncoderSet = false;
@@ -108,8 +111,8 @@ public class Motor4 extends Base {
 
         lfEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
         rfEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
-        lbEncoderSet = setEncoderPosition(caller, LFront, newLeftFrontTarget, encoderTimeout);
-        rbEncoderSet = setEncoderPosition(caller, RFront, newRightFrontTarget, encoderTimeout);
+        lbEncoderSet = setEncoderPosition(caller, LBack, newLeftBackTarget, encoderTimeout);
+        rbEncoderSet = setEncoderPosition(caller, RBack, newRightBackTarget, encoderTimeout);
 //        caller.telemetry.addLine("EncoderSet:")
 //                .addData("LB: ", lbEncoderSet)
 //                .addData("RB: ", rbEncoderSet)
@@ -128,7 +131,7 @@ public class Motor4 extends Base {
         int lfCurPos;
         int rfCurPos;
         int lbCurPos;
-        int rbCurPob;
+        int rbCurPos;
         double stopTime = runtime.seconds() + timeoutS;
         double leftFrontPower;
         double rightFrontPower;
@@ -142,13 +145,14 @@ public class Motor4 extends Base {
             rightFrontPower = speed;
             leftBackPower = speed;
             rightBackPower = speed;
-            if (leftFrontPower <= 0.01) {
-                lastSetTime = runtime.milliseconds();
-                leftFrontPower = speed;
-                rightFrontPower = speed;
-                leftBackPower = speed;
-                rightBackPower = speed;
-            }
+//            if (rightInches < 0 ){
+//                rightFrontPower = -speed;
+//                rightBackPower = -speed;
+//            }
+//            if(leftInches < 0) {
+//                leftFrontPower = -speed;
+//                leftBackPower = -speed;
+//            }
 
             leftFrontPower = Range.clip(leftFrontPower, -1.0, 1.0);
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
@@ -159,16 +163,18 @@ public class Motor4 extends Base {
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
 
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
-                            leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
-            caller.telemetry.update();
+
             lfCurPos = LFront.getCurrentPosition();
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
-            rbCurPob = RBack.getCurrentPosition();
+            rbCurPos = RBack.getCurrentPosition();
+            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
+                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower)
+                    .addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
+                            lfCurPos, rfCurPos, lbCurPos, rbCurPos);
+            caller.telemetry.update();
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
-            //     if ( robotType == FULLAUTO )
-            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPob - newRightBackTarget) >= 5);
+            isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
         }
         while (caller.opModeIsActive() && isBusy && runtime.seconds() < stopTime);
 
@@ -180,7 +186,7 @@ public class Motor4 extends Base {
 
         // Turn off RUN_TO_POSITION
 
-        setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setEncoderMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
 }

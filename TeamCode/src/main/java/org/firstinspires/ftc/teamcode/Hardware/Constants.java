@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 public final class Constants {
+    public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    public static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    public static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
 
     /**
      * All REV electronics will have at least one IMU defined (port 0 on sensors), and if there's
@@ -24,9 +28,12 @@ public final class Constants {
     public static final String ColorSensor = "Color Sensor";
 
     public static final String ColorServo = "Color Servo";
+    public static final String MarkerServo = "M Ser";
 
     public static final double TURN_SPEED = 0.3;
     public static final String LiftMotor = "Lift Motor";
+
+    public static final String LockServo = "L Ser";
 
     /**
      * The Vuforia license key, used by all opModes

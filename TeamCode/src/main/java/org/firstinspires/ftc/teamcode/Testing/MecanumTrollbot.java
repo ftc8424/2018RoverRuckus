@@ -37,8 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Hardware.Meet1Robot;
+import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
 /**
@@ -64,7 +63,7 @@ public class MecanumTrollbot extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private MecanumDrive robot = new Meet1Robot();
+    private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
 
 
@@ -103,16 +102,16 @@ public class MecanumTrollbot extends OpMode {
 
         wheelPower = robot.motorPower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
+        robot.LFront.setPower(wheelPower[0] * .5);
+        robot.RFront.setPower(wheelPower[1] * .5);
+        robot.LBack.setPower(wheelPower[2] * .5);
+        robot.RBack.setPower(wheelPower[3] * .5);
 
         telemetry.addData("Left Front", "Power: %.2f - Encoder: %d", wheelPower[0], robot.LFront.getCurrentPosition())
                  .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                  .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
                  .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
-        int redValue = robot.color.red();
+     /*   int redValue = robot.color.red();
         int blueValue = robot.color.blue();
         int greenValue = robot.color.green();
         telemetry.addData("color blue", blueValue);
@@ -120,7 +119,7 @@ public class MecanumTrollbot extends OpMode {
         telemetry.addData("color green", greenValue);
         telemetry.addData("isGold", robot.isGold());
         telemetry.addData ("heading", robot.getHeading());
-
+*/
     } // loop
 
     /*
