@@ -159,6 +159,7 @@ public abstract class AutoBase extends LinearOpMode {
         }
         robot.encoderDrive(this, .5, 4, 4, 3);
 
+
         do {
 
 
