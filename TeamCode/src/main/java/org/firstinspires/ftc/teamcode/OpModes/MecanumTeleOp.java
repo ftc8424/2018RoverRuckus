@@ -65,7 +65,7 @@ public class MecanumTeleOp extends OpMode {
     private Meet2Robot robot = new Meet2Robot();
     private double lastpress = 0;
     private double lasta = 0.0;
-    double powerAdjuster = .75;
+    double powerAdjuster = 1;
     // Last time we pressed the "gamepad1.a" button
     double lockSet = 0.0;
 
@@ -136,8 +136,22 @@ public class MecanumTeleOp extends OpMode {
         robot.LBack.setPower(wheelPower[2]);
         robot.RBack.setPower(wheelPower[3]);
 
+        if (gamepad1.left_trigger > .5)
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * 1, -gamepad1.left_stick_x * 1, gamepad1.right_stick_x * 1);
 
-        if (gamepad1.a) {
+        robot.LFront.setPower(wheelPower[0]);
+        robot.RFront.setPower(wheelPower[1]);
+        robot.LBack.setPower(wheelPower[2]);
+        robot.RBack.setPower(wheelPower[3]);
+
+        if (gamepad1.right_trigger > .5)
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * -1, -gamepad1.left_stick_x * -1, gamepad1.right_stick_x * -1);
+
+        robot.LFront.setPower(wheelPower[0]);
+        robot.RFront.setPower(wheelPower[1]);
+        robot.LBack.setPower(wheelPower[2]);
+        robot.RBack.setPower(wheelPower[3]);
+       /* if (gamepad1.a) {
             powerAdjuster = .75;
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
@@ -155,7 +169,7 @@ public class MecanumTeleOp extends OpMode {
             robot.RFront.setPower(wheelPower[1]);
             robot.LBack.setPower(wheelPower[2]);
             robot.RBack.setPower(wheelPower[3]);
-        }
+        } */
 
         /*if ( gamepad1.a && lasta + 500 < runtime.milliseconds() ) {
             robot.ColorServo.setPosition(robot.ColorSample);
