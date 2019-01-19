@@ -147,7 +147,7 @@ public class MecanumTeleOp extends OpMode {
         robot.RBack.setPower(wheelPower[3]);
 
         if (gamepad1.left_trigger > .5)
-            wheelPower = robot.motorPower(-gamepad1.left_stick_y * 1, -gamepad1.left_stick_x * 1, gamepad1.right_stick_x * 1);
+            wheelPower = robot.motorPower(-1, -1,0);
 
         robot.LFront.setPower(wheelPower[0]);
         robot.RFront.setPower(wheelPower[1]);
@@ -155,7 +155,7 @@ public class MecanumTeleOp extends OpMode {
         robot.RBack.setPower(wheelPower[3]);
 
         if (gamepad1.right_trigger > .5)
-            wheelPower = robot.motorPower(-gamepad1.left_stick_y * -1, -gamepad1.left_stick_x * -1, gamepad1.right_stick_x * -1);
+            wheelPower = robot.motorPower(1, 1, 0);
 
         robot.LFront.setPower(wheelPower[0]);
         robot.RFront.setPower(wheelPower[1]);
