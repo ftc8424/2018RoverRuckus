@@ -22,6 +22,9 @@ public class Meet2Robot extends MecanumDrive {
     public DcMotor LiftMotor = null;
     public int LiftUp =  -2046;
     public int LiftDown = -700;
+    //public DcMotor ClawMotor = null;
+    public int ClawDown = 0;
+    public int ClawUp = 1;
 
     @Override
     public void initServo(){
@@ -46,7 +49,10 @@ public class Meet2Robot extends MecanumDrive {
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         LiftMotor.setPower(0);
-
+        /*ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
+        ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ClawMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        ClawMotor.setPower(0);*/
     }
 
     // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400

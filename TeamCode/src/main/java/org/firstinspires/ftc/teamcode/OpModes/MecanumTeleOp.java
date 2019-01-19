@@ -105,6 +105,7 @@ public class MecanumTeleOp extends OpMode {
     public void loop() {
 
         double LiftVal = gamepad2.left_stick_y;
+
         telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
         telemetry.addData("Lock Position", robot.LockServo.getPosition());
         if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
@@ -125,6 +126,15 @@ public class MecanumTeleOp extends OpMode {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lasta = runtime.milliseconds();
         }
+      /*  if (gamepad2.left_bumper && runtime.milliseconds() > lasta + 500) {
+            robot.ClawMotor.setTargetPosition(robot.ClawDown);
+            lasta = runtime.milliseconds();
+        }
+        if (gamepad2.right_bumper && runtime.milliseconds() > lasta + 500) {
+            robot.ClawMotor.setTargetPosition(robot.ClawUp);
+            lasta = runtime.milliseconds();
+        }*/
+
         double[] wheelPower = { 0, 0, 0, 0 };
 
         telemetry.addData("Status", "Running: " + runtime.toString());

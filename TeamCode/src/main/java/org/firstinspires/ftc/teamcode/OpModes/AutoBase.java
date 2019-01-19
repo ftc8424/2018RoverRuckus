@@ -41,6 +41,7 @@ import com.vuforia.CameraDevice;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.Hardware.Constants;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
@@ -671,6 +672,200 @@ public abstract class AutoBase extends LinearOpMode {
         camera.setFlashTorchMode(false);
         return goldState;
 
+    }
+    public boolean VuforiaPosition(boolean position) throws InterruptedException {
+        do {
+            if (initialHeading == 45) {
+
+                if (robot.translation.get(0) < 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, -.5, -.5, 3);
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                }
+
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 0,3);
+                    robot.encoderDrive(this,.25,-.5,-.5 ,3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 0, 3);
+                    robot.encoderDrive(this,.25, .5, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+
+
+                }
+
+                else if (robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 0, 3);
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+
+                else if (robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 0, 3);
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+            } else if (initialHeading == 130) {
+                if (robot.translation.get(0) < 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, -.5, -.5, 3);
+                } else if (robot.translation.get(0) > 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                } else if (robot.translation.get(0) > 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                } else if (robot.translation.get(0) < 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                } else if (robot.translation.get(1) > 00 && robot.translation.get(0) == 000) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderDrive(this, .25, -.5, -.5, 3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                } else if (robot.translation.get(1) < 00 && robot.translation.get(0) == 000) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                    robot.gyroTurn(this, initialHeading, 3);
+
+                } else if (robot.translation.get(0) > 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                } else if (robot.translation.get(0) < 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                }
+            } else if (initialHeading == 225){
+                if (robot.translation.get(0) > 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, -.5, -.5, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                }
+
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 180,3);
+                    robot.encoderDrive(this,.25,-.5,-.5 ,3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 180, 3);
+                    robot.encoderDrive(this,.25, .5, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+
+
+                }
+
+                else if (robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 180, 3);
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+
+                else if (robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 180, 3);
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+            } else if (initialHeading == 310) {
+                if (robot.translation.get(0) > 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, -.5, -.5, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) > 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) < 00) {
+                    telemetry.update();
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                }
+
+                else if (robot.translation.get(1) > 00 && robot.translation.get(0) == 000) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90,3);
+                    robot.encoderDrive(this,.25,-.5,-.5 ,3);
+                    robot.gyroTurn(this, initialHeading, 3);
+                }
+
+                else if (robot.translation.get(1) < 00 && robot.translation.get(0) == 000) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderDrive(this, .25, .5, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+
+                }
+
+                else if (robot.translation.get(0) > 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderStrafe(this, .25, .5, 0, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+
+                else if (robot.translation.get(0) < 000 && robot.translation.get(1) == 00) {
+                    telemetry.update();
+                    robot.gyroTurn(this, 90, 3);
+                    robot.encoderStrafe(this, .25, 0, .5, 3);
+                    robot.gyroTurn(this,initialHeading,3);
+                }
+            }
+
+        } while (robot.translation.get(0) == 000 && robot.translation.get(1) == 00);
+        return true;
     }
     public void stopRobot() {
         if (robot.tfod != null) {
