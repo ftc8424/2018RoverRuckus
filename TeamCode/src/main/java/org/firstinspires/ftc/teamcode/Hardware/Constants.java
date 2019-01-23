@@ -34,7 +34,11 @@ public final class Constants {
     public static final String LiftMotor = "Lift Motor";
 
     public static final String LockServo = "L Ser";
-    //public static final String ClawMotor = "Claw";
+    public static final String ClawMotor = "Claw";
+
+    public static final String BasketMotor = "B Motor";
+    public static final String ClawServo = "Claw Servo";
+
 
     /**
      * The Vuforia license key, used by all opModes

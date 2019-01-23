@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 
@@ -62,7 +63,7 @@ public class MecanumTeleOp extends OpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    private Meet2Robot robot = new Meet2Robot();
+    private AMLChampionshipRobot robot = new AMLChampionshipRobot();
     private double lastpress = 0;
     private double lasta = 0.0;
     double powerAdjuster = 1;
@@ -105,18 +106,26 @@ public class MecanumTeleOp extends OpMode {
     public void loop() {
 
         double LiftVal = gamepad2.left_stick_y;
+        double BasketVal = gamepad2.right_stick_y;
 
         telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
         telemetry.addData("Lock Position", robot.LockServo.getPosition());
+        telemetry.addData("Claw motor Postion", robot.ClawMotor.getCurrentPosition());
         if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lockSet = runtime.milliseconds();
 
         }else if (Math.abs(LiftVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
             robot.LiftMotor.setPower(LiftVal);
-            //telemetry.addData("Lift Value", LiftVal);
+            telemetry.addData("Lift Value", LiftVal);
         } else {
             robot.LiftMotor.setPower(0);
+        }
+        if (Math.abs(BasketVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
+            robot.BasketMotor.setPower(BasketVal * .5);
+            telemetry.addData("Basket Value", BasketVal);
+        } else {
+            robot.BasketMotor.setPower(0);
         }
         if (gamepad2.a && runtime.milliseconds() > lasta +500) {
             robot.LockServo.setPosition(robot.LiftLock);
@@ -126,14 +135,27 @@ public class MecanumTeleOp extends OpMode {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lasta = runtime.milliseconds();
         }
-      /*  if (gamepad2.left_bumper && runtime.milliseconds() > lasta + 500) {
-            robot.ClawMotor.setTargetPosition(robot.ClawDown);
+        if (gamepad2.left_bumper && runtime.milliseconds() > lasta + 500) {
+            do {
+                robot.ClawMotor.setPower(.5);
+            } while (robot.ClawMotor.getCurrentPosition() != robot.ClawUp);
             lasta = runtime.milliseconds();
         }
         if (gamepad2.right_bumper && runtime.milliseconds() > lasta + 500) {
-            robot.ClawMotor.setTargetPosition(robot.ClawUp);
+            do {
+                robot.ClawMotor.setPower(.5);
+            } while (robot.ClawMotor.getCurrentPosition() != robot.ClawUp);
             lasta = runtime.milliseconds();
-        }*/
+        }
+        if (gamepad2.right_trigger > .5 && runtime.milliseconds() > lasta + 500){
+            robot.ClawServo.setPosition(robot.ClawSUp);
+            lasta = runtime.milliseconds();
+        }
+        if (gamepad2.left_trigger > .5 && runtime.milliseconds() > lasta + 500){
+            robot.ClawServo.setPosition(robot.ClawSDown);
+            lasta = runtime.milliseconds();
+        }
+
 
         double[] wheelPower = { 0, 0, 0, 0 };
 

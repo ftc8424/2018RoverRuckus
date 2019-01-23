@@ -4,30 +4,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
 import static java.lang.Thread.sleep;
 
-public class Meet2Robot extends MecanumDrive {
+public class AMLChampionshipRobot extends Meet2Robot {
 
-
-    public Servo MarkerServo = null;
-    public  Servo LockServo = null;
-    public double MarkerStart = 0.0;
-    public double MarkerDeploy = 1.0;
-    public double MarkerInit = 0.5;
-    public double LiftLock = .63;
-    public double LiftUnlock = .2;
-    public DcMotor LiftMotor = null;
-    public int LiftUp =  -2046;
-    public int LiftDown = -700;
+    public DcMotor ClawMotor = null;
+    public int ClawDown = -10;
+    public int ClawUp = 165;
+    public DcMotor BasketMotor = null;
+    public Servo ClawServo = null;
+    public int ClawSUp = 1;
+    public int ClawSDown = 0;
 
 
     @Override
     public void initServo(){
         super.initServo();
-        LockServo = hwMap.servo.get(Constants.LockServo);
+        ClawServo = hwMap.servo.get(Constants.ClawServo);
+
+        /*LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);
         try {
             //deploy(ColorServo, ColorSample);
@@ -37,28 +32,32 @@ public class Meet2Robot extends MecanumDrive {
             deploy(MarkerServo, MarkerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
-        LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
+       /* LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftMotor.setPower(0);
-        /*ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
+        LiftMotor.setPower(0);*/
+        ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
         ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ClawMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        ClawMotor.setPower(0);*/
-    }
+        ClawMotor.setPower(0);
+        BasketMotor = hwMap.dcMotor.get(Constants.BasketMotor);
+        BasketMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BasketMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        BasketMotor.setPower(0);
+}
 
     // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
-    public boolean isGold(){
+    /*public boolean isGold(){
 
 
 
-       /* int redValue = color.red();
+        int redValue = color.red();
         int blueValue = color.blue();
         int greenValue = color.green();
         if (blueValue > 20 && greenValue > 25 && redValue > 35){
@@ -68,9 +67,9 @@ public class Meet2Robot extends MecanumDrive {
             return true;
         } else {
             return false;
-        }*/
+        }
        return false;
-    }
+    }*/
 
     /**
      * This is the method used for 180 degree servos.  It gets their current position and sets
@@ -80,7 +79,7 @@ public class Meet2Robot extends MecanumDrive {
      *
      * @param servo
      */
-    public void deploy(Servo servo, double targetPos) throws InterruptedException {
+    /*public void deploy(Servo servo, double targetPos) throws InterruptedException {
         double currentPos = servo.getPosition();
         if (currentPos > targetPos){
             for (double d = currentPos; d > targetPos; d -= 0.1) {
@@ -95,5 +94,5 @@ public class Meet2Robot extends MecanumDrive {
             }
         }
 
-    }
+    }*/
 }
