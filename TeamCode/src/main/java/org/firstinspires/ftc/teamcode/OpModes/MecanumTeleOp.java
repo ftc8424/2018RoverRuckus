@@ -66,7 +66,10 @@ public class MecanumTeleOp extends OpMode {
     private AMLChampionshipRobot robot = new AMLChampionshipRobot();
     private double lastpress = 0;
     private double lasta = 0.0;
+    private double lastClaw = 0.0;
     double powerAdjuster = 1;
+    double ClawStart = 0;
+    boolean ClawMoving = false;
     // Last time we pressed the "gamepad1.a" button
     double lockSet = 0.0;
 
@@ -110,7 +113,9 @@ public class MecanumTeleOp extends OpMode {
 
         telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
         telemetry.addData("Lock Position", robot.LockServo.getPosition());
-        telemetry.addData("Claw motor Postion", robot.ClawMotor.getCurrentPosition());
+        telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
+        telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
+        telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
         if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lockSet = runtime.milliseconds();
@@ -121,7 +126,7 @@ public class MecanumTeleOp extends OpMode {
         } else {
             robot.LiftMotor.setPower(0);
         }
-        if (Math.abs(BasketVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
+        if (Math.abs(BasketVal) > 0.1) {
             robot.BasketMotor.setPower(BasketVal * .5);
             telemetry.addData("Basket Value", BasketVal);
         } else {
@@ -135,54 +140,76 @@ public class MecanumTeleOp extends OpMode {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lasta = runtime.milliseconds();
         }
-        if (gamepad2.left_bumper && runtime.milliseconds() > lasta + 500) {
-            do {
-                robot.ClawMotor.setPower(.5);
-            } while (robot.ClawMotor.getCurrentPosition() != robot.ClawUp);
-            lasta = runtime.milliseconds();
+        if (gamepad2.left_trigger > .09) {
+            if (gamepad2.left_trigger > .5) {
+                robot.ClawMotor.setPower(-.5);
+            }
+            else if (gamepad2.left_trigger > .25) {
+                robot.ClawMotor.setPower(-.25);
+            }
+            else {
+                robot.ClawMotor.setPower(-.1);
+            }
         }
-        if (gamepad2.right_bumper && runtime.milliseconds() > lasta + 500) {
-            do {
-                robot.ClawMotor.setPower(.5);
-            } while (robot.ClawMotor.getCurrentPosition() != robot.ClawUp);
-            lasta = runtime.milliseconds();
-        }
-        if (gamepad2.right_trigger > .5 && runtime.milliseconds() > lasta + 500){
-            robot.ClawServo.setPosition(robot.ClawSUp);
-            lasta = runtime.milliseconds();
-        }
-        if (gamepad2.left_trigger > .5 && runtime.milliseconds() > lasta + 500){
-            robot.ClawServo.setPosition(robot.ClawSDown);
-            lasta = runtime.milliseconds();
-        }
+        else if (gamepad2.right_trigger > .09) {
 
-
-        double[] wheelPower = { 0, 0, 0, 0 };
+            if (gamepad2.right_trigger > .5) {
+                robot.ClawMotor.setPower(.5);
+            }
+            else if (gamepad2.right_trigger > .25) {
+                robot.ClawMotor.setPower(.25);
+            }
+            else {
+                robot.ClawMotor.setPower(.1);
+            }
+        }
+        else {
+            robot.ClawMotor.setPower(0);
+        }
+        if (gamepad2.right_bumper && !ClawMoving){
+            ClawMoving = true;
+            robot.ClawServo.setPosition(.6);
+            lastClaw = runtime.milliseconds();
+        }
+        else if (gamepad2.left_bumper && !ClawMoving){
+            ClawMoving = true;
+            robot.ClawServo.setPosition(.4);
+            lastClaw = runtime.milliseconds();
+        }
+        else if (ClawMoving && runtime.milliseconds() > lastClaw + 500) {
+            ClawMoving = false;
+            robot.ClawServo.setPosition(.5);
+        }
+        telemetry.addData("Claw Position", robot.ClawServo.getPosition());
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
+        double[] wheelPower = { 0, 0, 0, 0 };
 
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
+        if (gamepad1.left_trigger > .5) {
 
-        if (gamepad1.left_trigger > .5)
-            wheelPower = robot.motorPower(-1, -1,0);
+        robot.LFront.setPower(-1);
+        robot.RFront.setPower(-1);
+        robot.LBack.setPower(-1);
+        robot.RBack.setPower(-1);
+        }
+        else if (gamepad1.right_trigger > .5) {
+            robot.LFront.setPower(1);
+            robot.RFront.setPower(1);
+            robot.LBack.setPower(1);
+            robot.RBack.setPower(1);
+        }
+        else {
 
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
-        if (gamepad1.right_trigger > .5)
-            wheelPower = robot.motorPower(1, 1, 0);
+            robot.LFront.setPower(wheelPower[0]);
+            robot.RFront.setPower(wheelPower[1]);
+            robot.LBack.setPower(wheelPower[2]);
+            robot.RBack.setPower(wheelPower[3]);
+        }
 
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
+
        /* if (gamepad1.a) {
             powerAdjuster = .75;
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);

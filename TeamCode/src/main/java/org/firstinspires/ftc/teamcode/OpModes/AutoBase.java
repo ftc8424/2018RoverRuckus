@@ -675,7 +675,6 @@ public abstract class AutoBase extends LinearOpMode {
     }
     public boolean VuforiaPosition(boolean position, double TimeOutSeconds) throws InterruptedException {
         do {
-            do {
                 if (initialHeading == 45) {
 
                     if (robot.translation.get(0) < 000 && robot.translation.get(1) < 00) {
@@ -820,9 +819,7 @@ public abstract class AutoBase extends LinearOpMode {
                         robot.gyroTurn(this, initialHeading, 3);
                     }
                 }
-            } while (runtime.milliseconds() < TimeOutSeconds);
-
-        } while (robot.translation.get(0) == 000 && robot.translation.get(1) == 00 && opModeIsActive());
+        } while (opModeIsActive() && robot.translation.get(0) == 000 && robot.translation.get(1) == 00 && runtime.milliseconds() < TimeOutSeconds);
         return true;
     }
     public void stopRobot() {
