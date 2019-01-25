@@ -10,7 +10,8 @@ public class AMLChampionshipRobot extends Meet2Robot {
 
     public DcMotor ClawMotor = null;
     public int ClawDown = -10;
-    public int ClawUp = 165;
+    public int ClawBasket = 165;
+    public int ClawStraight = 120;
     public DcMotor BasketMotor = null;
     public Servo ClawServo = null;
 

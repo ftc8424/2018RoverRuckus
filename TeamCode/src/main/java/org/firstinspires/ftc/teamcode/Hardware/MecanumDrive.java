@@ -263,70 +263,70 @@ public class MecanumDrive extends Motor4 {
         gyroTurn(caller, currentPos, 4); */
     }
     public void MecDiagonal (LinearOpMode caller,
-                              boolean leftFront, boolean rightFront, boolean leftBack, boolean rightBack,
-                              double timeoutS) throws InterruptedException {
+                             boolean leftFront, boolean rightFront, boolean leftBack, boolean rightBack,
+                             double Seconds) throws InterruptedException {
+
+        do {
+            if (leftFront) {
+                double[] wheelPower = {0, 0, 0, 0};
+
+                caller.telemetry.addData("Status", "Running: " + runtime.toString());
+
+                wheelPower = motorPower(.5, -.5, 0);
+
+                LFront.setPower(wheelPower[0]);
+                RFront.setPower(wheelPower[1]);
+                LBack.setPower(wheelPower[2]);
+                RBack.setPower(wheelPower[3]);
+            } else if (rightFront) {
+                double[] wheelPower = {0, 0, 0, 0};
+
+                caller.telemetry.addData("Status", "Running: " + runtime.toString());
+
+                wheelPower = motorPower(.5, .5, 0);
+
+                LFront.setPower(wheelPower[0]);
+                RFront.setPower(wheelPower[1]);
+                LBack.setPower(wheelPower[2]);
+                RBack.setPower(wheelPower[3]);
+            } else if (leftBack) {
+                double[] wheelPower = {0, 0, 0, 0};
+
+                caller.telemetry.addData("Status", "Running: " + runtime.toString());
+
+                wheelPower = motorPower(-.5, -.5, 0);
+
+                LFront.setPower(wheelPower[0]);
+                RFront.setPower(wheelPower[1]);
+                LBack.setPower(wheelPower[2]);
+                RBack.setPower(wheelPower[3]);
+            } else if (rightBack) {
+                double[] wheelPower = {0, 0, 0, 0};
+
+                caller.telemetry.addData("Status", "Running: " + runtime.toString());
+
+                wheelPower = motorPower(-.5, .5, 0);
+
+                LFront.setPower(wheelPower[0]);
+                RFront.setPower(wheelPower[1]);
+                LBack.setPower(wheelPower[2]);
+                RBack.setPower(wheelPower[3]);
+            } else {
+                double[] wheelPower = {0, 0, 0, 0};
+
+                caller.telemetry.addData("Status", "Running: " + runtime.toString());
+
+                wheelPower = motorPower(0, 0, 0);
+
+                LFront.setPower(wheelPower[0]);
+                RFront.setPower(wheelPower[1]);
+                LBack.setPower(wheelPower[2]);
+                RBack.setPower(wheelPower[3]);
+            }
+        }while (caller.opModeIsActive() && Seconds > runtime.milliseconds());
 
 
-        if (leftFront) {
-            double[] wheelPower = { 0, 0, 0, 0 };
-
-            caller.telemetry.addData("Status", "Running: " + runtime.toString());
-
-            wheelPower = motorPower(.5, -.5, 0);
-
-            LFront.setPower(wheelPower[0]);
-            RFront.setPower(wheelPower[1]);
-            LBack.setPower(wheelPower[2]);
-            RBack.setPower(wheelPower[3]);
-        } else if (rightFront) {
-            double[] wheelPower = { 0, 0, 0, 0 };
-
-            caller.telemetry.addData("Status", "Running: " + runtime.toString());
-
-            wheelPower = motorPower(.5, .5, 0);
-
-            LFront.setPower(wheelPower[0]);
-            RFront.setPower(wheelPower[1]);
-            LBack.setPower(wheelPower[2]);
-            RBack.setPower(wheelPower[3]);
-        } else if (leftBack) {
-            double[] wheelPower = { 0, 0, 0, 0 };
-
-            caller.telemetry.addData("Status", "Running: " + runtime.toString());
-
-            wheelPower = motorPower(-.5, -.5, 0);
-
-            LFront.setPower(wheelPower[0]);
-            RFront.setPower(wheelPower[1]);
-            LBack.setPower(wheelPower[2]);
-            RBack.setPower(wheelPower[3]);
-        } else if (rightBack) {
-            double[] wheelPower = { 0, 0, 0, 0 };
-
-            caller.telemetry.addData("Status", "Running: " + runtime.toString());
-
-            wheelPower = motorPower(-.5, .5, 0);
-
-            LFront.setPower(wheelPower[0]);
-            RFront.setPower(wheelPower[1]);
-            LBack.setPower(wheelPower[2]);
-            RBack.setPower(wheelPower[3]);
-        } else {
-            double[] wheelPower = { 0, 0, 0, 0 };
-
-            caller.telemetry.addData("Status", "Running: " + runtime.toString());
-
-            wheelPower = motorPower(0, 0, 0);
-
-            LFront.setPower(wheelPower[0]);
-            RFront.setPower(wheelPower[1]);
-            LBack.setPower(wheelPower[2]);
-            RBack.setPower(wheelPower[3]);
-        }
 
 
-
-
-
-        }
+    }
 }

@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
+import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 import org.firstinspires.ftc.teamcode.Hardware.Constants;
 import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
@@ -67,7 +68,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    protected Meet2Robot robot = new Meet2Robot();
+    protected AMLChampionshipRobot robot = new AMLChampionshipRobot();
     protected double initialHeading = 0;
     protected double timeoutS = 5;
     protected double finalHeading;
@@ -820,6 +821,7 @@ public abstract class AutoBase extends LinearOpMode {
                     }
                 }
         } while (opModeIsActive() && robot.translation.get(0) == 000 && robot.translation.get(1) == 00 && runtime.milliseconds() < TimeOutSeconds);
+
         return true;
     }
     public void stopRobot() {
