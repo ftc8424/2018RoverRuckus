@@ -9,9 +9,9 @@ import static java.lang.Thread.sleep;
 public class AMLChampionshipRobot extends Meet2Robot {
 
     public DcMotor ClawMotor = null;
-    public int ClawDown = -10;
-    public int ClawBasket = 165;
-    public int ClawStraight = 120;
+    public int ClawDown = -191;
+    public int ClawBasket = 45;
+    public int ClawStraight = 53;
     public DcMotor BasketMotor = null;
     public Servo ClawServo = null;
 
