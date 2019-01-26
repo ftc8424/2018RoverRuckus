@@ -144,34 +144,24 @@ public class MecanumTeleOp extends OpMode {
 
         if (gamepad2.dpad_down && runtime.milliseconds() > lastClaw + 500) {
             robot.ClawMotor.setTargetPosition(robot.ClawDown);
-            robot.setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.ClawMotor.setPower(-.5);
+            robot.setEncoderMode(robot.ClawMotor, DcMotor.RunMode.RUN_TO_POSITION);
+            robot.ClawMotor.setPower(.3);
 
         }
         else if (gamepad2.dpad_up && runtime.milliseconds() > lastClaw + 500) {
             robot.ClawMotor.setTargetPosition(robot.ClawStraight);
-            robot.setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (robot.ClawMotor.getCurrentPosition() < robot.ClawStraight){
-                robot.ClawMotor.setPower(.5);
-            } else if (robot.ClawMotor.getCurrentPosition() > robot.ClawStraight){
-                robot.ClawMotor.setPower(-.5);
-            }
+            robot.setEncoderMode(robot.ClawMotor, DcMotor.RunMode.RUN_TO_POSITION);
+            robot.ClawMotor.setPower(.3);
+
 
         } else if (gamepad2.dpad_right && runtime.milliseconds() > lastClaw + 500){
             robot.ClawMotor.setTargetPosition(robot.ClawBasket);
-            robot.setEncoderMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (robot.ClawMotor.getCurrentPosition() < robot.ClawBasket){
-                robot.ClawMotor.setPower(.5);
-            } else if (robot.ClawMotor.getCurrentPosition() > robot.ClawBasket){
-                robot.ClawMotor.setPower(-.5);
-            }
+            robot.setEncoderMode(robot.ClawMotor, DcMotor.RunMode.RUN_TO_POSITION);
 
-        }
-        else {
-            robot.ClawMotor.setPower(0);
+            robot.ClawMotor.setPower(.3);
         }
 
-        if (gamepad2.right_trigger > .5) {
+        /*if (gamepad2.right_trigger > .5) {
             robot.ClawMotor.setPower(gamepad2.right_trigger * .5);
         }
         else if (gamepad2.left_trigger > .25) {
@@ -180,6 +170,7 @@ public class MecanumTeleOp extends OpMode {
         else {
             robot.ClawMotor.setPower(0);
         }
+*/
 
         if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;

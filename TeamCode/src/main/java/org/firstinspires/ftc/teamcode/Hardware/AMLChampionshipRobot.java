@@ -50,7 +50,10 @@ public class AMLChampionshipRobot extends Meet2Robot {
         BasketMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BasketMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         BasketMotor.setPower(0);
-}
+    }
+    public void setEncoderMode (DcMotor dcMotor, DcMotor.RunMode mode) {
+        dcMotor.setMode(mode);
+    }
 
     // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
     /*public boolean isGold(){
