@@ -174,17 +174,24 @@ public class MecanumTeleOp extends OpMode {
 
         if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;
-            robot.ClawServo.setPosition(.6);
+            try {
+                robot.deploy(robot.ClawServo, .6);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             lastClaw = runtime.milliseconds();
         }
         else if (gamepad2.left_bumper && !ClawMoving){
             ClawMoving = true;
-            robot.ClawServo.setPosition(.4);
+            try {
+                robot.deploy(robot.ClawServo, .4);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             lastClaw = runtime.milliseconds();
         }
         else if (ClawMoving && runtime.milliseconds() > lastClaw + 500) {
             ClawMoving = false;
-            robot.ClawServo.setPosition(.5);
         }
         telemetry.addData("Claw Position", robot.ClawServo.getPosition());
 
