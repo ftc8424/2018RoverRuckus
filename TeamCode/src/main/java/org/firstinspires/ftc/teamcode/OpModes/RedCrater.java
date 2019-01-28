@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Red Crater", group="Red OpMode")
-public class RedCrater extends AutoBase {
+public class RedCrater extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
@@ -18,6 +18,7 @@ public class RedCrater extends AutoBase {
 
         robot.robot_init(hardwareMap,true);
         initRobot();
+        robot.targetsRoverRuckus.activate();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");

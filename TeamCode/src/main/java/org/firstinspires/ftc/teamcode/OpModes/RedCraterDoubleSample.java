@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Red Crater Double Sample", group="Red OpMode")
-public class RedCraterDoubleSample extends AutoBase {
+public class RedCraterDoubleSample extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {

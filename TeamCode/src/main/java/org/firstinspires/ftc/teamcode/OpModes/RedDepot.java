@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 @Autonomous(name="Red Depot", group="Red OpMode")
-public class RedDepot extends AutoBase {
+public class RedDepot extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
@@ -17,9 +17,10 @@ public class RedDepot extends AutoBase {
         leftSampleAngle = 180;
         lastHeading = 45;
         lastFinalHeading = 90;
+
         robot.robot_init(hardwareMap,true);
         initRobot();
-        boolean targetVisible = false;
+        robot.targetsRoverRuckus.activate();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");

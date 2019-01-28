@@ -560,21 +560,6 @@ public class Base {
         }
         camera = CameraDevice.getInstance();
         camera.setFlashTorchMode(true);
-
-        if (targetVisible) {
-            // express position (translation) of robot in inches.
-            VectorF translation = lastLocation.getTranslation();
-            //telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch;
-
-            // express the rotation of the robot in degrees.
-            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            //telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-        }
-        else {
-            //telemetry.addData("Visible Target", "none");
-        }
-        //telemetry.update();
-
     }
 
     /**
@@ -590,7 +575,6 @@ public class Base {
     }
 
     public boolean VuforiaTorch() {
-        targetsRoverRuckus.activate();
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 //telemetry.addData("Visible Target", trackable.getName());
@@ -607,6 +591,39 @@ public class Base {
         }
         return targetVisible;
     }
+
+    public void vuforiaUpdateLocation() {
+        for (VuforiaTrackable trackable : allTrackables) {
+            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                //telemetry.addData("Visible Target", trackable.getName());
+                targetVisible = true;
+
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null) {
+                    lastLocation = robotLocationTransform;
+                }
+                break;
+            }
+        }
+        if ( lastLocation != null ) {
+            translation = lastLocation.getTranslation();
+        }
+    }
+    public void vuforiaTesting(LinearOpMode caller){
+        vuforiaUpdateLocation();
+        if (translation != null) {
+            caller.telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+            // express the rotation of the robot in degrees.
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+            caller.telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+        }
+        else {
+            caller.telemetry.addData("Visible Target", "none");
+        }
+    }
+
 
 
 }

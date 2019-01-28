@@ -108,6 +108,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
     private OpenGLMatrix lastLocation = null;
+    private OpenGLMatrix currentLocation = null;
     private boolean targetVisible = false;
 
     /**
@@ -240,9 +241,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 165;   // eg: Camera is 165 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 250;   // eg: Camera is 250 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 55;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 127;   // eg: Camera is 165 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 203;   // eg: Camera is 250 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -268,7 +269,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
         /** Start tracking the data sets we care about. */
         targetsRoverRuckus.activate();
+
         while (opModeIsActive()) {
+            currentLocation = null;
             if (targetVisible == true) {
                 camera.setFlashTorchMode(false);
             }
@@ -284,25 +287,41 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
                     // the last time that call was made, or if the trackable is not currently visible.
                     OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
+                        currentLocation = robotLocationTransform;
                     }
                     break;
                 }
             }
 
             // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
+            if (targetVisible && currentLocation != null) {
+                if (lastLocation == null){
+                    lastLocation = currentLocation;
+                }
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                VectorF curXlate = currentLocation.getTranslation();
+                telemetry.addData("Pos (in) last", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
+                telemetry.addData("Pos (in) current", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        curXlate.get(0) / mmPerInch, curXlate.get(1) / mmPerInch, curXlate.get(2) / mmPerInch);
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                lastLocation = currentLocation;
+            }
+            else if ( lastLocation != null ){
+                VectorF translation = lastLocation.getTranslation();
+                telemetry.addData("Pos (in) last", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+                telemetry.addData("Pos (in) current", "current not found");
+                // express the rotation of the robot in degrees.
+                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                telemetry.addData("Visible Target", "none");
             }
             else {
-                telemetry.addData("Visible Target", "none");
+                telemetry.addData("Pos (in) last", "NULL!");
             }
             telemetry.update();
         }

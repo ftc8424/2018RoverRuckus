@@ -40,11 +40,8 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 import org.firstinspires.ftc.teamcode.Hardware.Constants;
-import org.firstinspires.ftc.teamcode.Hardware.Meet2Robot;
 
 import java.util.List;
 
@@ -64,7 +61,7 @@ import java.util.List;
 
 @Autonomous(name="Auto Depot", group="Linear Opmode")
 @Disabled
-public abstract class AutoBase extends LinearOpMode {
+public abstract class AutoBase2Vuforia extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

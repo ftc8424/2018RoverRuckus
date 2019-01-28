@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,7 +21,6 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public void initServo(){
         super.initServo();
         ClawServo = hwMap.servo.get(Constants.ClawServo);
-        ClawServo.setPosition(.5);
 
         /*LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);

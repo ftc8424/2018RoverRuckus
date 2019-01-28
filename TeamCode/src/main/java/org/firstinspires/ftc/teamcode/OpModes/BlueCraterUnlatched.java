@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Blue Crater Unlatched", group="Blue OpMode")
-public class BlueCraterUnlatched extends AutoBase {
+public class BlueCraterUnlatched extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
@@ -15,12 +15,19 @@ public class BlueCraterUnlatched extends AutoBase {
 
         robot.robot_init(hardwareMap,true);
         initRobot();
+        robot.targetsRoverRuckus.activate();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+            if (robot.VuforiaTorch()){
+                robot.camera.setFlashTorchMode(false);
+            }
+            robot.vuforiaTesting(this);
             telemetry.update();
 
         }
+
+
         super.runCrater(false);
         stopRobot();
 

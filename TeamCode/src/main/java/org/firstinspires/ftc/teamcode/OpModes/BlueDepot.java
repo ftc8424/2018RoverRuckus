@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Blue Depot", group="Blue OpMode")
-public class BlueDepot extends AutoBase {
+public class BlueDepot extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
@@ -16,6 +16,7 @@ public class BlueDepot extends AutoBase {
 
         robot.robot_init(hardwareMap,true);
         initRobot();
+        robot.targetsRoverRuckus.activate();
 
         while (!isStopRequested() && !isStarted()) {
             telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
