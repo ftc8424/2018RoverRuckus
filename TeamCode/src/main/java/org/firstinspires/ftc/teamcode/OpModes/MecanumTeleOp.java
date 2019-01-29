@@ -117,7 +117,6 @@ public class MecanumTeleOp extends OpMode {
         telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
         telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
         telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
-        telemetry.addData("Claw Servo Power", robot.ClawServo.getPosition());
         if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lockSet = runtime.milliseconds();
@@ -162,7 +161,7 @@ public class MecanumTeleOp extends OpMode {
             robot.ClawMotor.setPower(.3);
         }
 
-        /*if (gamepad2.right_trigger > .5) {
+        if (gamepad2.right_trigger > .5) {
             robot.ClawMotor.setPower(gamepad2.right_trigger * .5);
         }
         else if (gamepad2.left_trigger > .25) {
@@ -171,16 +170,16 @@ public class MecanumTeleOp extends OpMode {
         else {
             robot.ClawMotor.setPower(0);
         }
-*/
+
 
         if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;
-            robot.ClawServo.setPosition(0);
+            robot.ClawServo.setPosition(robot.ClawSStart);
             lastClaw = runtime.milliseconds();
         }
         else if (gamepad2.left_bumper && !ClawMoving){
             ClawMoving = true;
-            robot.ClawServo.setPosition(.5);
+            robot.ClawServo.setPosition(robot.ClawSOpen);
             lastClaw = runtime.milliseconds();
         }
         else if (ClawMoving && runtime.milliseconds() > lastClaw + 500) {

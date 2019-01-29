@@ -15,12 +15,20 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public int ClawStraight = 53;
     public DcMotor BasketMotor = null;
     public Servo ClawServo = null;
+    public double ClawSStart = .1;
+    public double ClawSOpen = .3;
 
 
     @Override
     public void initServo(){
         super.initServo();
         ClawServo = hwMap.servo.get(Constants.ClawServo);
+        try {
+          deploy(ClawServo, ClawSStart);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         /*LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);
