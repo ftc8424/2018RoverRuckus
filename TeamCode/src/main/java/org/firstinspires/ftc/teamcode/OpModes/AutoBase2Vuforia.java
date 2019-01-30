@@ -977,6 +977,84 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
         return true;
     }
+
+    /**
+     * Use Vuforia VuMarks to drive to a specific position on the field, assuming no disruptions
+     * or other things on the field blocking the way.  Note that the heading of the robot might
+     * change during this maneuver, so if a specific heading is required after the movement is
+     * over, the caller must manually set the heading after calling vuDriveTo().
+     *
+     * @param xposition   The xposition of the Vuforia navigation we should hit
+     * @param yposition   The yposition of the Vuforia navigation we should hit
+     * @param speed       The speed that we should make the movement
+     * @param timeoutS    The number of seconds we should continue trying to hit it
+     * @return            True if we hit our mark (within tolerances), False if we didn't
+     * @throws InterruptedException
+     */
+
+    public boolean vuDriveTo (double xposition, double yposition, double speed, int timeoutS) throws InterruptedException {
+        double curHeading = robot.getHeading();
+        boolean moveComplete = false;
+        double curXpos, curYpos, deltaX, deltaY;
+        double[] wheelPower = {0.0, 0.0, 0.0, 0.0};
+
+        if (!opModeIsActive())
+            return false;
+
+        // The first thing to do is get access to the VuMark, in case it's not displayed
+        if ( !robot.targetVisible ) {
+            double setHeading = 0.0;
+
+            if ( curHeading > 315 || curHeading <= 45 ) {
+                setHeading = 0;
+            } else if ( curHeading > 235 ) {
+                setHeading = 270;
+            } else if ( curHeading > 180 ) {
+                setHeading = 180;
+            } else if ( curHeading > 135 ) {
+                setHeading = 90;
+            }
+            robot.gyroTurn(this, setHeading, timeoutS > 3 ? 3 : timeoutS ); // Don't care if doesn't work
+        }
+        if (!opModeIsActive())
+                return false;
+
+        do {
+            curHeading = robot.getHeading();        // Get each time, in case moved/jostled
+            robot.vuforiaUpdateLocation();          // Update the vuMark visibility and location
+            telemetry.addData("VuDriveTo", "VuMark Visible:  %s", robot.targetVisible ? "TRUE" : "FALSE");
+            curXpos = robot.translation.get(0);
+            curYpos = robot.translation.get(1);
+            if ( curXpos < xposition*.95 ) {            // Need to move TOWARD the audience
+                // TODO: Use curHeading to decide if need to strafe right, left or move forward or backward
+
+            } else if ( curXpos > xposition*.95 ) {     // Need to move AWAY from audience
+                // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
+
+            } else if ( curYpos < yposition*.95 ) {     // Need to move TOWARD Red Alliance station
+                // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
+
+            } else if ( curYpos > yposition*.95 ) {     // Need to move AWAY from Red Alliance station
+                // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
+            } else {                                    // Need to STOP all movement, we're done
+                wheelPower[0] = 0.0; wheelPower[1] = 0.0;
+                wheelPower[2] = 0.0; wheelPower[2] = 0.0;
+                moveComplete = true;
+            }
+
+            robot.LFront.setPower(wheelPower[0]);
+            robot.RFront.setPower(wheelPower[1]);
+            robot.LBack.setPower(wheelPower[2]);
+            robot.RBack.setPower(wheelPower[3]);
+            
+            telemetry.update();                     // Print out all the telemetry we did in loop.
+        } while (opModeIsActive() && !moveComplete && runtime.seconds() < timeoutS);
+        return moveComplete;
+    }
+
+    /**
+     * Stop the robot and turn off the picture display to save battery.
+     */
     public void stopRobot() {
         if (robot.tfod != null) {
             robot.tfod.shutdown();
