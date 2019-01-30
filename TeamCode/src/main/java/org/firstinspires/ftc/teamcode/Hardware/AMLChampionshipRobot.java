@@ -16,7 +16,7 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public DcMotor BasketMotor = null;
     public Servo ClawServo = null;
     public double ClawSStart = .1;
-    public double ClawSOpen = .3;
+    public double ClawSOpen = .5;
 
 
     @Override
