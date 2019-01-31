@@ -122,7 +122,7 @@ public class MecanumTeleOp extends OpMode {
             lockSet = runtime.milliseconds();
 
         }else if (Math.abs(LiftVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
-            robot.LiftMotor.setPower(LiftVal);
+            robot.LiftMotor.setPower(-LiftVal);
             telemetry.addData("Lift Value", LiftVal);
         } else {
             robot.LiftMotor.setPower(0);
@@ -162,10 +162,10 @@ public class MecanumTeleOp extends OpMode {
         }*/
 
         if (gamepad2.right_trigger > .25) {
-            robot.ClawMotor.setPower(-gamepad2.right_trigger * .65);
+            robot.ClawMotor.setPower(-gamepad2.right_trigger * .55);
         }
         else if (gamepad2.left_trigger > .25) {
-            robot.ClawMotor.setPower(gamepad2.left_trigger * .75);
+            robot.ClawMotor.setPower(gamepad2.left_trigger * .65);
         }
         else {
             robot.ClawMotor.setPower(0);
@@ -213,14 +213,6 @@ public class MecanumTeleOp extends OpMode {
             robot.LBack.setPower(wheelPower[2]);
             robot.RBack.setPower(wheelPower[3]);
         }
-        wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
-
-        robot.LFront.setPower(wheelPower[0]);
-        robot.RFront.setPower(wheelPower[1]);
-        robot.LBack.setPower(wheelPower[2]);
-        robot.RBack.setPower(wheelPower[3]);
-
-
        /* if (gamepad1.a) {
             powerAdjuster = .75;
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);

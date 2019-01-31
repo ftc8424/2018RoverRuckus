@@ -241,8 +241,8 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 127;   // eg: Camera is 165 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 203;   // eg: Camera is 250 mm above ground
+        final int CAMERA_FORWARD_DISPLACEMENT  = 127;   // eg: Camera is 127 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 203;   // eg: Camera is 203 mm above ground
         final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix

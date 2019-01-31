@@ -986,13 +986,12 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
      *
      * @param xposition   The xposition of the Vuforia navigation we should hit
      * @param yposition   The yposition of the Vuforia navigation we should hit
-     * @param speed       The speed that we should make the movement
      * @param timeoutS    The number of seconds we should continue trying to hit it
      * @return            True if we hit our mark (within tolerances), False if we didn't
      * @throws InterruptedException
      */
 
-    public boolean vuDriveTo (double xposition, double yposition, double speed, int timeoutS) throws InterruptedException {
+    public boolean vuDriveTo (double xposition, double yposition, int timeoutS) throws InterruptedException {
         double curHeading = robot.getHeading();
         boolean moveComplete = false;
         double curXpos, curYpos, deltaX, deltaY;
@@ -1006,13 +1005,13 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             double setHeading = 0.0;
 
             if ( curHeading > 315 || curHeading <= 45 ) {
-                setHeading = 0;
+                setHeading = 345;
             } else if ( curHeading > 235 ) {
-                setHeading = 270;
+                setHeading = 255;
             } else if ( curHeading > 180 ) {
-                setHeading = 180;
+                setHeading = 165;
             } else if ( curHeading > 135 ) {
-                setHeading = 90;
+                setHeading = 75;
             }
             robot.gyroTurn(this, setHeading, timeoutS > 3 ? 3 : timeoutS ); // Don't care if doesn't work
         }
@@ -1025,16 +1024,75 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             telemetry.addData("VuDriveTo", "VuMark Visible:  %s", robot.targetVisible ? "TRUE" : "FALSE");
             curXpos = robot.translation.get(0);
             curYpos = robot.translation.get(1);
-            if ( curXpos < xposition*.95 ) {            // Need to move TOWARD the audience
+            deltaX = Math.abs(curXpos - xposition);
+            deltaY = Math.abs(curYpos - yposition);
+            if ( curXpos < xposition*.95 ) {
+                if (curHeading <= 80 && curHeading >= 70) {
+                    robot.encoderStrafe(this, .25, 0, deltaX, 3);
+                }
+                else if (curHeading <= 170 && curHeading >= 160) {
+                    robot.encoderDrive(this,.25, deltaX, deltaX,3);
+                }
+                else if (curHeading <= 260 && curHeading >= 250){
+                    robot.encoderStrafe(this, .25, deltaX, 0, 2);
+                }
+                else if (curHeading <= 350 && curHeading >= 340){
+                    robot.encoderDrive(this,.25, -deltaX, -deltaX,3);
+                }
+                // Need to move AWAY from the audience
                 // TODO: Use curHeading to decide if need to strafe right, left or move forward or backward
 
-            } else if ( curXpos > xposition*.95 ) {     // Need to move AWAY from audience
+            } else if ( curXpos > xposition*.95 ) {
+                if (curHeading <= 95 && curHeading >= 85) {
+                    robot.encoderStrafe(this, .25, deltaX, 0, 3);
+                }
+                else if (curHeading <= 185 && curHeading >= 175) {
+                    robot.encoderDrive(this, .25, -deltaX, -deltaX, 3);
+                }
+                else if (curHeading <= 275 && curHeading >= 265){
+                    robot.encoderStrafe(this, .25, 0, deltaX, 3);
+                }
+                else if (curHeading <= 5 && curHeading >= 355){
+                    robot.encoderDrive(this, .25, deltaX, deltaX, 3);
+                }
+
+                // Need to move TOWARDS the audience
                 // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
 
-            } else if ( curYpos < yposition*.95 ) {     // Need to move TOWARD Red Alliance station
+            } else if ( curYpos < yposition*.95 ) {
+                if (curHeading <= 95 && curHeading >= 85) {
+                    robot.encoderDrive(this,.25, deltaY, deltaY,3);
+                }
+                else if (curHeading <= 185 && curHeading >= 175) {
+                    robot.encoderStrafe(this,.25, deltaY,0,3);
+                }
+                else if (curHeading <= 275 && curHeading >= 265){
+                    robot.encoderDrive(this,.25, -deltaY, -deltaY,3);
+                }
+                else if (curHeading <= 5 && curHeading >= 355){
+                    robot.encoderStrafe(this,.25, -deltaY,0,3);
+                }
+
+                    // Need to move AWAY from Red Alliance station
                 // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
 
-            } else if ( curYpos > yposition*.95 ) {     // Need to move AWAY from Red Alliance station
+            } else if ( curYpos > yposition*.95 ) {
+                if (curHeading <= 95 && curHeading >= 85) {
+                    robot.encoderDrive(this,.25, -deltaY, -deltaY,3);
+                }
+                else if (curHeading <= 185 || curHeading >= 175) {
+                    robot.encoderStrafe(this,.25,0, deltaY,3);
+                }
+                else if (curHeading <= 275 && curHeading >= 265){
+                    robot.encoderDrive(this,.25, deltaY, deltaY,3);
+                }
+                else if (curHeading <= 5 && curHeading >= 355){
+                    robot.encoderStrafe(this,.25,deltaY, 0,3);
+
+                }
+
+
+                    // Need to move towards Red Alliance station
                 // TODO:  Use curHeading to decide if need to strafe right, left or move forward or backward
             } else {                                    // Need to STOP all movement, we're done
                 wheelPower[0] = 0.0; wheelPower[1] = 0.0;
