@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
@@ -303,7 +304,9 @@ public class Base {
              */
             deltaHeading = gHeading - heading;
             deltaAngle = Math.abs(deltaHeading);
+            caller.telemetry.addData("DeltaHeading", deltaHeading);
             turnspeed = deltaAngle/360;
+            caller.telemetry.addData("Initial TurnSpeed", turnspeed);
             if (turnspeed < turnFloor || deltaAngle < 30){
                 turnspeed = turnFloor;
             }
@@ -311,18 +314,22 @@ public class Base {
                 turnspeed = .25;
             }
             if (76 < deltaAngle && deltaAngle < 120){
-                turnspeed = .5;
+                turnspeed = .4;
             }
             if (121 < deltaAngle && deltaAngle < 180){
-                turnspeed = .75;
+                turnspeed = .5;
             }
+            caller.telemetry.addData("Final TurnSpeed", turnspeed);
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {
                 leftPower = -turnspeed;
                 rightPower = turnspeed;
+                caller.telemetry.addData("TURNING", "LEFT");
             } else {
                 leftPower = turnspeed;
                 rightPower = -turnspeed;
+                caller.telemetry.addData("TURNING", "RIGHT");
             }
+            caller.telemetry.addData("Power", "Left Power %.2f, Right Power %.2f");
             normalDrive(caller, leftPower, rightPower);
             caller.telemetry.update();
         }
@@ -408,8 +415,6 @@ public class Base {
             LBack.setPower(leftBackPower);
             RBack.setPower(rightBackPower);
 
-            caller.telemetry.addData("Power:", "Left Power %.2f, Right Power %.2f", leftBackPower, rightBackPower);
-            caller.telemetry.update();
             lbCurPos = LBack.getCurrentPosition();
             rbCurPos = RBack.getCurrentPosition();
             isBusy = (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
@@ -593,6 +598,7 @@ public class Base {
     }
 
     public void vuforiaUpdateLocation() {
+        targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 //telemetry.addData("Visible Target", trackable.getName());

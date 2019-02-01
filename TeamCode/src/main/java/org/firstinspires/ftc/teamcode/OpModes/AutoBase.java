@@ -145,14 +145,14 @@ public abstract class AutoBase extends LinearOpMode {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
-                robot.LiftMotor.setPower(-LiftLockPower);
+                robot.LiftMotor.setPower(LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
             robot.LiftMotor.setPower(0);
 
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
-                robot.LiftMotor.setPower(LiftLockPower);
+                robot.LiftMotor.setPower(-LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
 
@@ -362,14 +362,14 @@ public abstract class AutoBase extends LinearOpMode {
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
-                robot.LiftMotor.setPower(-LiftLockPower);
+                robot.LiftMotor.setPower(LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() >= robot.LiftUp + 10);
             robot.LiftMotor.setPower(0);
 
             robot.encoderDrive(this, .5, -4, -4, 3);
             do {
-                robot.LiftMotor.setPower(.5);
+                robot.LiftMotor.setPower(-LiftLockPower);
 
             } while (opModeIsActive() && robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 5);
 

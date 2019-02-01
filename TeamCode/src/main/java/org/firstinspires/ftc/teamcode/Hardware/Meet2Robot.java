@@ -45,7 +45,7 @@ public class Meet2Robot extends MecanumDrive {
         super.initMotor(revLeft);
         LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LiftMotor.setPower(0);
         /*ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
         ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

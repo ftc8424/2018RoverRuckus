@@ -122,7 +122,7 @@ public class MecanumTeleOp extends OpMode {
             lockSet = runtime.milliseconds();
 
         }else if (Math.abs(LiftVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
-            robot.LiftMotor.setPower(-LiftVal);
+            robot.LiftMotor.setPower(LiftVal);
             telemetry.addData("Lift Value", LiftVal);
         } else {
             robot.LiftMotor.setPower(0);
@@ -162,7 +162,7 @@ public class MecanumTeleOp extends OpMode {
         }*/
 
         if (gamepad2.right_trigger > .25) {
-            robot.ClawMotor.setPower(-gamepad2.right_trigger * .55);
+            robot.ClawMotor.setPower(-gamepad2.right_trigger * .45);
         }
         else if (gamepad2.left_trigger > .25) {
             robot.ClawMotor.setPower(gamepad2.left_trigger * .65);

@@ -168,11 +168,7 @@ public class Motor4 extends Base {
             rfCurPos = RFront.getCurrentPosition();
             lbCurPos = LBack.getCurrentPosition();
             rbCurPos = RBack.getCurrentPosition();
-            caller.telemetry.addData("Power:", "Left Front Power %.2f, Right Front Power %.2f, Left Back Power %.2f, Right Back Power %.2f",
-                    leftFrontPower, rightFrontPower, leftBackPower, rightBackPower)
-                    .addData("Position:", "Left Front  %d, Right Front  %d, Left Back  %d, Right Back  %d",
-                            lfCurPos, rfCurPos, lbCurPos, rbCurPos);
-            caller.telemetry.update();
+
             isBusy = (Math.abs(lfCurPos - newLeftFrontTarget) >= 5) && (Math.abs(rfCurPos - newRightFrontTarget) >= 5);
             isBusy = isBusy && (Math.abs(lbCurPos - newLeftBackTarget) >= 5) && (Math.abs(rbCurPos - newRightBackTarget) >= 5);
         }
