@@ -45,8 +45,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Constants;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.Hardware.Base.mmPerInch;
-
+import static org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot.mmPerInch;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -78,8 +77,8 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
     protected double zeroHeading = 0;
     protected double leftSampleAngle = 0;
     protected double LiftLockPower = 0.5;
-    protected double xposition = 0.0;
-    protected double yposition = 0.0;
+    protected double xposition = 0.0;           // Vuforia translation X and Y positions
+    protected double yposition = 0.0;           // Vuforia translation X and Y positions
 
     /**
      * Initialize the robot for autonomous-specific things (e.g., set encoder mode, initialize IMU)
