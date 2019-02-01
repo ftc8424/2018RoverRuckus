@@ -1008,23 +1008,20 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
         // The first thing to do is get access to the VuMark, in case it's not displayed
 
-            double setHeading = 0.0;
-            telemetry.addData("heading", curHeading);
-            telemetry.update();
-            sleep(1000);
+        double setHeading = 0.0;
+        telemetry.addData("heading", curHeading);
+        telemetry.update();
 
-
-            if ( curHeading >= 221 && curHeading <= 305) {
-                setHeading = 270;
-            } else if ( curHeading >= 131 && curHeading <= 220 ) {
-                setHeading = 180;
-            } else if ( curHeading >= 25 && curHeading <= 130 ) {
-                setHeading = 90;
-            } else {
-                setHeading = 0;
-            }
-
-            robot.gyroTurn(this, setHeading, timeoutS > 3 ? 3 : timeoutS ); // Don't care if doesn't work
+        if ( curHeading >= 221 && curHeading <= 305) {
+            setHeading = 270;
+        } else if ( curHeading >= 131 && curHeading <= 220 ) {
+            setHeading = 180;
+        } else if ( curHeading >= 25 && curHeading <= 130 ) {
+            setHeading = 90;
+        } else {
+            setHeading = 0;
+        }
+        robot.gyroTurn(this, setHeading, timeoutS > 3 ? 3 : timeoutS ); // Don't care if doesn't work
 
         if (!opModeIsActive())
                 return false;
@@ -1042,52 +1039,52 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             telemetry.addData("Current Position","X position = %.2f, Y position = %.2f", curXpos, curYpos);
             telemetry.addData("Heading","%.1f", curHeading);
             if ( curXpos < xposition*.90 ) {
-                if (curHeading <= 46 && curHeading >= 135) {
+                if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3);
                 }
-                else if (curHeading <= 136 && curHeading >= 225) {
+                else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderDrive(this, driveSpeed, deltaX, deltaX,3);
                 }
-                else if (curHeading <= 226 && curHeading >= 315){
+                else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 2);
                 }
                 else {
                     robot.encoderDrive(this, driveSpeed, -deltaX, -deltaX,3);
                 }
             } else if ( curXpos > xposition*.90 ) {
-                if (curHeading <= 46 && curHeading >= 135) {
+                if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 3);
                 }
-                else if (curHeading <= 136 && curHeading >= 225) {
+                else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderDrive(this, driveSpeed, -deltaX, -deltaX, 3);
                 }
-                else if (curHeading <= 226 && curHeading >= 315){
+                else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3);
                 }
                 else {
                     robot.encoderDrive(this, driveSpeed, deltaX, deltaX, 3);
                 }
             } else if ( curYpos < yposition*.90 ) {
-                if (curHeading <= 46 && curHeading >= 135) {
+                if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderDrive(this, driveSpeed, deltaY, deltaY,3);
                 }
-                else if (curHeading <= 136 && curHeading >= 225) {
+                else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderStrafe(this,strafeSpeed, deltaY,0,3);
                 }
-                else if (curHeading <= 226 && curHeading >= 315){
+                else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderDrive(this,driveSpeed, -deltaY, -deltaY,3);
                 }
                 else {
                     robot.encoderStrafe(this,strafeSpeed, -deltaY,0,3);
                 }
             } else if ( curYpos > yposition*.90 ) {
-                if (curHeading <= 46 && curHeading >= 135) {
+                if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderDrive(this,driveSpeed, -deltaY, -deltaY,3);
                 }
-                else if (curHeading <= 136 && curHeading >= 225) {
+                else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderStrafe(this, strafeSpeed,0, deltaY,3);
                 }
-                else if (curHeading <= 226 && curHeading >= 315){
+                else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderDrive(this,driveSpeed, deltaY, deltaY,3);
                 }
                 else {
