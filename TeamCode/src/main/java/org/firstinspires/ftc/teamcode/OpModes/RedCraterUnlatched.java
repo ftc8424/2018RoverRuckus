@@ -35,6 +35,7 @@ public class RedCraterUnlatched extends AutoBase2Vuforia {
                 robot.camera.setFlashTorchMode(false); // Turn off to alert setup is acquired
             }
             robot.vuforiaTesting(this);
+            telemetry.addData("Heading", robot.getHeading());
             telemetry.update();
 
         }
