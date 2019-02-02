@@ -12,12 +12,14 @@ public class RedDepot extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 225;
+        initialHeading = 210;
         deployHeading = 270;
         halfHeading = 0;
         leftSampleAngle = 180;
         lastHeading = 45;
         lastFinalHeading = 90;
+        xposition = 16;
+        yposition = -14;
 
         robot.robot_init(hardwareMap,true);
         initRobot();

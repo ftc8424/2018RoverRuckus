@@ -116,11 +116,15 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                       telemetry.addData("# Object Detected", updatedRecognitions.size());
                       if (updatedRecognitions.size() >= 1) {
                         int goldMineralX = -1;
+                        int goldMineralY = -1;
+                        double confidence = -1;
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                           if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                             goldMineralX = (int) recognition.getLeft();
+                            goldMineralY = Math.abs((int) recognition.getTop());
+                            confidence = recognition.getConfidence();
                           } else if (silverMineral1X == -1) {
                             silverMineral1X = (int) recognition.getLeft();
                           } else {
@@ -129,6 +133,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                         }
                         if (goldMineralX != -1) {
                             telemetry.addData("Gold Mineral Position", goldMineralX);
+                            telemetry.addData("Confidence:", confidence)
+                                    .addData("Gold Mineral Y", goldMineralY);
                         } else {
                             telemetry.addData("Gold Mineral:", "Not Found");
                         }

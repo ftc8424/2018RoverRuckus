@@ -8,12 +8,14 @@ public class RedCraterUnlatched extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 310;
+        initialHeading = 300;
         deployHeading = 270;
         leftSampleAngle = 275;
         lastHeading = 45;
         lastFinalHeading = 90;
         finalHeading = 180;
+        xposition = -16;
+        yposition = -14;
 
         robot.robot_init(hardwareMap,true);
         initRobot();

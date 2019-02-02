@@ -135,6 +135,7 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
         runtime.reset();
         boolean turnSuccessful = true;
         int times = 0;
+
         /** Activate Tensor Flow Object Detection. */
         if (robot.tfod != null) {
             robot.tfod.activate();
@@ -156,9 +157,11 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
             robot.LiftMotor.setPower(0);
             robot.encoderStrafe(this, .5, 0, 5, 3);
+            //vuDriveTo(xposition, yposition, 10);
 
         } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
+            //vuDriveTo(xposition, yposition , 10 );
             robot.encoderDrive(this, .5, -4, -4, 2);
         }
         robot.encoderDrive(this, .5, 4, 4, 3);
@@ -201,69 +204,47 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
         switch (sampleMineralsDepot()) {
             //switch (goldCenter){
-            case goldNotFound:
-                robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .75, 40, 40, 4);
-                telemetry.addData("Deploying Marker", "");
-                telemetry.update();
-                sleep(1000);
-                robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
-                sleep(100);
-                telemetry.addData("Marker Deployed", "");
-                telemetry.update();
-                sleep(1000);
-                if (robot.gyroTurn(this, deployHeading, 5)) {
-                    telemetry.addData("Turn Successful", "");
-                    telemetry.update();
-                    sleep(1000);
-                    robot.encoderStrafe(this, .5, 7, 0, 10);
-                    telemetry.addData("Strafe Completed", "");
-                    telemetry.update();
-                    sleep(1000);
-                    robot.encoderDrive(this, .75, -58, -58, 4);
-                }
-                break;
-
 
             case goldLeft:
                 robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .5, 8, 8, 3);
-                robot.encoderStrafe(this, .5, 18, 0, 3);
-                robot.encoderDrive(this, .5, 36, 36, 5);
+                robot.encoderDrive(this, .35, 8, 8, 3);
+                robot.encoderStrafe(this, .5, 10, 0, 3);
+                robot.encoderDrive(this, .5, 25, 25, 5);
                 robot.gyroTurn(this, deployHeading, 3);
-                robot.encoderDrive(this, .5, 6, 6, 2);
+                robot.encoderStrafe(this, .5, 4, 0, 3);
+                robot.encoderDrive(this, .5, 17, 17, 2);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 double msecs = runtime.milliseconds();
                 do {
                     robot.gyroTurn(this, deployHeading, timeoutS);
                 } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
-                robot.encoderDrive(this, 1, -75, -75, 10);
+                robot.encoderDrive(this, 0.5, -75, -75, 10);
 
                 break;
 
             case goldCenter:
-                robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderDrive(this, .5, 50, 50, 4);
+            case goldNotFound:
+                robot.gyroTurn(this, initialHeading+10, 3);
+                robot.encoderDrive(this, .5, 50, 50, 5);
                 telemetry.addData("Deploying Marker", "");
                 telemetry.update();
-                sleep(1000);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
+                sleep(1000);
                 msecs = runtime.milliseconds();
                 do {
-                    robot.gyroTurn(this, initialHeading, timeoutS);
+                    robot.gyroTurn(this, deployHeading, timeoutS);
                 } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
                 telemetry.addData("Marker Deployed", "");
                 telemetry.update();
-                sleep(1000);
                 if (robot.gyroTurn(this, deployHeading, 5)) {
                     telemetry.addData("Turn Successful", "");
                     telemetry.update();
                     sleep(200);
-                    robot.encoderStrafe(this, .5, 20, 0, 10);
+                    robot.encoderStrafe(this, .5, 2, 0, 5);
                     telemetry.addData("Strafe Completed", "");
                     telemetry.update();
                     sleep(1000);
-                    robot.encoderDrive(this, .75, -71, -71, 10);
+                    robot.encoderDrive(this, .5, -71, -71, 10);
                 } else {
                     telemetry.addData("Turn Unsuccessful", "");
                     telemetry.update();
@@ -273,17 +254,18 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
                 break;
 
             case goldRight:
-                robot.gyroTurn(this, initialHeading, 5);
-                robot.encoderDrive(this, .5, 10, 10, 3);
-                robot.encoderStrafe(this, .5, 0, 17, 3);
-                robot.encoderDrive(this, .5, 34, 34, 3);
+                robot.gyroTurn(this, initialHeading+10, 5);
+                robot.encoderDrive(this, .35, 10, 10, 3);
+                robot.encoderStrafe(this, .5, 0, 21, 3);
+                robot.encoderDrive(this, .5, 32, 32, 3);
                 robot.gyroTurn(this, deployHeading, 5);
-                robot.encoderStrafe(this, .5, 26, 0, 3);
+                robot.encoderStrafe(this, .5, 23, 0, 3);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 msecs = runtime.milliseconds();
                 do {
-                    robot.gyroTurn(this, finalHeading, timeoutS);
-                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);                robot.encoderDrive(this, 1, -77, -77, 10);
+                    robot.gyroTurn(this, deployHeading, timeoutS);
+                } while (opModeIsActive() && runtime.milliseconds() < msecs + 1000);
+                robot.encoderDrive(this, .6, -71, -71, 10);
 
                 break;
         }
@@ -374,13 +356,14 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             robot.LiftMotor.setPower(0);
 
             robot.encoderStrafe(this, .5, 0, 8, 3);
+            //vuDriveTo(xposition, yposition , 10);
 
         } else {
             robot.encoderStrafe(this, .5, 0, 3, 2);
+            //vuDriveTo(xposition, yposition, 10);
             robot.encoderDrive(this, .5, -3, -3, 2);
             robot.vuforiaTesting(this);
             telemetry.update();
-            sleep (10000);
         }
         robot.encoderDrive(this, .5, 6, 6, 3);
 
@@ -415,16 +398,9 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
         switch (sampleMineralsCrater()) {
 
-            case goldNotFound:
-
-                robot.encoderDrive(this, .75, 35, 35, 5);
-
-
-                break;
-
             case goldLeft:
                 robot.encoderDrive(this,.75,9, 9, 3);
-                robot.gyroTurn(this, initialHeading, 3);
+                robot.gyroTurn(this, initialHeading+10, 3);
                 robot.encoderStrafe(this, .5, 15, 0, 3);
                 robot.encoderDrive(this, .75, 13, 13, 3);
                 robot.encoderDrive(this, .5, -6, -6, 3);
@@ -450,6 +426,7 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
                 }
                 break;
 
+            case goldNotFound:
             case goldCenter:
                 robot.encoderDrive(this, .25, 21, 21, 3);
                 robot.encoderDrive(this, .5, -9, -9, 3);
@@ -478,8 +455,8 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
 
             case goldRight:
                 robot.encoderDrive(this, .5, 6, 6, 3);
-                robot.gyroTurn(this, initialHeading, 3);
-                robot.encoderStrafe(this, .5, 0, 22, 3);
+                robot.gyroTurn(this, initialHeading+10, 3);
+                robot.encoderStrafe(this, .5, 0, 22, 5);
                 robot.encoderDrive(this, .5, 12, 12, 3);
                 robot.encoderDrive(this, .5, -7, -7, 3);
                 robot.encoderStrafe(this, .75, 55, 0, 6);
@@ -551,65 +528,54 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
         camera.setFlashTorchMode(true);
 
 
-        do {
-            int goldMineralX = -1;
-            int goldMineralY = -1;
-            double confidence = -1;
-            if (robot.tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
-                            goldMineralX = Math.abs((int) recognition.getLeft());
-                            goldMineralY = Math.abs((int) recognition.getTop());
-                            confidence = recognition.getConfidence();
-                            telemetry.addData("Confidence:", confidence);
-                            telemetry.addData("Gold Mineral X", goldMineralX)
-                                    .addData("Gold Mineral Y", goldMineralY);
-                            if (confidence >= .9) {
-                                if (goldState == goldCenter) {
-                                    if (goldMineralY > 500) {
-                                        goldFound = true;
-                                        break;
-                                    }
-                                    //goldFound = true;
-                                } else if (goldState == goldLeft) {
-                                    if (goldMineralY > 500) {
-                                        goldFound = true;
-                                        break;
-                                    }
-                                    //goldFound = true;
-
-
-                                }
+        int goldMineralX = -1;
+        int goldMineralY = -1;
+        double confidence = -1;
+        if (robot.tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                        goldMineralX = Math.abs((int) recognition.getLeft());
+                        goldMineralY = Math.abs((int) recognition.getTop());
+                        confidence = recognition.getConfidence();
+                        telemetry.addData("Confidence:", confidence);
+                        telemetry.addData("Gold Mineral X", goldMineralX)
+                                .addData("Gold Mineral Y", goldMineralY);
+                        if (confidence >= .75 && goldMineralX < 300) {
+                            if (goldMineralY > 500) {
+                                goldFound = true;
+                                goldState = goldCenter;
+                                break;
                             }
-
+                            //goldFound = true;
+                        } else if (goldMineralY < 500) {
+                            goldFound = true;
+                            goldState = goldLeft;
+                            break;
                         }
-                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
-                        telemetry.update();
-                        sleep(250);
-
-
                     }
                 }
             }
-            times++;
-            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
-                goldState = goldLeft;
-                robot.gyroTurn(this, leftSampleAngle, 3);
-            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
-                goldState = goldRight;
+            if (!goldFound) {
                 goldFound = true;
+                goldState = goldRight;
             }
-            sleep(200);
-        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
+            telemetry.addData("gold Found", "%s - %s", goldFound ? "TRUE": "FALSE",
+                    goldState == goldCenter ? "Center"
+                            : goldState == goldLeft ? "Left" : "Right");
+            telemetry.update();
+            sleep(2500);
+        }
         camera.setFlashTorchMode(false);
         return goldState;
 
     }
+
+
 
     private int sampleMineralsDepot() throws InterruptedException {
         if (!opModeIsActive())
@@ -621,65 +587,56 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
         camera.setFlashTorchMode(true);
 
 
-        do {
-            int goldMineralX = -1;
-            int goldMineralY = -1;
-            double confidence = -1;
-            if (robot.tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
-                            goldMineralX = Math.abs((int) recognition.getLeft());
-                            goldMineralY = Math.abs((int) recognition.getTop());
-                            confidence = recognition.getConfidence();
-                            telemetry.addData("Confidence:", confidence);
-                            telemetry.addData("Gold Mineral X", goldMineralX)
-                                    .addData("Gold Mineral Y", goldMineralY);
-                            if (confidence >= .9) {
-                                if (goldState == goldCenter) {
-                                    if (goldMineralY > 50) {
-                                        goldFound = true;
-                                        break;
-                                    }
-                                    //goldFound = true;
-                                } else if (goldState == goldLeft) {
-                                    if (goldMineralY > 50) {
-                                        goldFound = true;
-                                        break;
-                                    }
-                                    //goldFound = true;
-
-
-                                }
+        int goldMineralX = -1;
+        int goldMineralY = -1;
+        double confidence = -1;
+        if (robot.tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals(Constants.LABEL_GOLD_MINERAL)) {
+                        goldMineralX = Math.abs((int) recognition.getLeft());
+                        goldMineralY = Math.abs((int) recognition.getTop());
+                        confidence = recognition.getConfidence();
+                        telemetry.addData("Confidence:", confidence);
+                        telemetry.addData("Gold Mineral X", goldMineralX)
+                                .addData("Gold Mineral Y", goldMineralY);
+                        if (confidence >= .8) {
+                            if (goldMineralY > 500) {
+                                goldFound = true;
+                                goldState = goldCenter;
+                                break;
+                            } else if (goldMineralY < 500) {
+                                goldFound = true;
+                                goldState = goldLeft;
+                                break;
                             }
-
                         }
-                        telemetry.addData("gold Found", goldFound ? "TRUE": "FALSE");
-                        telemetry.update();
-                        sleep(250);
-
-
                     }
                 }
+                if ( !goldFound ) {
+                    goldFound = true;
+                    goldState = goldRight;
+                }
+                telemetry.addData("gold Found", "%s - %s", goldFound ? "TRUE": "FALSE",
+                        goldState == goldCenter ? "Center"
+                                : goldState == goldLeft ? "Left" : "Right");
+                telemetry.update();
+                sleep(2500);
+
+
             }
-            times++;
-            if (!goldFound && goldState == goldCenter && times % 3 == 0) {
-                goldState = goldLeft;
-                robot.gyroTurn(this, leftSampleAngle, 1.5);
-            } else if (!goldFound && goldState == goldLeft && times % 3 == 0) {
-                goldState = goldRight;
-                goldFound = true;
-            }
-            sleep(200);
-        }while (opModeIsActive() && !goldFound && goldState != goldNotFound && times < 7) ;
+        }
+
+
         camera.setFlashTorchMode(false);
         return goldState;
-
     }
+
+
     public boolean VuforiaPosition(double xPosition, double yPosition, double TimeOutSeconds) throws InterruptedException {
         do {
             robot.translation.get(0);
@@ -1000,6 +957,11 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
         double StopTime = runtime.seconds() + timeoutS;
         double strafeSpeed = 0.5;
         double driveSpeed = 0.5;
+        double sensitivity = 0.75;
+        double xAdjust = 0;
+        double yAdjust = 0;
+        double xMax = 3;
+        double yMax = 3;
 
         if (!opModeIsActive())
             return false;
@@ -1038,57 +1000,61 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             telemetry.addData("Target Position","X position = %.2f, Y position = %.2f", xposition, yposition);
             telemetry.addData("Current Position","X position = %.2f, Y position = %.2f", curXpos, curYpos);
             telemetry.addData("Heading","%.1f", curHeading);
-            if ( curXpos < xposition*.90 ) {
+            if (deltaX > 1 &&  curXpos < xposition && xAdjust < xMax) {
+                xAdjust++;
                 if (curHeading >= 46 && curHeading <= 135) {
-                    robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3);
+                    robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3, false);
                 }
                 else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderDrive(this, driveSpeed, deltaX, deltaX,3);
                 }
                 else if (curHeading >= 226 && curHeading <= 315){
-                    robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 2);
+                    robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 2, false);
                 }
                 else {
                     robot.encoderDrive(this, driveSpeed, -deltaX, -deltaX,3);
                 }
-            } else if ( curXpos > xposition*.90 ) {
+            } else if (deltaX > 1 && curXpos > xposition && xAdjust < xMax) {
+                xAdjust++;
                 if (curHeading >= 46 && curHeading <= 135) {
-                    robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 3);
+                    robot.encoderStrafe(this, strafeSpeed, deltaX, 0, 3, false);
                 }
                 else if (curHeading >= 136 && curHeading <= 225) {
                     robot.encoderDrive(this, driveSpeed, -deltaX, -deltaX, 3);
                 }
                 else if (curHeading >= 226 && curHeading <= 315){
-                    robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3);
+                    robot.encoderStrafe(this, strafeSpeed, 0, deltaX, 3, false);
                 }
                 else {
                     robot.encoderDrive(this, driveSpeed, deltaX, deltaX, 3);
                 }
-            } else if ( curYpos < yposition*.90 ) {
+            } else if (deltaY > 1 && curYpos < yposition && yAdjust < yMax) {
+                yAdjust++;
                 if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderDrive(this, driveSpeed, deltaY, deltaY,3);
                 }
                 else if (curHeading >= 136 && curHeading <= 225) {
-                    robot.encoderStrafe(this,strafeSpeed, deltaY,0,3);
+                    robot.encoderStrafe(this,strafeSpeed, deltaY,0,3, false);
                 }
                 else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderDrive(this,driveSpeed, -deltaY, -deltaY,3);
                 }
                 else {
-                    robot.encoderStrafe(this,strafeSpeed, -deltaY,0,3);
+                    robot.encoderStrafe(this,strafeSpeed, -deltaY,0,3, false);
                 }
-            } else if ( curYpos > yposition*.90 ) {
+            } else if (deltaY > 1 && curYpos > yposition && yAdjust < yMax) {
+                yAdjust++;
                 if (curHeading >= 46 && curHeading <= 135) {
                     robot.encoderDrive(this,driveSpeed, -deltaY, -deltaY,3);
                 }
                 else if (curHeading >= 136 && curHeading <= 225) {
-                    robot.encoderStrafe(this, strafeSpeed,0, deltaY,3);
+                    robot.encoderStrafe(this, strafeSpeed,0, deltaY,3, false);
                 }
                 else if (curHeading >= 226 && curHeading <= 315){
                     robot.encoderDrive(this,driveSpeed, deltaY, deltaY,3);
                 }
                 else {
-                    robot.encoderStrafe(this,strafeSpeed, deltaY, 0,3);
+                    robot.encoderStrafe(this,strafeSpeed, deltaY, 0,3, false);
 
                 }
             } else {

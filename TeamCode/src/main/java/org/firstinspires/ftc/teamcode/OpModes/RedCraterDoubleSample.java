@@ -8,11 +8,13 @@ public class RedCraterDoubleSample extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 310;
+        initialHeading = 300;
         deployHeading = 270;
         zeroHeading = 180;
         lastHeading = 45;
         lastFinalHeading = 90;
+        xposition = -16;
+        yposition = -14;
 
         robot.robot_init(hardwareMap,true);
         initRobot();

@@ -263,9 +263,9 @@ public class AMLChampionshipRobot extends Meet2Robot {
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 165;   // eg: Camera is 165 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 250;   // eg: Camera is 250 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 55;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 140;   // eg: Camera is 140 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 205;   // eg: Camera is 205 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)

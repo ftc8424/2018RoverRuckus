@@ -8,13 +8,16 @@ public class RedDepotUnlatched extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 220;
+        initialHeading = 210;
         deployHeading = 270;
         finalHeading = 180;
         halfHeading = 0;
         lastHeading = 325;
         lastFinalHeading = 335;
         leftSampleAngle = 180;
+        xposition = 16;
+        yposition = -14;
+
         robot.robot_init(hardwareMap,true);
         initRobot();
 

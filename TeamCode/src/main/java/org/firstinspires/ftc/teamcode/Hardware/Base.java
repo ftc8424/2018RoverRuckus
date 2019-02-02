@@ -258,7 +258,8 @@ public class Base {
         double rightPower;
         double leftPower;
         double turnspeed;
-        double turnFloor = .20;
+        double turnFloor = .275;
+        double turnCeiling = .6;
         double stopTime = runtime.seconds() + timeoutS;
 
 
@@ -273,6 +274,12 @@ public class Base {
              */
             deltaHeading = gHeading - heading;
             deltaAngle = Math.abs(deltaHeading);
+/*
+            if (gHeading > 270 && heading < 90) {
+                deltaAngle = Math.abs(360 - gHeading - heading);
+                //deltaHeading = deltaAngle - heading;
+            }
+*/
             caller.telemetry.addData("DeltaHeading", deltaHeading);
             turnspeed = deltaAngle/360;
             caller.telemetry.addData("Initial TurnSpeed", turnspeed);
@@ -280,13 +287,16 @@ public class Base {
                 turnspeed = turnFloor;
             }
             if (31 < deltaAngle && deltaAngle < 75){
-                turnspeed = .25;
+                turnspeed = .275;
             }
             if (76 < deltaAngle && deltaAngle < 120){
                 turnspeed = .4;
             }
             if (121 < deltaAngle && deltaAngle < 180){
-                turnspeed = .5;
+                turnspeed = .6;
+            }
+            if ( turnspeed > turnCeiling ) {
+                turnspeed = turnCeiling;
             }
             caller.telemetry.addData("Final TurnSpeed", turnspeed);
             if ( deltaHeading < -180 || (deltaHeading > 0 && deltaHeading < 180) ) {

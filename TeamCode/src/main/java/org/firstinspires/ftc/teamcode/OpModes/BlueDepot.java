@@ -8,12 +8,14 @@ public class BlueDepot extends AutoBase2Vuforia {
 
 
     public void runOpMode() throws InterruptedException {
-        initialHeading = 45;
+        initialHeading = 30;
         deployHeading = 90;
         halfHeading = 180;
         leftSampleAngle = 0;
         lastHeading = 225;
         lastFinalHeading = 270;
+        xposition = -16;
+        yposition = 14;
 
         robot.robot_init(hardwareMap,true);
         initRobot();

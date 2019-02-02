@@ -9,12 +9,14 @@ public class BlueCrater extends AutoBase2Vuforia {
 
     public void runOpMode() throws InterruptedException {
 
-        initialHeading = 130;
+        initialHeading = 120;
         deployHeading = 90;
         leftSampleAngle = 95;
         lastHeading = 225;
         lastFinalHeading = 270;
         finalHeading = 0;
+        xposition = 16;
+        yposition = 14;
 
         robot.robot_init(hardwareMap,true);
         initRobot();
