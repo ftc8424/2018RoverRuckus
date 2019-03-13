@@ -141,6 +141,8 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             robot.tfod.activate();
         }
         if (latched) {
+            robot.LiftMotor.setPower(LiftLockPower);
+            sleep(500);
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
@@ -257,9 +259,9 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
                 robot.gyroTurn(this, initialHeading+10, 5);
                 robot.encoderDrive(this, .35, 10, 10, 3);
                 robot.encoderStrafe(this, .5, 0, 21, 3);
-                robot.encoderDrive(this, .5, 32, 32, 3);
+                robot.encoderDrive(this, .5, 29, 29, 3);
                 robot.gyroTurn(this, deployHeading, 5);
-                robot.encoderStrafe(this, .5, 23, 0, 3);
+                robot.encoderStrafe(this, .5, 28.5, 0, 3);
                 robot.deploy(robot.MarkerServo, robot.MarkerDeploy);
                 msecs = runtime.milliseconds();
                 do {
@@ -339,6 +341,8 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             robot.tfod.activate();
         }
         if (latched) {
+            robot.LiftMotor.setPower(LiftLockPower);
+            sleep(500);
             robot.deploy(robot.LockServo, robot.LiftUnlock);
             sleep(500);
             do {
@@ -456,10 +460,10 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
             case goldRight:
                 robot.encoderDrive(this, .5, 6, 6, 3);
                 robot.gyroTurn(this, initialHeading+10, 3);
-                robot.encoderStrafe(this, .5, 0, 22, 5);
+                robot.encoderStrafe(this, .5, 0, 28, 5);
                 robot.encoderDrive(this, .5, 12, 12, 3);
                 robot.encoderDrive(this, .5, -7, -7, 3);
-                robot.encoderStrafe(this, .75, 55, 0, 6);
+                robot.encoderStrafe(this, .75, 61, 0, 6);
                 robot.gyroTurn(this, finalHeading, 3);
                 robot.encoderStrafe(this, .5, 0, 8, 3);
                 robot.encoderDrive(this, 1, 50, 50, 5);
@@ -545,7 +549,7 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
                         telemetry.addData("Confidence:", confidence);
                         telemetry.addData("Gold Mineral X", goldMineralX)
                                 .addData("Gold Mineral Y", goldMineralY);
-                        if (confidence >= .75 && goldMineralX < 300) {
+                        if (confidence >= .7 && goldMineralX < 300) {
                             if (goldMineralY > 500) {
                                 goldFound = true;
                                 goldState = goldCenter;

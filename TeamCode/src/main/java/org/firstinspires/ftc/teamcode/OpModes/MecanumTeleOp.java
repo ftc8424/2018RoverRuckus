@@ -112,12 +112,12 @@ public class MecanumTeleOp extends OpMode {
         double LiftVal = gamepad2.left_stick_y;
         double BasketVal = gamepad2.right_stick_y;
 
-        telemetry.addData("Lift Value", robot.LiftMotor.getCurrentPosition());
+        telemetry.addData("Lift Position", robot.LiftMotor.getCurrentPosition());
         telemetry.addData("Lock Position", robot.LockServo.getPosition());
         telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
         telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
         telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
-        if (robot.LockServo.getPosition() != robot.LiftUnlock && Math.abs(LiftVal) > .1) {
+        if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lockSet = runtime.milliseconds();
 
