@@ -25,16 +25,14 @@ public final class Constants {
     public static final String LFRONT = "l front";
     public static final String RFRONT = "r front";
 
-    public static final String ColorSensor = "Color Sensor";
-
-    public static final String ColorServo = "Color Servo";
-    public static final String MarkerServo = "M Ser";
 
     public static final double TURN_SPEED = 0.3;
-    public static final String LiftMotor = "Lift Motor";
 
-    public static final String LockServo = "L Ser";
-    public static final String ClawMotor = "Claw";
+    public static final String RelicMotor = "Rel Mot";
+    public static final String RelicServo = "Rel Ser";
+
+    public static final String FerryServo = "F Ser";
+    public static final String ManipMotor = "Claw";
 
     public static final String BasketMotor = "B Motor";
     public static final String ClawServo = "Claw Servo";
