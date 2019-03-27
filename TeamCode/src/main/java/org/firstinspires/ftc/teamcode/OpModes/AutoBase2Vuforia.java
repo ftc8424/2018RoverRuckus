@@ -168,7 +168,6 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
         }
         robot.encoderDrive(this, .5, 4, 4, 3);
 
-
         do {
 
 
