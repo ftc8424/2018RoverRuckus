@@ -188,7 +188,7 @@ public class MecanumTeleOp extends OpMode {
            robot.RelicServoA.setPosition(robot.RelicServoClose);
            robot.RelicServoB.setPosition(robot.RelicServoClose);
        }
-       
+
         /*if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;
             robot.ClawServo.setPosition(robot.ClawSOpen);
