@@ -117,7 +117,7 @@ public class MecanumTeleOp extends OpMode {
         telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
         telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
         telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
-        if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
+        /*if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
             robot.LockServo.setPosition(robot.LiftUnlock);
             lockSet = runtime.milliseconds();
 
@@ -140,7 +140,7 @@ public class MecanumTeleOp extends OpMode {
         if (gamepad2.b && runtime.milliseconds() > lasta + 500){
             robot.LockServo.setPosition(robot.LiftUnlock);
             lasta = runtime.milliseconds();
-        }
+        }*/
 /*
         if (gamepad2.dpad_down && runtime.milliseconds() > lastClaw + 500) {
             robot.ClawMotor.setTargetPosition(robot.ClawDown);
@@ -161,7 +161,7 @@ public class MecanumTeleOp extends OpMode {
             robot.ClawMotor.setPower(.3);
         }*/
 
-        if (gamepad2.right_trigger > .25) {
+       /* if (gamepad2.right_trigger > .25) {
             robot.ClawMotor.setPower(-gamepad2.right_trigger * .45);
         }
         else if (gamepad2.left_trigger > .25) {
@@ -169,10 +169,27 @@ public class MecanumTeleOp extends OpMode {
         }
         else {
             robot.ClawMotor.setPower(0);
-        }
+        }*/
 
+       if (gamepad2.right_trigger > .5) {
+           robot.MunchServo.setPosition(robot.MunchStart);
+       }
 
-        if (gamepad2.right_bumper && !ClawMoving){
+       if (gamepad2.left_trigger > .5){
+           robot.MunchServo.setPosition(robot.MunchEnd);
+       }
+
+       if (gamepad2.right_bumper == true) {
+           robot.RelicServoA.setPosition(robot.RelicServoOpen);
+           robot.RelicServoB.setPosition(robot.RelicServoOpen);
+       }
+
+       if (gamepad2.left_bumper == true) {
+           robot.RelicServoA.setPosition(robot.RelicServoClose);
+           robot.RelicServoB.setPosition(robot.RelicServoClose);
+       }
+       
+        /*if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;
             robot.ClawServo.setPosition(robot.ClawSOpen);
             lastClaw = runtime.milliseconds();
@@ -185,7 +202,7 @@ public class MecanumTeleOp extends OpMode {
         else if (ClawMoving && runtime.milliseconds() > lastClaw + 500) {
             ClawMoving = false;
 
-        }
+        }*/
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 

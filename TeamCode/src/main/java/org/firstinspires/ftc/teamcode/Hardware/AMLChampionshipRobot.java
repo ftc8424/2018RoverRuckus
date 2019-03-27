@@ -32,10 +32,15 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public int ClawDown = -191;
     public int ClawBasket = 45;
     public int ClawStraight = 53;
-    public DcMotor BasketMotor = null;
-    public Servo ClawServo = null;
-    public double ClawSStart = .1;
-    public double ClawSOpen = .5;
+    public Servo MunchServo = null;
+    public double MunchStart = .1;
+    public double MunchEnd = .5;
+    public DcMotor LiftMot = null;
+    public double  ClawSOpen = .5;
+    public Servo RelicServoA = null;
+    public Servo RelicServoB = null;
+    public double RelicServoOpen = .1;
+    public double RelicServoClose = .3;
     public VectorF translation;
     public CameraDevice camera;
     public List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -59,12 +64,14 @@ public class AMLChampionshipRobot extends Meet2Robot {
     @Override
     public void initServo(){
         super.initServo();
-        ClawServo = hwMap.servo.get(Constants.ClawServo);
+        MunchServo = hwMap.servo.get(Constants.MunchServo);
         try {
-          deploy(ClawServo, ClawSStart);
+          deploy(MunchServo, MunchStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        RelicServoA = hwMap.servo.get(Constants.RelicServoA);
+        RelicServoB = hwMap.servo.get(Constants.RelicServoB);
 
 
         /*LockServo = hwMap.servo.get(Constants.LockServo);
@@ -87,14 +94,6 @@ public class AMLChampionshipRobot extends Meet2Robot {
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         LiftMotor.setPower(0);*/
-        ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
-        ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        ClawMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        ClawMotor.setPower(0);
-        BasketMotor = hwMap.dcMotor.get(Constants.BasketMotor);
-        BasketMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BasketMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        BasketMotor.setPower(0);
     }
     public void setEncoderMode (DcMotor dcMotor, DcMotor.RunMode mode) {
         dcMotor.setMode(mode);

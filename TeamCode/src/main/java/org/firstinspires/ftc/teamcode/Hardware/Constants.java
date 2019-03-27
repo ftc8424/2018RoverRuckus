@@ -28,7 +28,7 @@ public final class Constants {
     public static final String ColorSensor = "Color Sensor";
 
     public static final String ColorServo = "Color Servo";
-    public static final String MarkerServo = "M Ser";
+  //  public static final String MarkerServo = "M Ser";
 
     public static final double TURN_SPEED = 0.3;
     public static final String LiftMotor = "Lift Motor";
@@ -39,6 +39,9 @@ public final class Constants {
     public static final String BasketMotor = "B Motor";
     public static final String ClawServo = "Claw Servo";
 
+    public static final String MunchServo =  "M Ser";
+    public static final String RelicServoA = "RelicSerA";
+    public static final String RelicServoB = "RelicSerB";
 
     /**
      * The Vuforia license key, used by all opModes
