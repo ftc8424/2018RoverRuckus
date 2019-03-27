@@ -32,10 +32,10 @@ public final class Constants {
     public static final String RelicServo = "Rel Ser";
     public static final String MunchkinServo = "MunchSer";
     public static final String FerryServo = "F Ser";
-    //public static final String ManipMotor = "Claw";
+    public static final String ManipMotor = "Claw";
 
-    //public static final String BasketMotor = "B Motor";
-    //public static final String ClawServo = "Claw Servo";
+    public static final String BasketMotor = "B Motor";
+    public static final String ClawServo = "Claw Servo";
 
 
     /**
