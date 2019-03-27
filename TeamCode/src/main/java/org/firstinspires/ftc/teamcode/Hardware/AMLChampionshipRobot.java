@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -28,14 +29,17 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class AMLChampionshipRobot extends Meet2Robot {
 
-    public DcMotor ClawMotor = null;
-    public int ClawDown = -191;
-    public int ClawBasket = 45;
-    public int ClawStraight = 53;
-    public DcMotor BasketMotor = null;
-    public Servo ClawServo = null;
-    public double ClawSStart = .1;
-    public double ClawSOpen = .5;
+
+    public Servo MunchkinServo = null;
+    public double munchDown = .2;
+    public double munchUp = .5;
+    public Servo RelicServo = null;
+    public double relicOut = .3;
+    public double relicIn = .7;
+    public Servo FerryServo = null;
+    public double FerryServoUp = .6;
+    public double FerrServoDown = .1;
+    public boolean wheelForward = false;
     public VectorF translation;
     public CameraDevice camera;
     public List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -59,13 +63,9 @@ public class AMLChampionshipRobot extends Meet2Robot {
     @Override
     public void initServo(){
         super.initServo();
-        ClawServo = hwMap.servo.get(Constants.ClawServo);
-        try {
-          deploy(ClawServo, ClawSStart);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        FerryServo = hwMap.servo.get(Constants.FerryServo);
+        MunchkinServo = hwMap.servo.get(Constants.MunchkinServo);
+        RelicServo = hwMap.servo.get(Constants.RelicServo);
 
         /*LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);
@@ -87,14 +87,14 @@ public class AMLChampionshipRobot extends Meet2Robot {
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         LiftMotor.setPower(0);*/
-        ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
+       /* ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
         ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ClawMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         ClawMotor.setPower(0);
         BasketMotor = hwMap.dcMotor.get(Constants.BasketMotor);
         BasketMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BasketMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        BasketMotor.setPower(0);
+        BasketMotor.setPower(0);*/
     }
     public void setEncoderMode (DcMotor dcMotor, DcMotor.RunMode mode) {
         dcMotor.setMode(mode);

@@ -114,7 +114,6 @@ public class MecanumTeleOp extends OpMode {
 
         telemetry.addData("Lift Position", robot.LiftMotor.getCurrentPosition());
         telemetry.addData("Lock Position", robot.LockServo.getPosition());
-        telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
         telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
         telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
         if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
@@ -127,7 +126,7 @@ public class MecanumTeleOp extends OpMode {
         } else {
             robot.LiftMotor.setPower(0);
         }
-        if (Math.abs(BasketVal) > 0.1) {
+    /*    if (Math.abs(BasketVal) > 0.1) {
             robot.BasketMotor.setPower(BasketVal * .5);
             telemetry.addData("Basket Value", BasketVal);
         } else {
@@ -140,7 +139,7 @@ public class MecanumTeleOp extends OpMode {
         if (gamepad2.b && runtime.milliseconds() > lasta + 500){
             robot.LockServo.setPosition(robot.LiftUnlock);
             lasta = runtime.milliseconds();
-        }
+        }*/
 /*
         if (gamepad2.dpad_down && runtime.milliseconds() > lastClaw + 500) {
             robot.ClawMotor.setTargetPosition(robot.ClawDown);
@@ -161,7 +160,7 @@ public class MecanumTeleOp extends OpMode {
             robot.ClawMotor.setPower(.3);
         }*/
 
-        if (gamepad2.right_trigger > .25) {
+        /*if (gamepad2.right_trigger > .25) {
             robot.ClawMotor.setPower(-gamepad2.right_trigger * .45);
         }
         else if (gamepad2.left_trigger > .25) {
@@ -185,7 +184,7 @@ public class MecanumTeleOp extends OpMode {
         else if (ClawMoving && runtime.milliseconds() > lastClaw + 500) {
             ClawMoving = false;
 
-        }
+        }*/
 
         telemetry.addData("Status", "Running: " + runtime.toString());
 
@@ -205,6 +204,63 @@ public class MecanumTeleOp extends OpMode {
             robot.RBack.setPower(1);
         }
         else {
+
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
+
+            robot.LFront.setPower(wheelPower[0]);
+            robot.RFront.setPower(wheelPower[1]);
+            robot.LBack.setPower(wheelPower[2]);
+            robot.RBack.setPower(wheelPower[3]);
+        }
+
+        if (gamepad1.a == true && robot.FerryServo.getPosition() == robot.FerryServoUp){
+            robot.FerryServo.setPosition(robot.FerrServoDown);
+
+        } else if (gamepad1.a && robot.FerryServo.getPosition() == robot.FerrServoDown) {
+            robot.FerryServo.setPosition(robot.FerryServoUp);
+
+        } else {
+            robot.FerryServo.setPosition(robot.FerrServoDown);
+
+        }
+
+        if (gamepad1.left_bumper) {
+            robot.MunchkinServo.setPosition(robot.munchDown);
+        }
+        if (gamepad1.right_bumper) {
+            robot.MunchkinServo.setPosition(robot.munchUp);
+
+        }
+
+        if (gamepad1.b && robot.RelicServo.getPosition() == robot.relicIn){
+            robot.RelicServo.setPosition(robot.relicOut);
+
+        } else if (gamepad1.b && robot.RelicServo.getPosition() == robot.relicOut) {
+            robot.RelicServo.setPosition(robot.relicIn);
+
+        } else {
+            robot.RelicServo.setPosition(robot.relicOut);
+
+        }
+
+        if (gamepad1.x && robot.wheelForward == false) {
+            robot.wheelForward = true;
+        } else if (gamepad1.x && robot.wheelForward == true) {
+            robot.wheelForward = false;
+        } else {
+            robot.wheelForward = false;
+        }
+
+        if (robot.wheelForward == true) {
+
+            wheelPower = robot.motorPower(-gamepad1.left_stick_y, -gamepad1.left_stick_x, gamepad1.right_stick_x);
+
+            robot.LFront.setPower(-wheelPower[0]);
+            robot.RFront.setPower(-wheelPower[1]);
+            robot.LBack.setPower(-wheelPower[2]);
+            robot.RBack.setPower(-wheelPower[3]);
+
+        } else {
 
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 

@@ -28,14 +28,14 @@ public final class Constants {
 
     public static final double TURN_SPEED = 0.3;
 
-    public static final String RelicMotor = "Rel Mot";
+    //public static final String RelicMotor = "Rel Mot";
     public static final String RelicServo = "Rel Ser";
-
+    public static final String MunchkinServo = "MunchSer";
     public static final String FerryServo = "F Ser";
-    public static final String ManipMotor = "Claw";
+    //public static final String ManipMotor = "Claw";
 
-    public static final String BasketMotor = "B Motor";
-    public static final String ClawServo = "Claw Servo";
+    //public static final String BasketMotor = "B Motor";
+    //public static final String ClawServo = "Claw Servo";
 
 
     /**
