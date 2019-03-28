@@ -43,8 +43,8 @@ public class Meet2Robot extends MecanumDrive {
     @Override
     public void initServo(){
         super.initServo();
-        LockServo = hwMap.servo.get(Constants.LockServo);
-        MarkerServo = hwMap.servo.get(Constants.MarkerServo);
+        /*LockServo = hwMap.servo.get(Constants.LockServo);
+        MarkerServo = hwMap.servo.get(Constants.MarkerServo);*/
         try {
             //deploy(ColorServo, ColorSample);
             //deploy(ColorServo, MarkerStart);
@@ -59,7 +59,7 @@ public class Meet2Robot extends MecanumDrive {
     @Override
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
-        LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
+        //LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LiftMotor.setPower(0);
