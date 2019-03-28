@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 
@@ -43,6 +44,27 @@ public class BlueAuto extends LinearOpMode{
 
         robot.robot_init(hardwareMap,true);
         initRobot();
+
+        robot.targetsRoverRuckus.activate();
+
+        robot.camera = CameraDevice.getInstance();
+        boolean acquired = false;
+        while (!isStopRequested() && !isStarted()) {
+            telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+            if (robot.imu.isGyroCalibrated()) {
+                if (robot.VuforiaTorch()) {
+                    acquired = true;
+                } else if (!acquired) {
+                    robot.camera.setFlashTorchMode(true); // Turn on to alert setup to acquire
+                }
+            }
+            if (acquired) {
+                robot.camera.setFlashTorchMode(false); // Turn off to alert setup is acquired
+            }
+            robot.vuforiaTesting(this);
+            telemetry.addData("Heading", robot.getHeading());
+            telemetry.update();
+        }
 
         switch (ferryTarget()) {
 
