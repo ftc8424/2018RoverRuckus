@@ -111,6 +111,25 @@ public class BlueAuto extends LinearOpMode{
 
                 robot.encoderDrive(this,.5 ,-64 ,-64 ,5 );
 
+            case notSense:
+                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
+
+                if (robot.LiftMotor.getCurrentPosition() != LiftUp) {
+                    robot.LiftMotor.setPower(.25);
+                }
+                else {
+                    robot.LiftMotor.setPower(0);
+                }
+
+                robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
+
+                if (robot.LiftMotor.getCurrentPosition() != LiftDown) {
+                    robot.LiftMotor.setPower(-.25);
+                }
+                else {
+                    robot.LiftMotor.setPower(0);
+                }
+
         }
 
 
@@ -123,6 +142,7 @@ public class BlueAuto extends LinearOpMode{
     private static final int two = 2;
     private static  boolean sensed = false;
     private static int ferryPos = 0;
+    private static int times = 0;
 
     private int ferryTarget() {
         do {
@@ -139,7 +159,12 @@ public class BlueAuto extends LinearOpMode{
                 sensed = true;
                 ferryPos = two;
             }
-        } while (opModeIsActive() && sensed == false);
+            times++;
+            sleep(250);
+        } while (opModeIsActive() && sensed == false && times <= 4);
+        if (times > 4 && sensed == false) {
+            ferryPos = notSense;
+        }
         return ferryPos;
     }
 }
