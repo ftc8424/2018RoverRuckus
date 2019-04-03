@@ -132,7 +132,6 @@ public class BlueAuto extends LinearOpMode{
 
 
 
-
     }
 
     private static final int notSense = -1;
