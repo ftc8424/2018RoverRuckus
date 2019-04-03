@@ -77,11 +77,20 @@ public class RedTaxi extends LinearOpMode{
                 robot.encoderStrafe(this,.5 ,64 ,0 ,5 );
 
             case two:
+
                 robot.encoderStrafe(this,.5 ,25 ,0 ,4 );
                 robot.FerryServo.setPosition(robot.FerryServoUp);
                 robot.encoderDrive(this,.5 ,-45,-45 ,5 );
                 robot.FerryServo.setPosition(robot.FerrServoDown);
                 robot.encoderStrafe(this,.5 ,0 ,64 ,5 );
+
+            case notSense:
+
+                robot.encoderStrafe(this,.5 ,0 ,25 ,4 );
+                robot.FerryServo.setPosition(robot.FerryServoUp);
+                robot.encoderDrive(this,.5 ,45 ,45 ,5 );
+                robot.FerryServo.setPosition(robot.FerrServoDown);
+                robot.encoderStrafe(this,.5 ,64 ,0 ,5 );
         }
     }
     private static final int notSense = -1;
@@ -89,6 +98,7 @@ public class RedTaxi extends LinearOpMode{
     private static final int two = 2;
     private static  boolean sensed = false;
     private static int ferryPos = 0;
+    private static int times = 0;
 
     private int ferryTarget() {
         do {
@@ -105,7 +115,12 @@ public class RedTaxi extends LinearOpMode{
                 sensed = true;
                 ferryPos = two;
             }
-        } while (opModeIsActive() && sensed == false);
+            times++;
+            sleep(250);
+        } while (opModeIsActive() && sensed == false && times <= 4);
+        if (times > 4 && sensed == false) {
+            ferryPos = notSense;
+        }
         return ferryPos;
     }
 }
