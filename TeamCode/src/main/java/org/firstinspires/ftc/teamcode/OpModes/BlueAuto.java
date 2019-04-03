@@ -72,63 +72,61 @@ public class BlueAuto extends LinearOpMode{
 
                 robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftUp) {
+                do {
                     robot.LiftMotor.setPower(.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
+
 
                 robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftDown) {
-                    robot.LiftMotor.setPower(-.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
 
                 robot.encoderDrive(this,.5 ,64 ,64 ,5 );
 
             case two:
                 robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftUp) {
+                do {
                     robot.LiftMotor.setPower(.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
+
 
                 robot.encoderStrafe(this,.5 ,0 ,45 ,5 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftDown) {
-                    robot.LiftMotor.setPower(-.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
+
 
                 robot.encoderDrive(this,.5 ,-64 ,-64 ,5 );
 
             case notSense:
                 robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftUp) {
+                do {
                     robot.LiftMotor.setPower(.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
 
                 robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
 
-                if (robot.LiftMotor.getCurrentPosition() != LiftDown) {
-                    robot.LiftMotor.setPower(-.25);
-                }
-                else {
-                    robot.LiftMotor.setPower(0);
-                }
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.LiftMotor.setPower(0);
+
 
         }
 
