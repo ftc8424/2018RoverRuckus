@@ -1,50 +1,45 @@
-package org.firstinspires.ftc.teamcode.Hardware;
+package org.firstinspires.ftc.teamcode.OpModes;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraDevice;
+import com.vuforia.Vuforia;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
+import org.firstinspires.ftc.teamcode.Hardware.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-public class AMLChampionshipRobot extends Meet2Robot {
+@Autonomous(name="VoforiaTaxiTest", group="Blue OpMode")
 
-    public DcMotor ClawMotor = null;
-    public int ClawDown = -191;
-    public int ClawBasket = 45;
-    public int ClawStraight = 53;
-    public Servo MunchServo = null;
-    public double MunchStart = .1;
-    public double MunchEnd = .5;
-    public DcMotor LiftMot = null;
-    public double  ClawSOpen = .5;
-    public Servo RelicServoA = null;
-  //  public Servo RelicServoB = null;
-    public double RelicServoOpen = .1;
-    public double RelicServoClose = .3;
-    public VectorF translation;
-    public CameraDevice camera;
-    public List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+public class VuforiaTesting extends LinearOpMode{
 
+    private ElapsedTime runtime = new ElapsedTime();
+    protected AMLChampionshipRobot robot = new AMLChampionshipRobot();
+    protected double LiftUp = 300;
+    protected double LiftDown = 0;public List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+
+    public VuforiaLocalizer vuforia;
 
     /*
      * Here is the Vuforia-specific settings, only using Vuforia in Championship.
@@ -56,98 +51,14 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     public static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
+    public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+
 
     public OpenGLMatrix lastLocation = null;
     public boolean targetVisible = false;
 
-
-    @Override
-    public void initServo(){
-        super.initServo();
-        MunchServo = hwMap.servo.get(Constants.MunchServo);
-        try {
-          deploy(MunchServo, MunchStart);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        RelicServoA = hwMap.servo.get(Constants.RelicServoA);
-      //  RelicServoB = hwMap.servo.get(Constants.RelicServoB);
-
-
-        /*LockServo = hwMap.servo.get(Constants.LockServo);
-        MarkerServo = hwMap.servo.get(Constants.MarkerServo);
-        try {
-            //deploy(ColorServo, ColorSample);
-            //deploy(ColorServo, MarkerStart);
-            deploy(MarkerServo, MarkerInit);
-            sleep(100);
-            deploy(MarkerServo, MarkerStart);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-    }
-
-    @Override
-    public void initMotor(boolean revLeft) {
-        super.initMotor(revLeft);
-       /* LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
-        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        LiftMotor.setPower(0);*/
-    }
-    public void setEncoderMode (DcMotor dcMotor, DcMotor.RunMode mode) {
-        dcMotor.setMode(mode);
-    }
-
-    // TODO: Fix this to use the TensorFlow object from the ConceptTensorFlowObjectDetection and return true if GoldMineralX is >= 200 && <= 400
-    /*public boolean isGold(){
-
-
-
-        int redValue = color.red();
-        int blueValue = color.blue();
-        int greenValue = color.green();
-        if (blueValue > 20 && greenValue > 25 && redValue > 35){
-            return false;
-        }
-        else if (blueValue < 10 && greenValue > 10 && redValue > 10) {
-            return true;
-        } else {
-            return false;
-        }
-       return false;
-    }*/
-
-    /**
-     * This is the method used for 180 degree servos.  It gets their current position and sets
-     * it to their other position.  It will just be a bunch of if..elseif..else statements
-     * for each 180-degree servo to determine the target position.  If we can't find the
-     * type of servo we are, then just return back to the caller.
-     *
-     * @param servo
-     */
-    /*public void deploy(Servo servo, double targetPos) throws InterruptedException {
-        double currentPos = servo.getPosition();
-        if (currentPos > targetPos){
-            for (double d = currentPos; d > targetPos; d -= 0.1) {
-                servo.setPosition(d);
-                sleep(100);
-            }
-        }
-        else {
-            for (double d = currentPos; d < targetPos; d += 0.1) {
-                servo.setPosition(d);
-                sleep(100);
-            }
-        }
-
-    }*/
-
-    /**
-     * Initialize the Vuforia localization engine.
-     */
     public void initVuforia() {
-        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
+        int cameraMonitorViewId = robot.hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
@@ -280,78 +191,126 @@ public class AMLChampionshipRobot extends Meet2Robot {
     }
 
 
-    /**
-     * Check to see if we should turn off the camera's light (torch), but pretty much just returns
-     * whether the target is visible or not.  Calls vuforiaUpdateLocation() to set targetVisible
-     * as a side-effect.
-     *
-     * @return   Whether the VuMark is visible to the robot's camera or not.
-     */
-    public boolean VuforiaTorch() {
-        vuforiaUpdateLocation();
-        return targetVisible;
+    public void initRobot() {
+        robot.initMotor(true);
+        robot.initServo();
+        robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.LiftMotor.setPower(0);
 
-/*
-        for (VuforiaTrackable trackable : allTrackables) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                //telemetry.addData("Visible Target", trackable.getName());
-                targetVisible = true;
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        robot.imu.initialize(parameters);
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
+        robot.initVuforia();
 
-                // getUpdatedRobotLocation() will return null if no new information is available since
-                // the last time that call was made, or if the trackable is not currently visible.
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
+    }
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        robot.robot_init(hardwareMap,true);
+        initRobot();
+        initVuforia();
+
+        robot.targetsRoverRuckus.activate();
+
+        robot.camera = CameraDevice.getInstance();
+        boolean acquired = false;
+        while (!isStopRequested() && !isStarted()) {
+            telemetry.addData("Gyro Status", robot.imu.isGyroCalibrated() ? "Calibrated - Ready for Start" : "Calibrating - DO NOT START");
+            if (robot.imu.isGyroCalibrated()) {
+                if (robot.VuforiaTorch()) {
+                    acquired = true;
+                } else if (!acquired) {
+                    robot.camera.setFlashTorchMode(true); // Turn on to alert setup to acquire
                 }
-                break;
+            }
+            if (acquired) {
+                robot.camera.setFlashTorchMode(false); // Turn off to alert setup is acquired
+            }
+            robot.vuforiaTesting(this);
+            telemetry.addData("Heading", robot.getHeading());
+            for (VuforiaTrackable trackable : allTrackables) {
+                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                    telemetry.addData("Visible Target", trackable.getName());
+                    targetVisible = true;
+                }
+                telemetry.update();
             }
         }
-*/
-    }
 
-    /**
-     * Update the location with the Vuforia object.  Sets target to not visible and then goes
-     * through the checks to see if it is visible and, if so, sets things like the transformation
-     * and last location parameters that others can use.  This should be called each time through
-     * a loop or periodically when the robot is moving in order to get the latest information from
-     * the camera navigation.  This sets targetVisible and translation variables as side-effects.
-     */
-    public void vuforiaUpdateLocation() {
-        targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                //telemetry.addData("Visible Target", trackable.getName());
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                telemetry.addData("Visible Target", trackable.getName());
                 targetVisible = true;
-
-                // getUpdatedRobotLocation() will return null if no new information is available since
-                // the last time that call was made, or if the trackable is not currently visible.
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
-                }
-                break;
             }
-        }
-        if ( lastLocation != null ) {
-            translation = lastLocation.getTranslation();
+
+            sleep(5000);
         }
     }
 
-    /**
-     * Testing the Vuforia system by adding telemetry data for x/y/z positions and heading.
-     *
-     * @param caller  LinearOpMode for calling telemetry
-     */
-    public void vuforiaTesting(LinearOpMode caller){
-        vuforiaUpdateLocation();
-        if (translation != null) {
-            caller.telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f", translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-            // express the rotation of the robot in degrees.
-            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            caller.telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+        /*switch (ferryTarget()) {
+
+            case one:
+                telemetry.addData("VuMark", robot.targetsRoverRuckus.getName());
+                telemetry.addData("FerryPosition", ferryPos);
+                sleep(3000);
+
+            case two:
+                telemetry.addData("VuMark", robot.targetsRoverRuckus.getName());
+                telemetry.addData("FerryPosition", ferryPos);
+                sleep(3000);
+
+
+            case notSense:
+                telemetry.addData("VuMark", robot.targetsRoverRuckus.getName());
+                telemetry.addData("FerryPosition", ferryPos);
+                sleep(3000);
+
+        }*/
+
+
+
+    private static int notSense = -1;
+    private static final int one = 1;
+    private static final int two = 2;
+    private static boolean sensed = false;
+    private static int ferryPos = 0;
+    private static int times = 0;
+
+    public int ferryPosition() {
+        do {
+            if (robot.targetsRoverRuckus.getName() == "Front-Craters") {
+                sensed = true;
+                ferryPos = one;
+            } else if (robot.targetsRoverRuckus.getName() == "Red-Footprint") {
+                sensed = true;
+                ferryPos = one;
+            } else if (robot.targetsRoverRuckus.getName() == "Back-Space") {
+                sensed = true;
+                ferryPos = two;
+            } else if (robot.targetsRoverRuckus.getName() == "Blue-Rover") {
+                sensed = true;
+                ferryPos = two;
+            }
+            times++;
+            sleep(250);
+        } while (opModeIsActive() && sensed == false && times <= 4);
+        if (times > 4 && sensed == false) {
+            ferryPos = notSense;
         }
-        else {
-            caller.telemetry.addData("Visible Target", "none");
-        }
+        return ferryPos;
     }
+
+
+
 }

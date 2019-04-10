@@ -90,7 +90,7 @@ public class Base {
             (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
-    protected HardwareMap hwMap = null;
+    public HardwareMap hwMap = null;
 
     /**
      * This is the super-class robot_init() and it will call each initMotor(), initServo() and

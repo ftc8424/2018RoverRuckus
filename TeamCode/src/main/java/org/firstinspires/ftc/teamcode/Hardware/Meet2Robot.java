@@ -43,9 +43,9 @@ public class Meet2Robot extends MecanumDrive {
     @Override
     public void initServo(){
         super.initServo();
-        LockServo = hwMap.servo.get(Constants.LockServo);
-        MarkerServo = hwMap.servo.get(Constants.MarkerServo);
-        try {
+      //  LockServo = hwMap.servo.get(Constants.LockServo);
+       // MarkerServo = hwMap.servo.get(Constants.MarkerServo);
+        /*try {
             //deploy(ColorServo, ColorSample);
             //deploy(ColorServo, MarkerStart);
             deploy(MarkerServo, MarkerInit);
@@ -53,7 +53,7 @@ public class Meet2Robot extends MecanumDrive {
             deploy(MarkerServo, MarkerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
