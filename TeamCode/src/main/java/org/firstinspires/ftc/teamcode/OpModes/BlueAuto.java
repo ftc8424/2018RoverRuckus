@@ -2,13 +2,18 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraDevice;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 
+
+@Autonomous(name="BlueAutoTaxi", group="Blue OpMode")
 public class BlueAuto extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -66,7 +71,7 @@ public class BlueAuto extends LinearOpMode{
             telemetry.update();
         }
 
-        switch (ferryTarget()) {
+        switch (ferryPosition()) {
 
             case one:
 
@@ -129,9 +134,6 @@ public class BlueAuto extends LinearOpMode{
 
 
         }
-
-
-
     }
 
     private static final int notSense = -1;
@@ -141,26 +143,31 @@ public class BlueAuto extends LinearOpMode{
     private static int ferryPos = 0;
     private static int times = 0;
 
-    private int ferryTarget() {
-        do {
-            if (robot.targetsRoverRuckus.getName() == "Front-Craters") {
-                sensed = true;
-                ferryPos = one;
-            } else if (robot.targetsRoverRuckus.getName() == "Red-Footprint") {
-                sensed = true;
-                ferryPos = one;
-            } else if (robot.targetsRoverRuckus.getName() == "Back-Space") {
-                sensed = true;
-                ferryPos = two;
-            } else if (robot.targetsRoverRuckus.getName() == "Blue-Rover") {
-                sensed = true;
-                ferryPos = two;
+    public int ferryPosition() {
+        for (VuforiaTrackable trackable : robot.allTrackables) {
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+
+                do {
+                    if (trackable.getName() == "Front-Craters") {
+                        sensed = true;
+                        ferryPos = one;
+                    } else if (trackable.getName() == "Red-Footprint") {
+                        sensed = true;
+                        ferryPos = one;
+                    } else if (trackable.getName() == "Back-Space") {
+                        sensed = true;
+                        ferryPos = two;
+                    } else if (trackable.getName() == "Blue-Rover") {
+                        sensed = true;
+                        ferryPos = two;
+                    }
+                    times++;
+                    sleep(250);
+                } while (opModeIsActive() && sensed == false && times <= 4);
+                if (times > 4 && sensed == false) {
+                    ferryPos = notSense;
+                }
             }
-            times++;
-            sleep(250);
-        } while (opModeIsActive() && sensed == false && times <= 4);
-        if (times > 4 && sensed == false) {
-            ferryPos = notSense;
         }
         return ferryPos;
     }

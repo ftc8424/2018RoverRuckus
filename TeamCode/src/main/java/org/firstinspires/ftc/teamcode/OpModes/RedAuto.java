@@ -2,19 +2,23 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraDevice;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
 
-public class RedAuto extends LinearOpMode{
+@Autonomous(name="RedAutoTaxi", group="Red OpMode")
+public class RedAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     protected AMLChampionshipRobot robot = new AMLChampionshipRobot();
-    protected double LiftUp = 300;
-    protected double LiftDown = 0;
+    protected double LiftUp = -1400;
+    protected double LiftDown = -300;
 
     public void initRobot() {
         robot.initMotor(true);
@@ -39,10 +43,11 @@ public class RedAuto extends LinearOpMode{
         robot.initVuforia();
 
     }
+
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.robot_init(hardwareMap,true);
+        robot.robot_init(hardwareMap, true);
         initRobot();
 
         robot.targetsRoverRuckus.activate();
@@ -66,19 +71,11 @@ public class RedAuto extends LinearOpMode{
             telemetry.update();
         }
 
-        switch (ferryTarget()) {
+        switch (ferryPosition()) {
 
             case one:
 
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
+                robot.encoderDrive(this, .5, -25, -25, 4);
 
                 do {
                     robot.LiftMotor.setPower(-.25);
@@ -86,20 +83,20 @@ public class RedAuto extends LinearOpMode{
                 } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
                 robot.LiftMotor.setPower(0);
 
+                robot.encoderStrafe(this, .5, 45, 0, 5);
+
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderDrive(this,.5 ,64 ,64 ,5 );
+                robot.LiftMotor.setPower(0);
+
+                robot.encoderDrive(this, .5, 64, 64, 5);
 
             case two:
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderStrafe(this,.5 ,0 ,45 ,5 );
+                robot.encoderDrive(this, .5, -25, -25, 4);
 
                 do {
                     robot.LiftMotor.setPower(-.25);
@@ -107,19 +104,19 @@ public class RedAuto extends LinearOpMode{
                 } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
                 robot.LiftMotor.setPower(0);
 
+                robot.encoderStrafe(this, .5, 0, 45, 5);
 
-                robot.encoderDrive(this,.5 ,-64 ,-64 ,5 );
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+                robot.LiftMotor.setPower(0);
+
+
+                robot.encoderDrive(this, .5, -64, -64, 5);
 
             case notSense:
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
+                robot.encoderDrive(this, .5, -25, -25, 4);
 
                 do {
                     robot.LiftMotor.setPower(-.25);
@@ -127,7 +124,18 @@ public class RedAuto extends LinearOpMode{
                 } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderDrive(this,.5 ,64 ,64 ,5 );
+                robot.encoderStrafe(this, .5, 45, 0, 5);
+
+                do {
+                    robot.LiftMotor.setPower(.25);
+
+                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+                robot.LiftMotor.setPower(0);
+
+                robot.LiftMotor.setPower(0);
+
+                robot.encoderDrive(this, .5, 64, 64, 5);
+
         }
 
     }
@@ -135,30 +143,35 @@ public class RedAuto extends LinearOpMode{
     private static final int notSense = -1;
     private static final int one = 1;
     private static final int two = 2;
-    private static  boolean sensed = false;
+    private static boolean sensed = false;
     private static int ferryPos = 0;
     private static int times = 0;
 
-    private int ferryTarget() {
-        do {
-            if (robot.targetsRoverRuckus.getName() == "Front-Craters") {
-                sensed = true;
-                ferryPos = one;
-            } else if (robot.targetsRoverRuckus.getName() == "Red-Footprint") {
-                sensed = true;
-                ferryPos = one;
-            } else if (robot.targetsRoverRuckus.getName() == "Back-Space") {
-                sensed = true;
-                ferryPos = two;
-            } else if (robot.targetsRoverRuckus.getName() == "Blue-Rover") {
-                sensed = true;
-                ferryPos = two;
+    public int ferryPosition() {
+        for (VuforiaTrackable trackable : robot.allTrackables) {
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+
+                do {
+                    if (trackable.getName() == "Front-Craters") {
+                        sensed = true;
+                        ferryPos = one;
+                    } else if (trackable.getName() == "Red-Footprint") {
+                        sensed = true;
+                        ferryPos = one;
+                    } else if (trackable.getName() == "Back-Space") {
+                        sensed = true;
+                        ferryPos = two;
+                    } else if (trackable.getName() == "Blue-Rover") {
+                        sensed = true;
+                        ferryPos = two;
+                    }
+                    times++;
+                    sleep(250);
+                } while (opModeIsActive() && sensed == false && times <= 4);
+                if (times > 4 && sensed == false) {
+                    ferryPos = notSense;
+                }
             }
-            times++;
-            sleep(250);
-        } while (opModeIsActive() && sensed == false && times <= 4);
-        if (times > 4 && sensed == false) {
-            ferryPos = notSense;
         }
         return ferryPos;
     }

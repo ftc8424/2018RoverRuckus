@@ -109,12 +109,12 @@ public class MecanumTeleOp extends OpMode {
     @Override
     public void loop() {
 
-        double LiftVal = gamepad2.left_stick_y;
-        double BasketVal = gamepad2.right_stick_y;
+        double upLiftVal = gamepad1.left_trigger;
+        double downLiftVal = gamepad2.right_trigger;
 
         telemetry.addData("Lift Position", robot.LiftMotor.getCurrentPosition());
-        telemetry.addData("Lock Position", robot.LockServo.getPosition());
-        telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
+       // telemetry.addData("Lock Position", robot.LockServo.getPosition());
+       // telemetry.addData("Claw motor Position", robot.ClawMotor.getCurrentPosition());
         telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
         telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
         /*if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
@@ -171,21 +171,35 @@ public class MecanumTeleOp extends OpMode {
             robot.ClawMotor.setPower(0);
         }*/
 
-       if (gamepad2.right_trigger > .5) {
+       if (gamepad2.left_bumper) {
            robot.MunchServo.setPosition(robot.MunchStart);
        }
 
-       if (gamepad2.left_trigger > .5){
+       if (gamepad2.right_bumper){
            robot.MunchServo.setPosition(robot.MunchEnd);
        }
 
-       if (gamepad2.right_bumper == true) {
+       if (gamepad2.a) {
            robot.RelicServoA.setPosition(robot.RelicServoOpen);
        }
 
-       if (gamepad2.left_bumper == true) {
+       if (gamepad2.b) {
            robot.RelicServoA.setPosition(robot.RelicServoClose);
        }
+
+        if (gamepad1.left_trigger > .5) {
+            robot.LiftMotor.setPower(.3);
+            telemetry.addData("UpLiftPower", robot.LiftMotor.getPower());
+        } else {
+            robot.LiftMotor.setPower(0.0000);
+        }
+
+        if (gamepad1.right_trigger > .5) {
+            robot.LiftMotor.setPower(-.3);
+            telemetry.addData("DownLiftPower", robot.LiftMotor.getPower());
+        } else {
+            robot.LiftMotor.setPower(0.0000);
+        }
 
         /*if (gamepad2.right_bumper && !ClawMoving){
             ClawMoving = true;
@@ -206,20 +220,7 @@ public class MecanumTeleOp extends OpMode {
 
         double[] wheelPower = { 0, 0, 0, 0 };
 
-        if (gamepad1.left_trigger > .5) {
 
-            robot.LFront.setPower(-1);
-            robot.RFront.setPower(-1);
-            robot.LBack.setPower(-1);
-            robot.RBack.setPower(-1);
-        }
-        else if (gamepad1.right_trigger > .5) {
-            robot.LFront.setPower(1);
-            robot.RFront.setPower(1);
-            robot.LBack.setPower(1);
-            robot.RBack.setPower(1);
-        }
-        else {
 
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
 
@@ -227,7 +228,7 @@ public class MecanumTeleOp extends OpMode {
             robot.RFront.setPower(wheelPower[1]);
             robot.LBack.setPower(wheelPower[2]);
             robot.RBack.setPower(wheelPower[3]);
-        }
+
        /* if (gamepad1.a) {
             powerAdjuster = .75;
             wheelPower = robot.motorPower(-gamepad1.left_stick_y * powerAdjuster, -gamepad1.left_stick_x * powerAdjuster, gamepad1.right_stick_x * powerAdjuster);
@@ -264,6 +265,12 @@ public class MecanumTeleOp extends OpMode {
                 .addData("Right Front", "Power: %.2f - Encoder: %d", wheelPower[1], robot.RFront.getCurrentPosition())
                 .addData("Left Back", "Power: %.2f - Encoder: %d", wheelPower[2], robot.LBack.getCurrentPosition())
                 .addData("Right Back", "Power: %.2f - Encoder: %d", wheelPower[3], robot.RBack.getCurrentPosition());
+
+        telemetry.addData("UpLiftPower", robot.LiftMotor.getPower())
+                .addData("rigth trigger", gamepad1.right_trigger)
+                .addData("leftTrig", gamepad1.left_trigger);
+
+
         //.addData("color blue", robot.color.blue())
         //.addData("color red", robot.color.red())
         //.addData("color green", robot.color.green())
@@ -280,5 +287,6 @@ public class MecanumTeleOp extends OpMode {
         robot.RFront.setPower(0);
         robot.LBack.setPower(0);
         robot.RBack.setPower(0);
+        robot.LiftMotor.setPower(0.000);
     }
 }
