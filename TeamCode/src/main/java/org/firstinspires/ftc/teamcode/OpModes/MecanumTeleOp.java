@@ -188,7 +188,7 @@ public class MecanumTeleOp extends OpMode {
        }
 
         if (gamepad1.left_trigger > .5) {
-            robot.LiftMotor.setPower(.3);
+            robot.LiftMotor.setPower(1);
             telemetry.addData("UpLiftPower", robot.LiftMotor.getPower());
         } else {
             robot.LiftMotor.setPower(0.0000);

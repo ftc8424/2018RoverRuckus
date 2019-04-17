@@ -22,7 +22,7 @@ public class Meet2Robot extends MecanumDrive {
     public double LiftLock = .63;
     public double LiftUnlock = .48;
     public DcMotor LiftMotor = null;
-    public int LiftUp =  -2046;
+    public int LiftUp =  -3600;
     public int LiftDown = -700;
 
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.

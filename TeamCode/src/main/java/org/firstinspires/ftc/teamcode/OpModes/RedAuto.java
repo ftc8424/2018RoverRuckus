@@ -71,7 +71,7 @@ public class RedAuto extends LinearOpMode {
             telemetry.update();
         }
 
-        switch (ferryPosition()) {
+        switch (one) {
 
             case one:
 
@@ -80,7 +80,7 @@ public class RedAuto extends LinearOpMode {
                 do {
                     robot.LiftMotor.setPower(-.25);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() >= robot.LiftUp);
                 robot.LiftMotor.setPower(0);
 
                 robot.encoderStrafe(this, .5, 45, 0, 5);

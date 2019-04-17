@@ -18,8 +18,8 @@ public class BlueAuto extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
     protected AMLChampionshipRobot robot = new AMLChampionshipRobot();
-    protected double LiftUp = 300;
-    protected double LiftDown = 0;
+    protected double LiftUp = -2000;
+    protected double LiftDown = -300;
 
     public void initRobot() {
         robot.initMotor(true);
@@ -71,49 +71,41 @@ public class BlueAuto extends LinearOpMode{
             telemetry.update();
         }
 
-        switch (ferryPosition()) {
+        switch (two) {
 
             case one:
 
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
+                robot.encoderDrive(this,.5 ,-30,-30 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(.25);
+                    robot.LiftMotor.setPower(-.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
                 robot.LiftMotor.setPower(0);
 
+                robot.gyroTurn(this, 270, 3);
+                robot.encoderDrive(this, .5, 70, 70, 4);
+                robot.gyroTurn(this, 0, 3);
 
-                robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                robot.encoderDrive(this,.5 ,-45 ,-45 ,5 );
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderDrive(this,.5 ,64 ,64 ,5 );
 
             case two:
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
+                robot.encoderDrive(this,.5 ,-30 ,-30 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(.25);
+                    robot.LiftMotor.setPower(-.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
                 robot.LiftMotor.setPower(0);
 
+                robot.gyroTurn(this, 90, 4);
 
-                robot.encoderStrafe(this,.5 ,0 ,45 ,5 );
+                robot.encoderDrive(this,.75 ,55 ,55 ,5 );
+                robot.gyroTurn(this, 0, 3);
 
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
-
-
-                robot.encoderDrive(this,.5 ,-64 ,-64 ,5 );
+                robot.encoderDrive(this,.5 ,55 ,55 ,5 );
 
             case notSense:
                 robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
@@ -134,6 +126,7 @@ public class BlueAuto extends LinearOpMode{
 
 
         }
+        robot.LiftMotor.setPower(0);
     }
 
     private static final int notSense = -1;
