@@ -71,10 +71,57 @@ public class BlueAuto extends LinearOpMode{
             telemetry.update();
         }
 
-        switch (two) {
+        switch (ferryPosition()) {
 
             case one:
 
+                robot.encoderDrive(this,.5 ,-27,-27 ,4 );
+
+                do {
+                    robot.LiftMotor.setPower(-.4);
+
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
+                robot.LiftMotor.setPower(0);
+
+                robot.gyroTurn(this, 270, 3);
+                robot.encoderDrive(this, .5, 55, 55, 4);
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this,.5 ,-65 ,-65 ,5 );
+                robot.LiftMotor.setPower(0);
+
+                do {
+                    robot.LiftMotor.setPower(.4);
+
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
+                robot.LiftMotor.setPower(0);
+                break;
+
+
+            case two:
+                robot.encoderDrive(this,.5 ,-30 ,-30 ,4 );
+
+                do {
+                    robot.LiftMotor.setPower(-.4);
+
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
+                robot.LiftMotor.setPower(0);
+
+                robot.gyroTurn(this, 90, 4);
+
+                robot.encoderDrive(this,.75 ,50 ,50 ,5 );
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this,.5 ,50 ,50 ,5 );
+
+                do {
+                    robot.LiftMotor.setPower(.4);
+
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
+                robot.LiftMotor.setPower(0);
+                break;
+
+            case notSense:
                 robot.encoderDrive(this,.5 ,-30,-30 ,4 );
 
                 do {
@@ -90,39 +137,12 @@ public class BlueAuto extends LinearOpMode{
                 robot.encoderDrive(this,.5 ,-45 ,-45 ,5 );
                 robot.LiftMotor.setPower(0);
 
-
-            case two:
-                robot.encoderDrive(this,.5 ,-30 ,-30 ,4 );
-
                 do {
-                    robot.LiftMotor.setPower(-.4);
+                    robot.LiftMotor.setPower(.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
                 robot.LiftMotor.setPower(0);
-
-                robot.gyroTurn(this, 90, 4);
-
-                robot.encoderDrive(this,.75 ,55 ,55 ,5 );
-                robot.gyroTurn(this, 0, 3);
-
-                robot.encoderDrive(this,.5 ,55 ,55 ,5 );
-
-            case notSense:
-                robot.encoderDrive(this,.5 ,-25 ,-25 ,4 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderStrafe(this,.5 ,45 ,0 ,5 );
-
-                do {
-                    robot.LiftMotor.setPower(.25);
-
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
-                robot.LiftMotor.setPower(0);
+                break;
 
 
         }

@@ -47,7 +47,7 @@ public class RedAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.robot_init(hardwareMap, true);
+        robot.robot_init(hardwareMap,true);
         initRobot();
 
         robot.targetsRoverRuckus.activate();
@@ -71,73 +71,81 @@ public class RedAuto extends LinearOpMode {
             telemetry.update();
         }
 
-        switch (one) {
+        switch (ferryPosition()) {
 
             case one:
 
-                robot.encoderDrive(this, .5, -25, -25, 4);
+                robot.encoderDrive(this,.5 ,-22,-22 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(-.25);
+                    robot.LiftMotor.setPower(-.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() >= robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderStrafe(this, .5, 45, 0, 5);
+                robot.gyroTurn(this, 270, 3);
+                robot.encoderDrive(this, .5, 55, 55, 4);
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this,.5 ,35 ,35 ,5 );
+                robot.LiftMotor.setPower(0);
 
                 do {
-                    robot.LiftMotor.setPower(.25);
+                    robot.LiftMotor.setPower(.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
                 robot.LiftMotor.setPower(0);
+                break;
 
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderDrive(this, .5, 64, 64, 5);
 
             case two:
-                robot.encoderDrive(this, .5, -25, -25, 4);
+                robot.encoderStrafe(this,.5 ,0 ,25 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(-.25);
+                    robot.LiftMotor.setPower(-.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderStrafe(this, .5, 0, 45, 5);
+                robot.encoderDrive(this, .75,-25 ,-25,4 );
+
+                robot.encoderStrafe(this,.5 ,0 ,40 ,4 );
+                robot.gyroTurn(this,  0, 4);
+                robot.encoderDrive(this, .75, -50 ,-50 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(.25);
+                    robot.LiftMotor.setPower(.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
                 robot.LiftMotor.setPower(0);
-
-
-                robot.encoderDrive(this, .5, -64, -64, 5);
+                break;
 
             case notSense:
-                robot.encoderDrive(this, .5, -25, -25, 4);
+                robot.encoderDrive(this,.5 ,-30,-30 ,4 );
 
                 do {
-                    robot.LiftMotor.setPower(-.25);
+                    robot.LiftMotor.setPower(-.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftUp);
+                } while (robot.LiftMotor.getCurrentPosition() > robot.LiftUp - 10);
                 robot.LiftMotor.setPower(0);
 
-                robot.encoderStrafe(this, .5, 45, 0, 5);
+                robot.gyroTurn(this, 270, 3);
+                robot.encoderDrive(this, .5, 70, 70, 4);
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this,.5 ,-45 ,-45 ,5 );
+                robot.LiftMotor.setPower(0);
 
                 do {
-                    robot.LiftMotor.setPower(.25);
+                    robot.LiftMotor.setPower(.4);
 
-                } while (robot.LiftMotor.getCurrentPosition() != robot.LiftDown);
+                } while (robot.LiftMotor.getCurrentPosition() < robot.LiftDown - 10);
                 robot.LiftMotor.setPower(0);
+                break;
 
-                robot.LiftMotor.setPower(0);
-
-                robot.encoderDrive(this, .5, 64, 64, 5);
 
         }
-
+        robot.LiftMotor.setPower(0);
     }
 
     private static final int notSense = -1;
