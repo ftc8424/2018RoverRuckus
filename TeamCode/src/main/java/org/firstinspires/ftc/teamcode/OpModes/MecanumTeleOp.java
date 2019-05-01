@@ -112,20 +112,7 @@ public class MecanumTeleOp extends OpMode {
         double LiftVal = gamepad2.left_stick_y;
         double BasketVal = gamepad2.right_stick_y;
 
-        telemetry.addData("Lift Position", robot.LiftMotor.getCurrentPosition());
-        telemetry.addData("Lock Position", robot.LockServo.getPosition());
-        telemetry.addData("Claw Motor Speed Left", gamepad2.left_trigger);
-        telemetry.addData("Claw Motor Right", gamepad2.right_trigger);
-        if (((int)robot.LockServo.getPosition() * 100 != ((int)robot.LiftUnlock * 100) && Math.abs(LiftVal) > .1)) {
-            robot.LockServo.setPosition(robot.LiftUnlock);
-            lockSet = runtime.milliseconds();
 
-        }else if (Math.abs(LiftVal) > 0.1 && runtime.milliseconds() > lockSet + 500) {
-            robot.LiftMotor.setPower(LiftVal);
-            telemetry.addData("Lift Value", LiftVal);
-        } else {
-            robot.LiftMotor.setPower(0);
-        }
     /*    if (Math.abs(BasketVal) > 0.1) {
             robot.BasketMotor.setPower(BasketVal * .5);
             telemetry.addData("Basket Value", BasketVal);
@@ -187,7 +174,7 @@ public class MecanumTeleOp extends OpMode {
         }*/
 
         telemetry.addData("Status", "Running: " + runtime.toString());
-
+        telemetry.addData("Ferry Servo Position", robot.FerryServo.getPosition());
         double[] wheelPower = { 0, 0, 0, 0 };
 
         if (gamepad1.left_trigger > .5) {
@@ -316,7 +303,7 @@ public class MecanumTeleOp extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public    void stop() {
+    public void stop() {
         robot.LFront.setPower(0);
         robot.RFront.setPower(0);
         robot.LBack.setPower(0);

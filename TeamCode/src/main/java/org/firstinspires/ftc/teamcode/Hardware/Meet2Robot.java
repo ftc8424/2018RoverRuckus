@@ -45,24 +45,13 @@ public class Meet2Robot extends MecanumDrive {
         super.initServo();
         /*LockServo = hwMap.servo.get(Constants.LockServo);
         MarkerServo = hwMap.servo.get(Constants.MarkerServo);*/
-        try {
-            //deploy(ColorServo, ColorSample);
-            //deploy(ColorServo, MarkerStart);
-            deploy(MarkerServo, MarkerInit);
-            sleep(100);
-            deploy(MarkerServo, MarkerStart);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
     public void initMotor(boolean revLeft) {
         super.initMotor(revLeft);
         //LiftMotor = hwMap.dcMotor.get(Constants.LiftMotor);
-        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        LiftMotor.setPower(0);
         /*ClawMotor = hwMap.dcMotor.get(Constants.ClawMotor);
         ClawMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ClawMotor.setDirection(DcMotorSimple.Direction.FORWARD);
