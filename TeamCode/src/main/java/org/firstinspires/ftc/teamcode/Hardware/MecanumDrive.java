@@ -167,9 +167,9 @@ public class MecanumDrive extends Motor4 {
             rightFrontPower = Range.clip(rightFrontPower, -1.0, 1.0);
             leftBackPower = Range.clip(leftBackPower, -1.0, 1.0);
             rightBackPower = Range.clip(rightBackPower, -1.0, 1.0);
-            LFront.setPower(leftFrontPower);
+            LFront.setPower(-leftFrontPower);
             RFront.setPower(rightFrontPower);
-            LBack.setPower(leftBackPower);
+            LBack.setPower(-leftBackPower);
             RBack.setPower(rightBackPower);
 
 

@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.Hardware.AMLChampionshipRobot;
+@Autonomous(name="Blue Taxi", group="Blue OpMode")
 
 public class BlueTaxi extends LinearOpMode{
 
@@ -20,11 +22,8 @@ public class BlueTaxi extends LinearOpMode{
         robot.initMotor(true);
         robot.initServo();
         robot.setEncoderMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         robot.setEncoderMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.LiftMotor.setPower(0);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -65,35 +64,53 @@ public class BlueTaxi extends LinearOpMode{
             telemetry.addData("Heading", robot.getHeading());
             telemetry.update();
         }
-
-        switch (ferryTarget()) {
+        switch (one ) {
 
             case one:
 
-                robot.encoderStrafe(this,.5 ,0 ,25 ,4 );
-                robot.FerryServo.setPosition(robot.FerryServoUp);
-                robot.encoderDrive(this,.5 ,45 ,45 ,5 );
-                robot.FerryServo.setPosition(robot.FerrServoDown);
-                robot.encoderStrafe(this,.5 ,64 ,0 ,5 );
+                robot.encoderDrive(this, .5, -27, -27, 4);
+
+
+                robot.encoderDrive(this, .5, 55, 55, 4);
+                robot.gyroTurn(this, 270, 3);
+
+                robot.encoderDrive(this, .5, -65, -65, 5);
+
+                break;
+
 
             case two:
+                robot.encoderDrive(this, .5, -30, -30, 4);
 
-                robot.encoderStrafe(this,.5 ,25 ,0 ,4 );
-                robot.FerryServo.setPosition(robot.FerryServoUp);
-                robot.encoderDrive(this,.5 ,-45,-45 ,5 );
-                robot.FerryServo.setPosition(robot.FerrServoDown);
-                robot.encoderStrafe(this,.5 ,0 ,64 ,5 );
+
+                robot.gyroTurn(this, 90, 4);
+
+                robot.encoderDrive(this, .75, 50, 50, 5);
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this, .5, 50, 50, 5);
+
+
+                break;
 
             case notSense:
+                robot.encoderDrive(this, .5, -30, -30, 4);
 
-                robot.encoderStrafe(this,.5 ,0 ,25 ,4 );
-                robot.FerryServo.setPosition(robot.FerryServoUp);
-                robot.encoderDrive(this,.5 ,45 ,45 ,5 );
-                robot.FerryServo.setPosition(robot.FerrServoDown);
-                robot.encoderStrafe(this,.5 ,64 ,0 ,5 );
+
+                robot.gyroTurn(this, 270, 3);
+                robot.encoderDrive(this, .5, 70, 70, 4);
+                robot.gyroTurn(this, 0, 3);
+
+                robot.encoderDrive(this, .5, -45, -45, 5);
+                robot.LiftMotor.setPower(0);
+
+
+                break;
+        }
+
 
         }
-    }
+
 
     private static final int notSense = -1;
     private static final int one = 1;
