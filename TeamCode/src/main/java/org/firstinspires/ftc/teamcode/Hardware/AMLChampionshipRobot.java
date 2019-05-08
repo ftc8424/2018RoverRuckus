@@ -38,7 +38,7 @@ public class AMLChampionshipRobot extends Meet2Robot {
     public double relicIn = .7;
     public Servo FerryServo = null;
     public double FerryServoUp = .6;
-    public double FerrServoDown = .1;
+    public double FerrServoDown = 0;
     public boolean wheelForward = false;
     public VectorF translation;
     public CameraDevice camera;

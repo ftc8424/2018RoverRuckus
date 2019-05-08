@@ -200,16 +200,7 @@ public class MecanumTeleOp extends OpMode {
             robot.RBack.setPower(wheelPower[3]);
         }
 
-        if (gamepad1.a == true && robot.FerryServo.getPosition() == robot.FerryServoUp){
-            robot.FerryServo.setPosition(robot.FerrServoDown);
 
-        } else if (gamepad1.a && robot.FerryServo.getPosition() == robot.FerrServoDown) {
-            robot.FerryServo.setPosition(robot.FerryServoUp);
-
-        } else {
-            robot.FerryServo.setPosition(robot.FerrServoDown);
-
-        }
 
         if (gamepad1.left_bumper) {
             robot.MunchkinServo.setPosition(robot.munchDown);
@@ -255,6 +246,14 @@ public class MecanumTeleOp extends OpMode {
             robot.RFront.setPower(wheelPower[1]);
             robot.LBack.setPower(wheelPower[2]);
             robot.RBack.setPower(wheelPower[3]);
+        }
+
+        if (gamepad1.y) {
+            robot.FerryServo.setPosition(robot.FerryServoUp);
+        }
+
+        if (gamepad1.x) {
+            robot.FerryServo.setPosition(robot.FerrServoDown);
         }
        /* if (gamepad1.a) {
             powerAdjuster = .75;

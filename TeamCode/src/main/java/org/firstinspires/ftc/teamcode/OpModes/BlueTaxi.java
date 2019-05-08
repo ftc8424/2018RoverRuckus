@@ -64,33 +64,31 @@ public class BlueTaxi extends LinearOpMode{
             telemetry.addData("Heading", robot.getHeading());
             telemetry.update();
         }
-        
+
         switch (one ) {
 
             case one:
 
-                robot.encoderDrive(this, .5, -27, -27, 4);
+                robot.encoderDrive(this, .5, -18, -18, 4);
+                robot.FerryServo.setPosition(robot.FerryServoUp);
+                sleep(200);
+                robot.encoderStrafe(this, .75, 0, 90, 4);
 
 
-                robot.encoderDrive(this, .5, 55, 55, 4);
-                robot.gyroTurn(this, 270, 3);
-
-                robot.encoderDrive(this, .5, -65, -65, 5);
+                robot.encoderDrive(this, .5, -32, -32, 5);
 
                 break;
 
 
             case two:
-                robot.encoderDrive(this, .5, -30, -30, 4);
+                robot.encoderDrive(this, .5, -19, -19, 4);
+                sleep(200);
+                robot.FerryServo.setPosition(robot.FerryServoUp);
+                sleep(100);
+                robot.encoderStrafe(this, .75, 80, 0, 4);
 
 
-                robot.gyroTurn(this, 90, 4);
-
-                robot.encoderDrive(this, .75, 50, 50, 5);
-                robot.gyroTurn(this, 0, 3);
-
-                robot.encoderDrive(this, .5, 50, 50, 5);
-
+                robot.encoderDrive(this, .5, 25, 25, 4);
 
                 break;
 
