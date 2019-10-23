@@ -79,15 +79,15 @@ public class Base {
     protected static final double WHEEL_DIAMETER_INCHES= 4.0;   // 4" Omni wheels and 4" Stealth and 4" Mecanum
 
     protected static final double encoderInch = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static final double lbencoderInch = (152.5 * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static final double lfencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static final double rfencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     protected static final double rbencoderInch = (543 * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     /* Other privates for things such as the runtime, the hardware Map, etc. */
     protected HardwareMap hwMap = null;

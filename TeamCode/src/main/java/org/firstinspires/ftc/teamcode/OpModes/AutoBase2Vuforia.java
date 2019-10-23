@@ -1074,9 +1074,9 @@ public abstract class AutoBase2Vuforia extends LinearOpMode {
      * Stop the robot and turn off the picture display to save battery.
      */
     public void stopRobot() {
-        if (robot.tfod != null) {
-            robot.tfod.shutdown();
-        }
+            if (robot.tfod != null) {
+                robot.tfod.shutdown();
+            }
     }
 
 }
